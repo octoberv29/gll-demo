@@ -863,6 +863,57 @@ button,input,select{color:inherit;font:inherit;}
 .lm-state{padding-top:.15rem;font-size:.7rem;font-weight:700;white-space:nowrap;}
 @media (max-width:72rem){.lm-grid{grid-template-columns:1fr;}}
 
+/* «Склад» */
+.strip-wh{grid-template-columns:.8fr 1.3fr 1.3fr .8fr .9fr;}
+.zone-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:.6rem;margin-bottom:1rem;}
+.zone-card{cursor:default;}
+.zone-card .run-head strong{flex:none;}
+.zone-card .run-head .run-vehicle{margin-left:auto;}
+.zone-icon{color:var(--color-quiet);font-size:1.1rem;}
+.wh-table{min-width:62rem;}
+.wh-table .grid-head,.wh-table .grid-row{display:grid;grid-template-columns:minmax(15rem,1.8fr) 8.5rem 7.5rem 7rem 6.5rem 9rem 8rem;align-items:center;}
+.cover-low{color:var(--color-amber);font-weight:700;}
+.ship-panel{margin-top:1rem;}
+.detail-panel + .detail-panel{margin-top:1rem;}
+.ship-grid{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(16rem,1fr);gap:2rem;}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:1.2rem;height:15rem;padding-top:1.4rem;}
+.bar-col{display:grid;grid-template-rows:1.3rem 1fr auto auto;align-items:end;justify-items:center;gap:.25rem;min-height:0;}
+.bar-col > .bar-value{align-self:end;font-size:.72rem;font-weight:700;}
+.bar-stack{display:flex;flex-direction:column-reverse;width:min(4.5rem,100%);border-radius:.45rem .45rem .15rem .15rem;overflow:hidden;align-self:end;}
+.bar-stack i{display:block;width:100%;}
+.bar-label{font-size:.75rem;font-weight:700;}
+.bar-sub{color:var(--color-quiet);font-size:.62rem;}
+.bar-col-today .bar-label::after{content:" · сегодня";color:var(--color-cobalt);}
+.bar-legend{display:flex;flex-wrap:wrap;gap:.4rem 1rem;margin-top:1.2rem;font-size:.72rem;color:#3a4148;}
+.bar-legend span{display:inline-flex;align-items:center;gap:.35rem;}
+.bar-legend i{width:.6rem;height:.6rem;border-radius:.15rem;}
+.bar-legend b{color:var(--color-quiet);font-weight:500;font-size:.66rem;}
+.ship-note{margin:1rem 0 0;padding:.75rem .9rem;color:#3a4148;font-size:.75rem;background:var(--color-paper);border-radius:var(--radius-md);}
+.point-list{display:grid;margin:0;padding:0;list-style:none;}
+.point-list li{display:flex;align-items:center;justify-content:space-between;gap:1rem;padding:.6rem 0;border-bottom:1px solid var(--color-row-line);font-size:.8rem;}
+.point-list li:last-child{border-bottom:0;}
+.point-list small{display:block;margin-top:.15rem;color:var(--color-quiet);font-size:.66rem;}
+.point-list .mono{font-size:.75rem;font-weight:700;}
+.product-list{display:grid;}
+.product-row{display:grid;grid-template-columns:minmax(0,1fr) 6rem 4.5rem;align-items:center;gap:1rem;padding:.55rem 0;border-bottom:1px solid var(--color-row-line);font-size:.78rem;}
+.product-row:last-child{border-bottom:0;}
+.product-name{display:flex;align-items:center;gap:.5rem;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+.spark{display:grid;grid-template-columns:repeat(4,1fr);align-items:end;gap:3px;height:1.6rem;}
+.spark i{display:block;border-radius:2px 2px 0 0;opacity:.85;}
+.product-total{font-size:.72rem;font-weight:700;text-align:right;}
+.op-list li{grid-template-columns:2rem 1fr auto;}
+.op-icon{display:grid;place-items:center;width:2rem;height:2rem;border-radius:.55rem;}
+.op-icon .ms{font-size:1.05rem;}
+@media (max-width:72rem){.ship-grid{grid-template-columns:1fr;}.zone-grid{grid-template-columns:repeat(2,1fr);}}
+
+.lm-history{margin-bottom:1rem;}
+.bars-lm{height:12rem;}
+.history-figures{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:.6rem;margin:0;align-content:start;}
+.history-figures div{display:grid;gap:.25rem;padding:.85rem .95rem;background:var(--color-paper);border-radius:var(--radius-md);}
+.history-figures dt{color:var(--color-quiet);font-size:.68rem;}
+.history-figures dd{margin:0;font-size:1.15rem;font-weight:600;}
+.history-figures small{color:var(--color-quiet);font-size:.66rem;}
+
 @keyframes gllpulse{0%{opacity:1;}50%{opacity:.4;}100%{opacity:1;}}
 @keyframes gllrise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 @keyframes gllflash{0%{background:#e9edff;}100%{background:transparent;}}
@@ -1727,84 +1778,148 @@ button,input,select{color:inherit;font:inherit;}
       </div>
       </sc-if>
 
-      <!-- ================= WAREHOUSE ================= -->
+      <!-- ================= «СКЛАД»: stock, days of cover and four days of shipments ================= -->
       <sc-if value="{{ scWh }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:22px 32px 48px;max-width:1180px;">
-        <div style="display:flex;align-items:center;gap:13px;padding:16px 20px;border-radius:var(--radius-lg);background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;margin-bottom:20px;">
-          <span style="width:40px;height:40px;flex:none;border-radius:11px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:23px;color:#9bb0ff;">science</span></span>
-          <div style="font-size:14px;font-weight:700;color:#14212b;line-height:1.4;">{{ wh.banner }}</div>
+      <div class="shipment-content">
+        <div class="shipment-heading">
+          <div><p class="eyebrow">Ответственное хранение</p><h1>Склад</h1></div>
+          <p class="trips-now">{{ wh.updated }}</p>
         </div>
 
-        <sc-if value="{{ wh.ai }}" hint-placeholder-val="{{ true }}">
-        <div style="display:flex;align-items:flex-start;gap:13px;padding:16px 18px;border-radius:13px;background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;margin-bottom:20px;">
-          <span style="width:34px;height:34px;flex:none;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">auto_awesome</span></span>
-          <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:#14212b;margin-bottom:3px;">{{ wh.ai.headline }}</div><div style="font-size:13px;line-height:1.55;color:#14212b;">{{ wh.ai.text }}</div></div>
-        </div>
+        <sc-if value="{{ aiCopilot }}" hint-placeholder-val="{{ true }}">
+          <div class="ai-card">
+            <div class="ai-card-head" style="cursor:default;">
+              <span class="ai-mark"><span class="ms">auto_awesome</span></span>
+              <span style="flex:1;min-width:0;"><strong>AI-логист · {{ wh.ai.headline }}</strong><small>Считает по остаткам и средним отгрузкам последних дней.</small></span>
+            </div>
+            <div class="ai-card-items">
+              <sc-for list="{{ wh.ai.items }}" as="it" hint-placeholder-count="3">
+                <div class="ai-item"><span class="ai-dot" style="background:#c98227;"></span><div>{{ it }}</div></div>
+              </sc-for>
+            </div>
+          </div>
         </sc-if>
 
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:20px;">
-          <sc-for list="{{ wh.kpis }}" as="k" hint-placeholder-count="5">
-            <div style="flex:1;min-width:150px;padding:16px 18px;border-radius:13px;background:{{ k.warn }};border:1px solid {{ k.warnB }};">
-              <div style="font-size:22px;font-weight:800;color:{{ k.warnFg }};line-height:1;">{{ k.value }}</div>
-              <div style="font-size:12px;color:#5f655f;margin-top:6px;">{{ k.label }}</div>
-            </div>
-          </sc-for>
-        </div>
-
-        <div style="display:flex;flex-direction:column;gap:10px;margin-bottom:20px;">
-          <sc-for list="{{ wh.alerts }}" as="a" hint-placeholder-count="2">
-            <div style="display:flex;align-items:flex-start;gap:12px;padding:14px 16px;border-radius:12px;background:{{ a.bg }};border:1px solid {{ a.border }};border-left:3px solid {{ a.fg }};">
-              <span style="font-family:'Material Symbols Outlined';font-size:21px;color:{{ a.fg }};flex:none;">{{ a.icon }}</span>
-              <div style="font-size:13.5px;line-height:1.5;color:#14212b;">{{ a.text }}</div>
-            </div>
-          </sc-for>
-        </div>
-
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:22px;">
-          <sc-for list="{{ wh.zones }}" as="z" hint-placeholder-count="3">
-            <div style="padding:16px 18px;border-radius:13px;background:#fbf9f4;border:1px solid #d7d1c5;">
-              <div style="display:flex;align-items:center;gap:9px;margin-bottom:10px;"><span style="width:32px;height:32px;flex:none;border-radius:9px;background:#e4f3ed;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:18px;color:#24775b;">warehouse</span></span><span style="font-size:14px;font-weight:700;color:#14212b;">{{ z.name }}</span></div>
-              <div style="display:flex;justify-content:space-between;"><span style="font-size:12.5px;color:#5f655f;">Темп-режим</span><span style="font-size:12.5px;font-weight:600;color:#14212b;">{{ z.temp }}</span></div>
-              <div style="display:flex;justify-content:space-between;margin-top:5px;"><span style="font-size:12.5px;color:#5f655f;">Занято</span><span style="font-size:12.5px;font-weight:600;color:#14212b;">{{ z.pallets }}</span></div>
-            </div>
-          </sc-for>
-        </div>
-
-        <section data-tour="tour-wh-stock" style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);overflow:hidden;margin-bottom:20px;">
-          <div style="padding:15px 18px;border-bottom:1px solid #e5e0d7;font-size:15px;font-weight:800;color:#14212b;">Остатки на складе</div>
-          <div style="overflow-x:auto;">
-            <div style="min-width:920px;">
-              <div style="display:grid;grid-template-columns:180px 170px 90px 90px 130px 100px 90px;gap:10px;padding:10px 18px;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#5f655f;border-bottom:1px solid #e5e0d7;">
-                <div>Товар</div><div>Категория</div><div>Зона</div><div>Темп</div><div>Остаток</div><div>Годен до</div><div>Источник</div>
+        <section class="strip strip-wh" aria-label="Склад сегодня">
+          <div class="strip-group">
+            <div class="strip-label">Позиций на складе</div>
+            <button sc-camel-on-click="{{ wh.showAll }}" class="strip-num strip-num-link" title="Показать все">{{ wh.positions }}</button>
+            <div class="strip-third">{{ wh.positionsNoun }}</div>
+          </div>
+          <sc-for list="{{ wh.groups }}" as="g" hint-placeholder-count="4">
+            <div class="strip-group">
+              <div class="strip-tiles">
+                <sc-for list="{{ g.tiles }}" as="f" hint-placeholder-count="2">
+                  <div>
+                    <div class="strip-label">{{ f.label }}</div>
+                    <sc-if value="{{ f.pressable }}" hint-placeholder-val="{{ true }}"><button sc-camel-on-click="{{ f.onPress }}" class="{{ f.cls }}">{{ f.big }}</button></sc-if>
+                    <sc-if value="{{ f.notPressable }}" hint-placeholder-val="{{ false }}"><div class="{{ f.cls }}">{{ f.big }}</div></sc-if>
+                    <div class="strip-third">{{ f.third }}</div>
+                  </div>
+                </sc-for>
               </div>
-              <sc-for list="{{ wh.inventory }}" as="r" hint-placeholder-count="4">
-                <div style="display:grid;grid-template-columns:180px 170px 90px 90px 130px 100px 90px;gap:10px;padding:13px 18px;align-items:center;border-bottom:1px solid #ebe6dc;background:{{ r.rowBg }};">
-                  <div style="font-size:13px;font-weight:700;color:#14212b;">{{ r.batch }}</div>
-                  <div style="font-size:12.5px;color:#5f655f;">{{ r.category }}</div>
-                  <div style="font-size:12.5px;color:#14212b;">{{ r.zone }}</div>
-                  <div style="font-size:12.5px;color:#14212b;">{{ r.temp }}</div>
-                  <div style="font-size:12.5px;font-weight:700;color:#14212b;">{{ r.stock }}</div>
-                  <div style="font-size:12px;font-weight:600;color:{{ r.expFg }};">{{ r.expiry }}</div>
-                  <button sc-camel-on-click="{{ r.onSource }}" style="justify-self:start;border:none;background:transparent;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:600;color:#3157e5;padding:0;" style-hover="text-decoration:underline;">{{ r.source }}</button>
+            </div>
+          </sc-for>
+        </section>
+
+        <div class="zone-grid">
+          <sc-for list="{{ wh.zones }}" as="z" hint-placeholder-count="4">
+            <div class="run-card zone-card">
+              <span class="run-head"><span class="ms zone-icon">warehouse</span><strong>Зона {{ z.name }}</strong><span class="run-vehicle">{{ z.kind }}</span></span>
+              <span class="run-vehicle mono">{{ z.place }}</span>
+              <span class="run-bar"><i style="width:{{ z.pct }}%;background:{{ z.color }};"></i></span>
+              <span class="run-meta"><span>{{ z.pct }}% · {{ z.label }}</span><span class="mono">{{ z.note }}</span></span>
+            </div>
+          </sc-for>
+        </div>
+
+        <section data-tour="tour-wh-stock" class="shipments-panel">
+          <div class="shipment-toolbar">
+            <div class="search-field search-field-docs">
+              <span class="search-icon" aria-hidden="true">⌕</span>
+              <input value="{{ wh.query }}" sc-camel-on-input="{{ wh.onQuery }}" placeholder="Товар, артикул или партия" aria-label="Поиск по остаткам">
+            </div>
+            <div class="filter-row">
+              <sc-for list="{{ wh.placeChips }}" as="chip" hint-placeholder-count="3">
+                <button sc-camel-on-click="{{ chip.onClick }}" class="{{ chip.cls }}">{{ chip.label }}<span class="chip-count mono">{{ chip.count }}</span></button>
+              </sc-for>
+            </div>
+          </div>
+          <div class="result-heading"><h2>Остатки</h2><div class="result-tools"><p class="mono">{{ wh.resultLine }}</p></div></div>
+          <div class="table-scroll">
+            <div class="shipment-table wh-table" role="table" aria-label="Остатки">
+              <div class="grid-head" role="row"><span>Товар</span><span>Склад · зона</span><span>Остаток</span><span>Хватит на</span><span>Годен до</span><span>Состояние</span><span>Поступил рейсом</span></div>
+              <sc-for list="{{ wh.rows }}" as="r" hint-placeholder-count="8">
+                <div class="grid-row" role="row" style="cursor:default;">
+                  <span><strong class="lm-point">{{ r.name }}</strong><small class="cell-sub mono">{{ r.sku }}</small></span>
+                  <span class="carrier-cell">{{ r.place }}</span>
+                  <span><span class="date-value mono">{{ r.qty }}</span></span>
+                  <span><span class="{{ r.coverCls }}">{{ r.cover }}</span></span>
+                  <span><span class="date-value mono">{{ r.expiry }}</span></span>
+                  <span><span class="unload-state" style="color:{{ r.stateFg }};"><i class="state-dot" style="background:{{ r.dot }};"></i>{{ r.state }}</span></span>
+                  <span><button sc-camel-on-click="{{ r.onSource }}" class="link-button mono trip-code">{{ r.source }}</button></span>
                 </div>
               </sc-for>
             </div>
           </div>
+          <sc-if value="{{ wh.empty }}" hint-placeholder-val="{{ false }}">
+            <div class="dataset-message"><strong>Ничего не найдено</strong><span>Измените запрос или снимите фильтр.</span><button sc-camel-on-click="{{ wh.showAll }}" class="link-button">Показать все остатки</button></div>
+          </sc-if>
         </section>
 
-        <section style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);overflow:hidden;">
-          <div style="padding:15px 18px;border-bottom:1px solid #e5e0d7;font-size:15px;font-weight:800;color:#14212b;">Операции</div>
-          <div style="padding:4px 18px 10px;">
-            <sc-for list="{{ wh.operations }}" as="o" hint-placeholder-count="5">
-              <div style="display:flex;align-items:center;gap:14px;padding:12px 0;border-top:1px solid #ebe6dc;">
-                <span style="width:30px;height:30px;flex:none;border-radius:8px;background:{{ o.icBg }};display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:17px;color:{{ o.icFg }};">{{ o.icon }}</span></span>
-                <span style="font-size:12.5px;color:#5f655f;font-family:var(--font-mono);white-space:nowrap;">{{ o.date }}</span>
-                <span style="flex:1;font-size:13.5px;font-weight:600;color:#14212b;">{{ o.type }}</span>
-                <span style="font-size:12.5px;color:#5f655f;white-space:nowrap;">{{ o.qty }}</span>
-                <button sc-camel-on-click="{{ o.onSource }}" style="border:none;background:transparent;cursor:pointer;font-family:var(--font-mono);font-size:12px;font-weight:600;color:#3157e5;padding:0;white-space:nowrap;" style-hover="text-decoration:underline;">{{ o.source }}</button>
+        <section data-tour="tour-wh-ship" class="detail-panel ship-panel">
+          <div class="panel-heading"><div><p class="eyebrow">Склад Алматы · {{ wh.daysLabel }}</p><h2>Отгрузки</h2></div><span class="mono">средний заказ {{ wh.avgOrder }}</span></div>
+          <div class="ship-grid">
+            <div>
+              <div class="bars" role="img" aria-label="Отгрузки по дням">
+                <sc-for list="{{ wh.shipDays }}" as="d" hint-placeholder-count="4">
+                  <div class="{{ d.cls }}">
+                    <span class="bar-value mono">{{ d.kg }}</span>
+                    <span class="bar-stack" style="height:{{ d.height }}%;">
+                      <sc-for list="{{ d.segments }}" as="sg" hint-placeholder-count="3"><i style="height:{{ sg.pct }}%;background:{{ sg.color }};"></i></sc-for>
+                    </span>
+                    <span class="bar-label">{{ d.label }}</span>
+                    <span class="bar-sub mono">{{ d.orders }}</span>
+                  </div>
+                </sc-for>
+              </div>
+              <div class="bar-legend">
+                <sc-for list="{{ wh.legend }}" as="l" hint-placeholder-count="5"><span><i style="background:{{ l.color }};"></i>{{ l.name }} <b class="mono">{{ l.total }}</b></span></sc-for>
+              </div>
+              <p class="ship-note">{{ wh.repeat }}</p>
+            </div>
+            <div>
+              <p class="eyebrow">Крупнейшие точки</p>
+              <ol class="point-list">
+                <sc-for list="{{ wh.points }}" as="pt" hint-placeholder-count="6">
+                  <li><span><strong>{{ pt.name }}</strong><small>{{ pt.meta }}</small></span><span class="mono">{{ pt.kg }}</span></li>
+                </sc-for>
+              </ol>
+            </div>
+          </div>
+          <p class="eyebrow" style="margin-top:1.6rem;">Что уходит чаще всего</p>
+          <div class="product-list">
+            <sc-for list="{{ wh.products }}" as="pr" hint-placeholder-count="6">
+              <div class="product-row">
+                <span class="product-name"><i class="run-dot" style="background:{{ pr.color }};"></i>{{ pr.name }}</span>
+                <span class="spark"><sc-for list="{{ pr.perDay }}" as="b" hint-placeholder-count="4"><i title="{{ b.title }}" style="height:{{ b.h }}%;background:{{ pr.color }};"></i></sc-for></span>
+                <span class="mono product-total">{{ pr.total }}</span>
               </div>
             </sc-for>
           </div>
+        </section>
+
+        <section class="detail-panel">
+          <div class="panel-heading"><div><p class="eyebrow">Журнал склада</p><h2>Операции</h2></div></div>
+          <ul class="document-list op-list">
+            <sc-for list="{{ wh.operations }}" as="o" hint-placeholder-count="6">
+              <li>
+                <span class="op-icon" style="color:{{ o.icFg }};background:{{ o.icBg }};"><span class="ms">{{ o.icon }}</span></span>
+                <span><strong>{{ o.type }}</strong><span class="document-meta">{{ o.date }} · {{ o.qty }}</span></span>
+                <button sc-camel-on-click="{{ o.onSource }}" class="link-button mono trip-code">{{ o.source }}</button>
+              </li>
+            </sc-for>
+          </ul>
         </section>
       </div>
       </sc-if>
@@ -1859,6 +1974,27 @@ button,input,select{color:inherit;font:inherit;}
             <div class="map-legend"><span><i class="lg lg-done"></i>Доставлено</span><span><i class="lg lg-here"></i>Машина на точке</span><span><i class="lg lg-wait"></i>Ожидает</span><span><i class="lg lg-cancel"></i>Отменено</span></div>
           </div>
         </div>
+
+        <section class="detail-panel lm-history">
+          <div class="panel-heading"><div><p class="eyebrow">Развозка за последние дни</p><h2>Сколько и куда возили</h2></div><span class="mono">заказы по дням</span></div>
+          <div class="ship-grid">
+            <div class="bars bars-lm" role="img" aria-label="Заказы по дням">
+              <sc-for list="{{ lmv.history.days }}" as="d" hint-placeholder-count="4">
+                <div class="{{ d.cls }}">
+                  <span class="bar-value mono">{{ d.orders }}</span>
+                  <span class="bar-stack" style="height:{{ d.height }}%;"><i style="height:100%;background:var(--color-cobalt);"></i></span>
+                  <span class="bar-label">{{ d.label }}</span>
+                  <span class="bar-sub mono">{{ d.kg }} · {{ d.points }}</span>
+                </div>
+              </sc-for>
+            </div>
+            <dl class="history-figures">
+              <sc-for list="{{ lmv.history.figures }}" as="f" hint-placeholder-count="4">
+                <div><dt>{{ f.label }}</dt><dd class="mono">{{ f.value }}</dd><sc-if value="{{ f.note }}" hint-placeholder-val="{{ false }}"><small>{{ f.note }}</small></sc-if></div>
+              </sc-for>
+            </dl>
+          </div>
+        </section>
 
         <section class="shipments-panel">
           <sc-if value="{{ lmv.hasRun }}" hint-placeholder-val="{{ false }}">
@@ -2021,7 +2157,7 @@ class Component extends DCLogic {
     docKind:'', docSelected:{}, archiveStatus:'',
     periodKey:'jul', periodOpen:false, stripFilter:{}, selected:{}, exportStatus:'',
     docQuery:'', docSeg:'all', docSort:'date_desc', openDocIdx:null,
-    lmRun:'', lmStatus:'', lmFocus:'', lmQuery:'',
+    lmRun:'', lmStatus:'', lmFocus:'', lmQuery:'', whFilter:'', whPlace:'', whQuery:'',
     picked:'A', legPicks:{},
     toast:'', toastIcon:'download'
   };
@@ -2138,7 +2274,7 @@ class Component extends DCLogic {
       {"sku":"SKU-2211","name":"Кофе растворимый, банка 500 г","category":"Кофе","batch":"П-2607-22","expiry_date":"2027-09-10","zone":"A1","warehouse":"Алматы, склад 2","qty":3120,"unit":"шт","received_at":"2026-07-22","source":"GLL-2607-204","status":"в наличии"},
       {"sku":"SKU-3100","name":"Вино столовое, ящик 6×0.75 л","category":"Алкоголь","batch":"П-2607-17","expiry_date":"2028-06-01","zone":"A2","warehouse":"Астана, склад","qty":210,"unit":"ящик","received_at":"2026-07-17","source":"GLL-2607-203","status":"в наличии"},
       {"sku":"SKU-3101","name":"Пиво светлое, кег 30 л","category":"Алкоголь","batch":"П-2607-17","expiry_date":"2026-10-01","zone":"A2","warehouse":"Астана, склад","qty":48,"unit":"кег","received_at":"2026-07-17","source":"GLL-2607-203","status":"срок подходит — обратить внимание"},
-      {"sku":"SKU-1080","name":"Картофель фри, соломка 9мм, 2.5 кг","category":"Заморозка","batch":"П-2607-11","expiry_date":"2027-06-15","zone":"F2","warehouse":"Астана, склад","qty":18200,"unit":"кг","received_at":"2026-07-02","source":"GLL-2607-202","status":"в наличии"}
+      {"sku":"SKU-1003","name":"Картофель фри в панировке 9×9 мм, 2.5 кг","category":"Заморозка","batch":"П-2607-21","expiry_date":"2027-07-15","zone":"F1","warehouse":"Алматы, склад 2","qty":9800,"unit":"кг","received_at":"2026-07-21","source":"GLL-2607-201","status":"в наличии"},{"sku":"SKU-4010","name":"Соус майонезный «Сырный» 42%, 1 кг","category":"Соусы","batch":"П-2607-23","expiry_date":"2026-12-20","zone":"A1","warehouse":"Алматы, склад 2","qty":900,"unit":"кг","received_at":"2026-07-23","source":"GLL-2607-211","status":"критически мало — пополнить"},{"sku":"SKU-4020","name":"Майонез Провансаль 67%, ведро 9.6 кг","category":"Соусы","batch":"П-2607-23","expiry_date":"2026-11-30","zone":"A1","warehouse":"Алматы, склад 2","qty":4300,"unit":"кг","received_at":"2026-07-23","source":"GLL-2607-211","status":"в наличии"},{"sku":"SKU-4030","name":"Кетчуп томатный, 2 кг","category":"Соусы","batch":"П-2607-23","expiry_date":"2027-02-10","zone":"A1","warehouse":"Алматы, склад 2","qty":3100,"unit":"кг","received_at":"2026-07-23","source":"GLL-2607-211","status":"в наличии"},{"sku":"SKU-1080","name":"Картофель фри, соломка 9мм, 2.5 кг","category":"Заморозка","batch":"П-2607-11","expiry_date":"2027-06-15","zone":"F2","warehouse":"Астана, склад","qty":18200,"unit":"кг","received_at":"2026-07-02","source":"GLL-2607-202","status":"в наличии"}
     ],
     "write_offs":[{"sku":"SKU-3101","name":"Пиво светлое, кег 30 л","qty":4,"unit":"кег","reason":"истёк срок годности","date":"2026-07-18"},{"sku":"SKU-1051","name":"Мороженое эскимо, короб 24 шт","qty":3,"unit":"короб","reason":"нарушение температурного режима при приёмке","date":"2026-07-19"}]
   },
@@ -2230,6 +2366,14 @@ class Component extends DCLogic {
   //   eta — planned arrival; otw/arr/done/canc — when the driver set off, arrived, handed over, cancelled
   LM_TODAY={"date": "2026-07-26", "dateLabel": "26 июля", "now": "12:25", "depot": {"name": "Склад GLL · Алматы", "lat": 43.33538, "lng": 76.92462}, "runs": [{"id": "r1", "driver": "Данияр С.", "vehicle": "Foton · 512 KZ02 18", "color": "#3157e5", "status": "planned", "started": "", "shiftEnd": "15:54", "km": 58.2, "kmDone": 58.2, "stops": [{"point": "Ресторан №1", "street": "пр. Турара Рыскулова", "lat": 43.29203, "lng": 76.92466, "eta": "11:28", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 90, 90.0], ["Соус майонезный сливочно-чесночный 42% PRO балк 1кг короб 6к", 120, 120.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 90, 90.0], ["Соус \"Пицца-соус\" PRO балк 2кг короб 6кг ТМ Астория", 90, 180.0], ["Капуста брокколи 8 кг/кор", 352, 352.0], ["Капуста цветная (10кг/кор)", 300, 300.0]], "kg": 1132.0, "no": "GLL-LM-2607-001"}, {"point": "Точка продаж №1", "street": "Аксункар", "lat": 43.26809, "lng": 76.856, "eta": "12:02", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 6250, 156.2], ["Соус Барбекю Астория (дип 25гр) 1шт", 6250, 156.2]], "kg": 312.5, "no": "GLL-LM-2607-002"}, {"point": "Точка продаж №4", "street": "рынок Барыс", "lat": 43.25215, "lng": 76.82322, "eta": "12:24", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 325, 812.5]], "kg": 812.5, "no": "GLL-LM-2607-003"}, {"point": "Точка продаж №3", "street": "рынок Жулдыз", "lat": 43.25025, "lng": 76.82347, "eta": "12:34", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 60, 60.0]], "kg": 60.0, "no": "GLL-LM-2607-004"}, {"point": "Точка продаж №2", "street": "рынок Барыс", "lat": 43.2511, "lng": 76.82451, "eta": "12:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 30, 30.0]], "kg": 30.0, "no": "GLL-LM-2607-005"}, {"point": "Точка продаж №5", "street": "рынок Барыс", "lat": 43.23924, "lng": 76.83978, "eta": "13:08", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 60, 60.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 60, 60.0], ["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 60, 60.0], ["Соус на основе растительных масел \"Горчичный Оригинальный\" 2", 30, 30.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 30, 30.0], ["Соус \"Пицца-соус\" PRO балк 2кг короб 6кг ТМ Астория", 15, 30.0], ["Кетчуп томатный Астория ( балк. 2 кг)", 15, 30.0]], "kg": 300.0, "no": "GLL-LM-2607-006"}, {"point": "Бургерная №1", "street": "Сейдимбек", "lat": 43.19385, "lng": 76.85531, "eta": "13:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 300, 750.0], ["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 4375, 109.4], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 1875, 46.9]], "kg": 906.2, "no": "GLL-LM-2607-007"}, {"point": "Точка продаж №7", "street": "рынок Барыс", "lat": 43.22692, "lng": 76.96087, "eta": "14:30", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 30, 30.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 30, 30.0], ["Соус майонезный сливочно-чесночный 42% PRO балк 1кг короб 6к", 18, 18.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 12, 12.0]], "kg": 90.0, "no": "GLL-LM-2607-008"}, {"point": "Точка продаж №6", "street": "рынок Барыс", "lat": 43.22876, "lng": 76.96078, "eta": "14:40", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный сливочно-чесночный 42% PRO балк 1кг короб 6к", 120, 120.0], ["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 3750, 93.8]], "kg": 213.8, "no": "GLL-LM-2607-009"}]}, {"id": "r2", "driver": "Ерлан К.", "vehicle": "ГАЗель · 307 KZ02 44", "color": "#2f9d78", "status": "active", "started": "10:07", "shiftEnd": "16:42", "km": 111.5, "kmDone": 55.1, "stops": [{"point": "Бургерная №13", "street": "ул. Айнабулак", "lat": 43.22576, "lng": 76.95586, "eta": "11:44", "otw": "10:15", "arr": "10:15", "done": "10:17", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 15, 37.5]], "kg": 37.5, "no": "GLL-LM-2607-010"}, {"point": "Бургерная №16", "street": "Жетысу", "lat": 43.21911, "lng": 76.84177, "eta": "", "otw": "10:15", "arr": "", "done": "", "canc": "10:21", "status": "cancelled", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 20, 50.0]], "kg": 50.0, "no": "GLL-LM-2607-011"}, {"point": "Бургерная №11", "street": "ул. Демьяна Бедного", "lat": 43.2947, "lng": 76.9542, "eta": "10:43", "otw": "10:23", "arr": "10:41", "done": "10:41", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 25, 62.5]], "kg": 62.5, "no": "GLL-LM-2607-012"}, {"point": "Бургерная №17", "street": "ул. Абая", "lat": 43.23818, "lng": 76.94665, "eta": "", "otw": "10:50", "arr": "11:11", "done": "11:11", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 25, 62.5]], "kg": 62.5, "no": "GLL-LM-2607-013"}, {"point": "Бургерная №12", "street": "пр. Абая", "lat": 43.22882, "lng": 76.95943, "eta": "11:24", "otw": "11:12", "arr": "11:24", "done": "11:24", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 75, 187.5]], "kg": 187.5, "no": "GLL-LM-2607-014"}, {"point": "Бургерная №15", "street": "ул. Ауэзова", "lat": 43.25249, "lng": 76.90124, "eta": "15:43", "otw": "11:40", "arr": "11:40", "done": "11:40", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 15, 37.5]], "kg": 37.5, "no": "GLL-LM-2607-015"}, {"point": "Бургерная №14", "street": "Райымбека", "lat": 43.2516, "lng": 76.82404, "eta": "13:21", "otw": "11:40", "arr": "11:50", "done": "12:06", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 35, 87.5]], "kg": 87.5, "no": "GLL-LM-2607-016"}, {"point": "Бургерная №2", "street": "Туркебаева", "lat": 43.25138, "lng": 76.87998, "eta": "", "otw": "12:07", "arr": "12:20", "done": "", "canc": "", "status": "arrived", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 40, 100.0]], "kg": 100.0, "no": "GLL-LM-2607-017"}, {"point": "Бургерная №3", "street": "Розыбакиева", "lat": 43.20358, "lng": 76.8914, "eta": "12:21", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 30, 75.0]], "kg": 75.0, "no": "GLL-LM-2607-018"}, {"point": "Бургерная №4", "street": "ул. Мустафина", "lat": 43.19949, "lng": 76.87938, "eta": "12:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-019"}, {"point": "Бургерная №5", "street": "8-й мкр.", "lat": 43.24369, "lng": 76.82074, "eta": "13:40", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 50, 125.0]], "kg": 125.0, "no": "GLL-LM-2607-020"}, {"point": "Бургерная №6", "street": "Ташкентский тракт", "lat": 43.23596, "lng": 76.7757, "eta": "14:11", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 85, 212.5]], "kg": 212.5, "no": "GLL-LM-2607-021"}, {"point": "Бургерная №8", "street": "Шугыла", "lat": 43.21449, "lng": 76.7884, "eta": "14:43", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 20, 50.0]], "kg": 50.0, "no": "GLL-LM-2607-022"}, {"point": "Бургерная №10", "street": "Абая", "lat": 43.2362, "lng": 76.88185, "eta": "15:23", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 35, 87.5]], "kg": 87.5, "no": "GLL-LM-2607-023"}, {"point": "Бургерная №7", "street": "Ташкентский тракт", "lat": 43.23645, "lng": 76.77566, "eta": "", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 25, 62.5]], "kg": 62.5, "no": "GLL-LM-2607-024"}, {"point": "Бургерная №9", "street": "ул. Утеген Батыра", "lat": 43.24347, "lng": 76.85565, "eta": "", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 15, 37.5]], "kg": 37.5, "no": "GLL-LM-2607-025"}]}, {"id": "r3", "driver": "Мурат А.", "vehicle": "Mitsubishi Delica · 128 KZ02 61", "color": "#c98227", "status": "active", "started": "10:56", "shiftEnd": "18:39", "km": 100.2, "kmDone": 81.8, "stops": [{"point": "Точка продаж №14", "street": "рынок Турксиб", "lat": 43.32439, "lng": 76.95856, "eta": "12:10", "otw": "11:03", "arr": "11:23", "done": "11:33", "canc": "", "status": "delivered", "items": [["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 30, 30.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 42, 42.0], ["Картофель Фри 9*9мм (2,5*5) Royal Chef", 100, 250.0]], "kg": 322.0, "no": "GLL-LM-2607-026"}, {"point": "Точка продаж №15", "street": "рынок Турксиб", "lat": 43.32352, "lng": 76.95961, "eta": "14:52", "otw": "11:33", "arr": "11:41", "done": "11:44", "canc": "", "status": "delivered", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 25, 62.5]], "kg": 62.5, "no": "GLL-LM-2607-027"}, {"point": "Суши-бар №3", "street": "Райымбека", "lat": 43.29069, "lng": 77.01427, "eta": "12:28", "otw": "11:47", "arr": "12:07", "done": "12:12", "canc": "", "status": "delivered", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 1, 1.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 2, 19.2]], "kg": 33.7, "no": "GLL-LM-2607-028"}, {"point": "Магазин №1", "street": "Акмешит", "lat": 43.28185, "lng": 77.00503, "eta": "13:57", "otw": "12:12", "arr": "12:23", "done": "", "canc": "", "status": "arrived", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 50, 125.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 30, 30.0], ["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 30, 30.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 12, 12.0]], "kg": 197.0, "no": "GLL-LM-2607-029"}, {"point": "Точка продаж №8", "street": "Сейфуллина", "lat": 43.3538, "lng": 76.93253, "eta": "11:18", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 20, 50.0], ["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 375, 9.4], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 375, 9.4]], "kg": 68.8, "no": "GLL-LM-2607-030"}, {"point": "Бургерная №18", "street": "Сейфуллина", "lat": 43.23928, "lng": 76.83948, "eta": "12:57", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 35, 87.5]], "kg": 87.5, "no": "GLL-LM-2607-031"}, {"point": "Кафе №1", "street": "Макатаева", "lat": 43.19011, "lng": 76.88781, "eta": "13:36", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 15, 37.5]], "kg": 37.5, "no": "GLL-LM-2607-032"}, {"point": "Ресторан №2", "street": "ул. Аль Фараби", "lat": 43.21197, "lng": 76.92204, "eta": "14:24", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус Майонезный Провансаль Н 40% ведро 9,8 кг", 3, 29.4]], "kg": 29.4, "no": "GLL-LM-2607-033"}, {"point": "Точка продаж №9", "street": "Назарбаева", "lat": 43.23895, "lng": 76.94773, "eta": "15:18", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 2, 2.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 2, 2.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 2, 2.0], ["Жир жидкий для фритюра К800 канистра 9,1 кг/10 л TM \"Астория", 2, 18.2], ["Соус Майонезный Провансаль Н 40% ведро 9,8 кг", 2, 19.6]], "kg": 43.8, "no": "GLL-LM-2607-034"}, {"point": "Точка продаж №10", "street": "пр. Сейфуллина", "lat": 43.23502, "lng": 76.93583, "eta": "15:39", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-035"}, {"point": "Точка продаж №11", "street": "пр. Абая", "lat": 43.23976, "lng": 76.92397, "eta": "16:03", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Кетчуп томатный Астория ( балк. 2 кг)", 9, 18.0]], "kg": 18.0, "no": "GLL-LM-2607-036"}, {"point": "Точка продаж №12", "street": "Курмангазы", "lat": 43.24482, "lng": 76.93964, "eta": "16:20", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 15, 37.5], ["Кетчуп томатный Астория ( балк. 2 кг)", 5, 10.0], ["Соус на основе растительных масел \"Горчичный Оригинальный\" 2", 2, 2.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0]], "kg": 50.5, "no": "GLL-LM-2607-037"}, {"point": "Суши-бар №1", "street": "пр. Сейфуллина", "lat": 43.25581, "lng": 76.93335, "eta": "16:38", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0], ["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 1, 1.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 1, 1.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 2, 19.2]], "kg": 22.2, "no": "GLL-LM-2607-038"}, {"point": "Бургерная №19", "street": "ул. Сейфуллина", "lat": 43.25563, "lng": 76.93257, "eta": "16:48", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 30, 75.0]], "kg": 75.0, "no": "GLL-LM-2607-039"}, {"point": "Ресторан №3", "street": "ул. Толе би", "lat": 43.25402, "lng": 76.93273, "eta": "17:00", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-040"}, {"point": "Суши-бар №2", "street": "ул. Сейфуллина", "lat": 43.24977, "lng": 76.92932, "eta": "17:17", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 1, 1.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 1, 1.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0], ["Соус майонезный \"Сметанный с грибами\" 42% PRO балк 1 кг коро", 1, 1.0], ["Соус майонезный сливочно-чесночный 42% PRO балк 1кг короб 6к", 1, 1.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 2, 19.2], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5]], "kg": 36.7, "no": "GLL-LM-2607-041"}, {"point": "Точка продаж №13", "street": "ул. Нурмакова", "lat": 43.25484, "lng": 76.90423, "eta": "17:40", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-042"}, {"point": "Ресторан №4", "street": "Панфилова", "lat": 43.26469, "lng": 76.95312, "eta": "", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 20, 50.0]], "kg": 50.0, "no": "GLL-LM-2607-043"}]}, {"id": "r4", "driver": "Тимур Б.", "vehicle": "Hyundai Porter · 845 KZ02 09", "color": "#8a4fd6", "status": "active", "started": "10:49", "shiftEnd": "18:49", "km": 106.7, "kmDone": 71.5, "stops": [{"point": "Точка продаж №26", "street": "мкр. Нуркент", "lat": 43.41793, "lng": 76.96873, "eta": "", "otw": "10:51", "arr": "12:05", "done": "12:06", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 5, 12.5]], "kg": 12.5, "no": "GLL-LM-2607-044"}, {"point": "Ресторан №5", "street": "ул. Ратушного", "lat": 43.2885, "lng": 76.91413, "eta": "11:39", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 300, 300.0], ["Картофель Фри 9*9мм (2,5*5) Royal Chef", 60, 150.0]], "kg": 450.0, "no": "GLL-LM-2607-045"}, {"point": "Суши-бар №8", "street": "ул. Гажайып", "lat": 43.27333, "lng": 76.81414, "eta": "12:21", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0]], "kg": 1.0, "no": "GLL-LM-2607-046"}, {"point": "Суши-бар №9", "street": "ул. Гажайып", "lat": 43.27285, "lng": 76.81349, "eta": "12:31", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 2, 2.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 4, 38.4], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5]], "kg": 52.9, "no": "GLL-LM-2607-047"}, {"point": "Точка продаж №22", "street": "мкр. Нуркент", "lat": 43.25596, "lng": 76.82255, "eta": "12:47", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-048"}, {"point": "Точка продаж №23", "street": "Алматы", "lat": 43.25212, "lng": 76.82487, "eta": "13:01", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 12, 12.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 12, 12.0]], "kg": 24.0, "no": "GLL-LM-2607-049"}, {"point": "Точка продаж №24", "street": "ул. Запотоцкого", "lat": 43.25133, "lng": 76.82384, "eta": "13:11", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Акция 10+1уп Картофель Фри 9*9мм (2,5*5) Royal Chef", 1, 30.0]], "kg": 30.0, "no": "GLL-LM-2607-050"}, {"point": "Суши-бар №10", "street": "Ташкентский тракт", "lat": 43.23491, "lng": 76.77523, "eta": "13:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 10, 25.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 3, 28.8], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 2, 2.0], ["Соус майонезный \"Сметанный с грибами\" 42% PRO балк 1 кг коро", 2, 2.0]], "kg": 57.8, "no": "GLL-LM-2607-051"}, {"point": "Точка продаж №25", "street": "Ташкентский тракт", "lat": 43.23677, "lng": 76.7767, "eta": "13:54", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 375, 9.4], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 750, 18.8], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 6, 6.0], ["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 3, 3.0]], "kg": 37.1, "no": "GLL-LM-2607-052"}, {"point": "Суши-бар №7", "street": "4-й мкр.", "lat": 43.22586, "lng": 76.86128, "eta": "14:43", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 3, 3.0], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 4, 38.4]], "kg": 53.9, "no": "GLL-LM-2607-053"}, {"point": "Точка продаж №21", "street": "Сатпаева", "lat": 43.23107, "lng": 76.87384, "eta": "15:07", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 40, 100.0], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 625, 15.6]], "kg": 115.6, "no": "GLL-LM-2607-054"}, {"point": "Суши-бар №6", "street": "Абая", "lat": 43.23617, "lng": 76.88297, "eta": "15:23", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 1, 1.0], ["Соус майонезный \"Сметанный с грибами\" 42% PRO балк 1 кг коро", 1, 1.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 2, 19.2]], "kg": 21.2, "no": "GLL-LM-2607-055"}, {"point": "Точка продаж №20", "street": "ул. Розыбакиева", "lat": 43.21342, "lng": 76.89212, "eta": "15:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 10, 25.0], ["Картофельные дольки с кожурой Триумф 2,5 кг", 10, 25.0]], "kg": 50.0, "no": "GLL-LM-2607-056"}, {"point": "Суши-бар №5", "street": "ул. Розыбакиева", "lat": 43.20632, "lng": 76.89352, "eta": "15:57", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 2, 2.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 1, 1.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 4, 38.4], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5]], "kg": 53.9, "no": "GLL-LM-2607-057"}, {"point": "Точка продаж №18", "street": "ул. Розыбакиева", "lat": 43.20377, "lng": 76.89157, "eta": "16:13", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 50, 125.0]], "kg": 125.0, "no": "GLL-LM-2607-058"}, {"point": "Точка продаж №19", "street": "Витебская", "lat": 43.19286, "lng": 76.89241, "eta": "16:32", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-059"}, {"point": "Суши-бар №4", "street": "мкр. Аксай", "lat": 43.21239, "lng": 76.90186, "eta": "16:55", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Майонез Провансаль 57 % Астория ведро 9,6 кг", 4, 38.4], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 63.4, "no": "GLL-LM-2607-060"}, {"point": "Точка продаж №17", "street": "мкр. Айнбаулак", "lat": 43.22757, "lng": 76.90613, "eta": "17:17", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 50, 125.0], ["Соус Майонезный Провансаль Н 40% ведро 9,8 кг", 7, 68.6], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 375, 9.4], ["Жир жидкий для фритюра К800 канистра 9,1 кг/10 л TM \"Астория", 5, 45.5], ["Малина цельная замороженная", 1, 1.0]], "kg": 249.5, "no": "GLL-LM-2607-061"}, {"point": "Точка продаж №16", "street": "3-й мкр.", "lat": 43.2346, "lng": 76.93294, "eta": "17:46", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Майонез Провансаль 67% Астория ведро 9,6 кг", 4, 38.4], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 2, 2.0]], "kg": 40.4, "no": "GLL-LM-2607-062"}]}]};
 
+  // Four real days of shipments from the Almaty warehouse (orders exported from the TMS), anonymized the same way
+  // as LM_TODAY: points carry the same invented names, no addresses, phones or notes. Kilograms are quantity × unit
+  // weight; the last day is LM_TODAY's day. Stock itself is demo data — these files hold shipments only.
+  //   categories / products — kilograms shipped per day, in the order of days
+  //   repeat — how many points ordered at all, on two or more days, on every day
+  OUTBOUND={"days": [{"date": "2026-07-20", "label": "20 июля", "orders": 74, "points": 71, "lines": 180, "kg": 17817, "avgKg": 241, "medianKg": 50}, {"date": "2026-07-22", "label": "22 июля", "orders": 92, "points": 90, "lines": 208, "kg": 11576, "avgKg": 126, "medianKg": 62}, {"date": "2026-07-25", "label": "25 июля", "orders": 87, "points": 87, "lines": 175, "kg": 7879, "avgKg": 91, "medianKg": 62}, {"date": "2026-07-26", "label": "26 июля", "orders": 62, "points": 60, "lines": 131, "kg": 7855, "avgKg": 127, "medianKg": 54}], "categories": [{"name": "Картофель фри", "perDay": [11722, 7638, 4720, 4468]}, {"name": "Соусы", "perDay": [4509, 2276, 465, 2215]}, {"name": "Майонез", "perDay": [931, 950, 1814, 298]}, {"name": "Кетчуп", "perDay": [582, 339, 821, 158]}, {"name": "Овощи и ягоды", "perDay": [14, 122, 3, 653]}, {"name": "Масло и жир", "perDay": [0, 194, 0, 64]}, {"name": "Прочее", "perDay": [58, 56, 55, 0]}], "products": [{"name": "Картофель Фри 9*9мм Royal Chef", "category": "Картофель фри", "perDay": [8165, 2558, 418, 1488], "total": 12628}, {"name": "Картофель Фри в панировке 9*9мм Royal Chef", "category": "Картофель фри", "perDay": [3262, 3838, 3750, 1775], "total": 12625}, {"name": "Картофель Фри в панировке 7*7мм Royal Chef", "category": "Картофель фри", "perDay": [262, 1242, 538, 1150], "total": 3192}, {"name": "Соус майонезный \"Сырный\" 42% PRO", "category": "Соусы", "perDay": [1239, 340, 65, 597], "total": 2241}, {"name": "Майонез Провансаль 67% Астория", "category": "Майонез", "perDay": [576, 278, 1267, 38], "total": 2160}, {"name": "Майонез Провансаль 57 % Астория", "category": "Майонез", "perDay": [355, 672, 547, 259], "total": 1834}, {"name": "Соус \"Барбекю\" PRO КБ", "category": "Соусы", "perDay": [933, 223, 3, 106], "total": 1265}, {"name": "Соус майонезный Сырный Астория дип 25 г", "category": "Соусы", "perDay": [409, 459, 12, 378], "total": 1259}, {"name": "Кетчуп томатный Астория", "category": "Кетчуп", "perDay": [266, 130, 774, 58], "total": 1228}, {"name": "Соус \"Бургер-соус\" 30% PRO", "category": "Соусы", "perDay": [352, 407, 84, 129], "total": 972}], "points": [{"name": "Точка продаж №56", "kg": 5290, "orders": 1, "days": 1}, {"name": "Точка продаж №59", "kg": 3938, "orders": 1, "days": 1}, {"name": "Точка продаж №58", "kg": 2581, "orders": 2, "days": 2}, {"name": "Точка продаж №82", "kg": 2362, "orders": 1, "days": 1}, {"name": "Точка продаж №1", "kg": 1842, "orders": 3, "days": 3}, {"name": "Ресторан №1", "kg": 1540, "orders": 2, "days": 2}, {"name": "Точка продаж №27", "kg": 1469, "orders": 1, "days": 1}, {"name": "Бургерная №1", "kg": 1250, "orders": 2, "days": 2}], "repeat": {"points": 199, "twoPlus": 70, "everyDay": 12}};
+  GOODS_COLORS={'Картофель фри':'#3157e5','Соусы':'#c98227','Майонез':'#2f9d78','Кетчуп':'#c94a46','Овощи и ягоды':'#8a4fd6','Масло и жир':'#3a4a57','Прочее':'#b9b4a9'};
+
   // The demo's "today": the strip says «обновлено сегодня», periods are counted from it.
   TODAY='2026-07-26';
   PERIODS=[{key:'jul',label:'Июль 2026',from:'2026-07-01',to:'2026-07-31',span:'01.07 — 26.07'},{key:'jun',label:'Июнь 2026',from:'2026-06-01',to:'2026-06-30',span:'01.06 — 30.06'},{key:'all',label:'Всё время',from:'0000',to:'9999',span:'с начала работы'}];
@@ -2280,6 +2424,7 @@ class Component extends DCLogic {
     {screen:'card', id:'GLL-2607-210', target:'tour-e2e-docs', text:'И все документы по этому рейсу — с типом и размером, скачиваются в один клик.', sub:'GLL-2607-210'},
     {screen:'card', id:'GLL-2607-204', target:'tour-demurrage', text:'Простой считаем по ТТН: заезд, выезд, бесплатное время по договору и сумма к оплате. Ниже — что заявил перевозчик в своей претензии и чем она расходится с ТТН.', sub:'GLL-2607-204'},
     {screen:'card', id:'GLL-2607-204', target:'tour-nav-docs', text:'Документы по всем рейсам сразу — в разделе «Документы» слева. Там можно искать, фильтровать и скачивать любой документ по любому рейсу, не заходя в каждую карточку по отдельности.', sub:'GLL-2607-204'},
+    {screen:'wh', target:'tour-wh-ship', text:'Склад: остатки, на сколько дней их хватит при нынешних отгрузках, и что уходило со склада по дням — какие товары и каким точкам.'},
     {screen:'lm', target:'tour-lm-map', text:'Последняя миля на сегодня: где сейчас каждая машина, какие точки уже получили товар, где машина разгружается и что ещё ждёт. Нажмите на машину — откроется её маршрутный лист.'},
     {screen:'list', center:true, text:'Это был обзорный тур по платформе. Попробуйте теперь сами — откройте любой рейс из списка, а также загляните в разделы «Документы», «Склад» и «Последняя миля» в боковой панели.'}
   ];
@@ -2455,44 +2600,87 @@ class Component extends DCLogic {
   }
   pill(on,color){ return on ? ('background:'+color+';color:#fff;') : 'background:transparent;color:#5f655f;'; }
 
-  nearExp(iso){ if(!iso) return false; const [y,m]=String(iso).split('-').map(Number); const today=2026*12+7; return (y*12+m)-today<=2; }
+  nearExp(iso){ if(!iso) return false; const [y,m]=String(iso).split('-').map(Number); const today=2026*12+7; return (y*12+m)-today<=3; }
 
+  // «Склад»: demo stock in the cabinet's layout plus four real days of shipments (OUTBOUND). «Хватит на» divides an
+  // Almaty item's stock by what that product shipped on an average day; items with no matching shipments show «—».
   buildWarehouse(){
     const w=this.DATA.warehouse; if(!w) return null;
-    const stock=w.stock||[]; const batches={}; stock.forEach(s=>batches[s.batch]=true);
-    const criticalLow=stock.filter(s=>/критически/i.test(s.status||'')).length;
-    const writeOffs=w.write_offs||[];
+    const s=this.state, ob=this.OUTBOUND;
+    const nDays=ob.days.length, avg=arr=>arr.reduce((a,b)=>a+b,0)/nDays;
+    const byName=k=>ob.products.find(p=>p.name.indexOf(k)>=0);
+    const byCat=k=>ob.categories.find(c=>c.name===k);
+    // stock item → the shipments it feeds, matched by product name; only Almaty ships in OUTBOUND
+    const flowOf=r=>{ if(!/Алматы/.test(r.warehouse)) return null; const n=r.name;
+      if(/панировке 9×9/.test(n)) return byName('в панировке 9*9');
+      if(/соломка 9мм/.test(n)) return byName('Картофель Фри 9*9');
+      if(/Сырный/.test(n)) return byName('"Сырный"');
+      if(/Провансаль 67/.test(n)) return byName('Провансаль 67');
+      if(/Кетчуп/.test(n)) return byCat('Кетчуп');
+      return null; };
+    const fmtT=kg=>(kg/1000).toFixed(1).replace('.',',')+' т';
+    const stockRows=(w.stock||[]).map(r=>{ const flow=flowOf(r); const perDay=flow?avg(flow.perDay):0;
+      const sameGoods=(w.stock||[]).filter(x=>x.name.replace(/\s*\(.*\)/,'')===r.name.replace(/\s*\(.*\)/,'')&&x.warehouse===r.warehouse);
+      const total=sameGoods.reduce((a,x)=>a+x.qty,0); const cover=perDay&&r.unit==='кг'?total/perDay:null;
+      const low=(cover!=null&&cover<3)||/критически/i.test(r.status||''); const exp=this.nearExp(r.expiry_date);
+      return {...r, cover, low, exp}; });
+    const sf=s.whFilter||'', place=s.whPlace||'', q=(s.whQuery||'').trim().toLowerCase();
+    const lowN=stockRows.filter(r=>r.low).length, expN=stockRows.filter(r=>r.exp).length;
+    const writeOffs=w.write_offs||[]; const batches=new Set(stockRows.map(r=>r.batch)).size;
+    const capacity=(w.zones||[]).reduce((a,z)=>a+z.capacity_m3,0), occupied=(w.zones||[]).reduce((a,z)=>a+z.occupied_m3,0);
+    const pick=k=>()=>this.setState(p=>({whFilter:p.whFilter===k?'':k}));
+    const fig=(label,big,third,tone,key)=>({label,big:String(big),third,pressable:!!key,notPressable:!key,onPress:key?pick(key):()=>{},
+      cls:'strip-num'+(tone?' strip-num-'+tone:'')+(key?' strip-num-link':'')+(key&&sf===key?' strip-num-on':'')});
+    const today=ob.days[nDays-1], kgAll=ob.days.reduce((a,d)=>a+d.kg,0), ordersAll=ob.days.reduce((a,d)=>a+d.orders,0);
+    const groups=[
+      [fig('Заканчивается',lowN,'меньше 3 дней','amber','low'), fig('Срок подходит',expN,'до 3 месяцев','quiet','exp')],
+      [fig('Отгружено сегодня',fmtT(today.kg),today.orders+' заказа','ok',null), fig('За '+nDays+' дня',fmtT(kgAll),ordersAll+' заказов','',null)],
+      [fig('Занято',Math.round(occupied/capacity*100)+'%',occupied+' из '+capacity+' м³','',null)],
+      [fig('Списано',writeOffs.reduce((a,o)=>a+(o.qty||0),0)+' ед',writeOffs.length+' случая за неделю','quiet',null)]
+    ].map(tiles=>({tiles}));
+    const placeChips=[['','Все склады'],['Алматы','Алматы'],['Астана','Астана']].map(([k,label])=>({label, count:stockRows.filter(r=>!k||r.warehouse.indexOf(k)>=0).length,
+      cls:'filter-chip'+(place===k?' filter-chip-on':''), onClick:()=>this.setState({whPlace:k})}));
+    const rows=stockRows.filter(r=>(!place||r.warehouse.indexOf(place)>=0)&&(!sf||(sf==='low'&&r.low)||(sf==='exp'&&r.exp))&&(!q||(r.name+' '+r.sku+' '+r.batch).toLowerCase().indexOf(q)>=0))
+      .sort((a,b)=>(b.low-a.low)||(b.exp-a.exp)||a.warehouse.localeCompare(b.warehouse))
+      .map(r=>{ const tone=r.low?this.tone('amber'):r.exp?this.tone('amber'):null;
+        return { name:r.name, sku:r.sku+' · партия '+r.batch, place:r.warehouse.replace(', склад 2','').replace(', склад','')+' · '+r.zone,
+          qty:this.fmtN(r.qty)+' '+r.unit, cover:r.cover==null?'—':(r.cover<1?'меньше дня':'≈ '+Math.floor(r.cover)+' '+this.plural(Math.floor(r.cover),'день','дня','дней')),
+          coverCls:'date-value mono'+(r.low?' cover-low':''), expiry:this.fmtDay(r.expiry_date),
+          state:r.low?'Заканчивается':r.exp?'Срок подходит':'В наличии', stateFg:tone?tone.fg:'var(--color-quiet)', dot:tone?tone.dot:'#8f948d',
+          source:r.source, onSource:()=>this.setState({clientScreen:'card',currentId:r.source}) }; });
+    const zones=(w.zones||[]).map(z=>{ const pct=Math.round(z.occupied_m3/z.capacity_m3*100); const cold=/−?\d+\s*°C/.test(z.category);
+      return { name:z.zone, place:z.warehouse, kind:cold?'Заморозка −18 °C':'Обычное хранение', pct, color:pct>=90?'#c98227':'#3157e5',
+        label:z.occupied_m3+' из '+z.capacity_m3+' м³', note:pct>=90?'почти заполнена':'свободно '+(z.capacity_m3-z.occupied_m3)+' м³' }; });
+    // shipments by day, stacked by category; bars are scaled to the busiest day
+    const maxDay=Math.max.apply(null,ob.days.map(d=>d.kg));
+    const shipDays=ob.days.map((d,i)=>({ label:d.label, kg:fmtT(d.kg), orders:d.orders+' '+this.plural(d.orders,'заказ','заказа','заказов'), height:Math.round(d.kg/maxDay*100),
+      cls:'bar-col'+(i===nDays-1?' bar-col-today':''),
+      segments:ob.categories.map(c=>({color:this.GOODS_COLORS[c.name]||'#b9b4a9', pct:d.kg?Math.round(c.perDay[i]/d.kg*1000)/10:0})).filter(x=>x.pct>0) }));
+    const legend=ob.categories.filter(c=>c.perDay.some(Boolean)).map(c=>({name:c.name,color:this.GOODS_COLORS[c.name]||'#b9b4a9',total:fmtT(c.perDay.reduce((a,b)=>a+b,0))}));
+    const products=ob.products.map(p=>{ const m=Math.max.apply(null,p.perDay)||1; return { name:p.name, color:this.GOODS_COLORS[p.category]||'#b9b4a9', total:fmtT(p.total),
+      perDay:p.perDay.map((v,i)=>({h:Math.max(4,Math.round(v/m*100)), title:ob.days[i].label+': '+this.fmtN(v)+' кг'})) }; });
+    const points=ob.points.map(p=>({ name:p.name, kg:fmtT(p.kg), meta:p.orders+' '+this.plural(p.orders,'заказ','заказа','заказов')+' · '+p.days+' из '+nDays+' дней' }));
+    const operations=[
+      ...ob.days.map(d=>({date:this.fmtDay(d.date), type:'Отгрузка · '+d.orders+' '+this.plural(d.orders,'заказ','заказа','заказов')+' на '+d.points+' '+this.plural(d.points,'точку','точки','точек'), icon:'north_east', tone:'blue', qty:fmtT(d.kg), source:d.date===today.date?'Развозка сегодня':'Склад Алматы', onSource:d.date===today.date?()=>this.setState({clientScreen:'lm'}):()=>{} })),
+      ...(w.stock||[]).filter((r,i,a)=>a.findIndex(x=>x.batch===r.batch)===i).map(r=>({date:this.fmtDay(r.received_at), type:'Приёмка · партия '+r.batch, icon:'south_west', tone:'green', qty:this.fmtN((w.stock||[]).filter(x=>x.batch===r.batch).length)+' поз.', source:r.source, onSource:()=>this.setState({clientScreen:'card',currentId:r.source})})),
+      ...writeOffs.map(o=>({date:this.fmtDay(o.date), type:'Списание · '+o.reason, icon:'delete', tone:'red', qty:this.fmtN(o.qty)+' '+(o.unit||'ед'), source:o.sku, onSource:()=>{}}))
+    ].map(o=>{ const t=this.tone(o.tone); return {...o, icFg:t.fg, icBg:t.bg}; })
+     .sort((a,b)=>b.date.split('.').reverse().join('').localeCompare(a.date.split('.').reverse().join('')));
+    const lowItems=stockRows.filter(r=>r.low&&r.cover!=null);
     return {
-      banner:'Два склада: Алматы (склад 2) и Астана — заморозка −18°C, алкоголь и кофе на ambient-хранении.',
-      ai:{headline:'AI следит за остатками и сроками годности', text:'Критично мало «Мороженое эскимо» (SKU-1051) — рекомендуем пополнить. «Пиво светлое» (SKU-3101) приближается к сроку годности.'},
-      kpis:[
-        {label:'SKU на складе',value:this.fmtN(stock.length),warn:'#fff',warnB:'#d7d1c5',warnFg:'#14212b'},
-        {label:'Складов',value:'2',warn:'#fff',warnB:'#d7d1c5',warnFg:'#14212b'},
-        {label:'Партий',value:this.fmtN(Object.keys(batches).length),warn:'#fff',warnB:'#d7d1c5',warnFg:'#14212b'},
-        {label:'Списано за период',value:this.fmtN(writeOffs.reduce((s,o)=>s+(o.qty||0),0))+' ед',warn:'#fff',warnB:'#d7d1c5',warnFg:'#14212b'},
-        {label:'Критично мало',value:this.fmtN(criticalLow),warn:'#fff',warnB:'#d7d1c5',warnFg:'#8a5516'}
-      ],
-      alerts:[
-        {text:'SKU-1051 «Мороженое эскимо, короб 24 шт» — критически мало, требуется пополнение.', icon:'warning', fg:'#c98227', bg:'#fff', border:'#d7d1c5'},
-        {text:'SKU-3101 «Пиво светлое, кег 30 л» — срок годности приближается (окт. 2026), обратить внимание.', icon:'warning', fg:'#c98227', bg:'#fff', border:'#d7d1c5'},
-        {text:'Списано: 4 кег пива (истёк срок), 3 короба мороженого (нарушение темп. режима при приёмке).', icon:'info', fg:'#5f655f', bg:'#fff', border:'#d7d1c5'}
-      ],
-      zones:(w.zones||[]).map(z=>{
-        const cold=/−?\d+\s*°C/.test(z.category); const tempM=(z.category.match(/−?\d+\s*°C/)||[])[0];
-        return {name:z.zone+' · '+z.warehouse, temp:cold?tempM:'Ambient', pallets:this.fmtN(z.occupied_m3)+' м³ из '+this.fmtN(z.capacity_m3)+' м³'};
-      }),
-      inventory: stock.map(r=>{
-        const cold=/−?\d+\s*°C/.test(r.category)|| /заморозка/i.test(r.category);
-        const exp=this.nearExp(r.expiry_date);
-        return {batch:r.name, category:r.category, zone:r.zone, temp:cold?'−18°C':'Ambient',
-          stock:this.fmtN(r.qty)+' '+r.unit, expiry:this.fmtISO(r.expiry_date), expFg:exp?'#8a5516':'#14212b', rowBg:exp?'#fbf9f4':'#fff',
-          source:r.source, onSource:()=>this.setState({clientScreen:'card',currentId:r.source}) };
-      }),
-      operations:[
-        ...stock.map(r=>({date:this.fmtISO(r.received_at), type:'Приёмка · '+r.category, isIn:true, icon:'south_west', icBg:'#e4f3ed', icFg:'#24775b', qty:this.fmtN(r.qty)+' '+r.unit, source:r.source, onSource:()=>this.setState({clientScreen:'card',currentId:r.source})})),
-        ...writeOffs.map(o=>({date:this.fmtISO(o.date), type:'Списание · '+o.reason, isIn:false, icon:'north_east', icBg:'#e9edff', icFg:'#3157e5', qty:this.fmtN(o.qty)+' '+(o.unit||'ед'), source:o.sku, onSource:()=>{}}))
-      ].sort((a,b)=> (b.date||'').localeCompare(a.date||''))
-    };
+      updated:'Алматы и Астана · обновлено в '+this.LM_TODAY.now,
+      ai:{ headline:'следит за остатками и отгрузками', items:[
+        ...lowItems.map(r=>'«'+r.name+'» хватит '+(r.cover<1?'меньше чем на день':'примерно на '+Math.floor(r.cover)+' '+this.plural(Math.floor(r.cover),'день','дня','дней'))+' при текущих отгрузках — пора пополнить.'),
+        (n=>'Картофеля фри 9×9 в Алматы хватит примерно на '+n+' '+this.plural(n,'день','дня','дней')+' отгрузок.')(Math.floor(stockRows.find(r=>r.sku==='SKU-1001').cover)),
+        '«Пиво светлое, кег 30 л» в Астане — срок годности в октябре, стоит отгрузить в первую очередь.'] },
+      groups, positions:stockRows.length, positionsNoun:this.plural(stockRows.length,'позиция','позиции','позиций')+' · '+batches+' партий',
+      showAll:()=>this.setState({whFilter:'',whPlace:'',whQuery:''}),
+      zones, placeChips, rows, empty:rows.length===0, query:s.whQuery||'', onQuery:e=>this.setState({whQuery:e.target.value}),
+      resultLine:'показаны '+rows.length+' из '+stockRows.length+(sf?' · только «'+(sf==='low'?'заканчивается':'срок подходит')+'»':''),
+      shipDays, legend, products, points, daysLabel:ob.days[0].label+' — '+today.label,
+      repeat:ob.repeat.points+' точек получали товар, '+ob.repeat.twoPlus+' — больше одного раза, '+ob.repeat.everyDay+' — каждый день отгрузок',
+      avgOrder:Math.round(kgAll/ordersAll)+' кг',
+      operations };
   }
 
   mkChips(list,active,onPick){ return list.map(c=>{const on=active===c.key; return {label:c.label,count:c.count,
@@ -2544,7 +2732,15 @@ class Component extends DCLogic {
     const rows=filtered.slice().sort((a,b)=>(rank[a.status]-rank[b.status])||((a.eta||'99').localeCompare(b.eta||'99'))).map(x=>{ const t=tone(x.status); return {
       no:x.no, point:x.point, street:x.street, color:x.run.color, driver:x.run.driver, eta:x.eta||'—', fact:factOf(x)||'—',
       statusLabel:ST[x.status].label, fg:x.status==='assigned'?'var(--color-quiet)':t.fg, dot:t.dot, kg:fmtKg(x.kg), positions:x.items.length+' '+this.plural(x.items.length,'позиция','позиции','позиций'), onFocus:focus(x.no) }; });
-    return { dateLabel:d.dateLabel, now:d.now, total:all.length, totalNoun:this.plural(all.length,'заказ','заказа','заказов')+' · '+d.runs.length+' машины', groups, runs,
+    const ob=this.OUTBOUND, maxOrders=Math.max.apply(null,ob.days.map(x=>x.orders));
+    const history={ days:ob.days.map((x,i)=>({ label:x.label, orders:x.orders, height:Math.round(x.orders/maxOrders*100), kg:fmtKg(x.kg), points:x.points+' '+this.plural(x.points,'точка','точки','точек'),
+        cls:'bar-col'+(i===ob.days.length-1?' bar-col-today':'') })),
+      figures:[
+        {label:'Заказов за '+ob.days.length+' дня', value:String(ob.days.reduce((a,x)=>a+x.orders,0))},
+        {label:'Отгружено', value:fmtKg(ob.days.reduce((a,x)=>a+x.kg,0))},
+        {label:'Средний заказ', value:Math.round(ob.days.reduce((a,x)=>a+x.kg,0)/ob.days.reduce((a,x)=>a+x.orders,0))+' кг'},
+        {label:'Точек получали товар', value:String(ob.repeat.points), note:ob.repeat.twoPlus+' — повторно, '+ob.repeat.everyDay+' — каждый день'}] };
+    return { history, dateLabel:d.dateLabel, now:d.now, total:all.length, totalNoun:this.plural(all.length,'заказ','заказа','заказов')+' · '+d.runs.length+' машины', groups, runs,
       hasRun:!!run, noRun:!run, run, sheet, rows, empty:rows.length===0,
       resultLine:'показаны '+rows.length+' из '+all.length+(sf?' · только «'+ST[sf].label.toLowerCase()+'»':''),
       query:s.lmQuery||'', onQuery:e=>this.setState({lmQuery:e.target.value}),
