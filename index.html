@@ -10,6 +10,8 @@ window.__resources = {
   "https://unpkg.com/react-dom@18.3.1/umd/react-dom.production.min.js": "vendor/react-dom.production.min.js"
 };
 </script>
+<link rel="stylesheet" href="vendor/leaflet/leaflet.css">
+<script src="vendor/leaflet/leaflet.js"></script>
 <script src="dc-runtime.js"></script>
 </head>
 <body>
@@ -812,6 +814,54 @@ button,input,select{color:inherit;font:inherit;}
 .auth-support{margin:1.5rem 0 0;color:var(--color-quiet);font-size:.78rem;line-height:1.6;text-align:center;}
 @keyframes route-scan{0%,100%{transform:translateX(0);}50%{transform:translateX(18rem);}}
 @media (max-width:60rem){.auth-page{grid-template-columns:1fr;}.auth-story{min-height:28rem;}.auth-panel{min-height:auto;padding:4rem 1.25rem;}}
+
+/* «Последняя миля» */
+.strip-lm{grid-template-columns:.9fr 1.2fr 1.2fr .8fr 1.3fr;}
+.lm-tiles{filter:grayscale(.55) sepia(.12) brightness(1.04) contrast(.92);}
+.period-pill-static{cursor:default;}
+.lm-grid{display:grid;grid-template-columns:20rem minmax(0,1fr);gap:1rem;margin-bottom:1rem;}
+.lm-runs{display:grid;gap:.6rem;align-content:start;}
+.run-card{display:grid;gap:.45rem;width:100%;padding:.9rem 1rem;text-align:left;background:var(--color-surface);border:1px solid var(--color-line);border-radius:var(--radius-md);cursor:pointer;transition:border-color 160ms,opacity 160ms,box-shadow 160ms;}
+.run-card:hover{border-color:#aaa79f;}
+.run-card-on{border-color:var(--color-ink);box-shadow:0 8px 22px rgb(20 33 43/10%);}
+.run-card-dim{opacity:.55;}
+.run-head{display:flex;align-items:center;gap:.5rem;}
+.run-head strong{flex:1;font-size:.9rem;}
+.run-dot{display:inline-block;flex:none;width:.6rem;height:.6rem;border-radius:50%;}
+.run-vehicle{color:var(--color-quiet);font-size:.66rem;}
+.run-bar{display:block;height:.35rem;background:var(--color-row-line);border-radius:999px;overflow:hidden;}
+.run-bar i{display:block;height:100%;border-radius:999px;}
+.run-meta{display:flex;justify-content:space-between;gap:.5rem;color:var(--color-ink);font-size:.72rem;font-weight:700;}
+.run-meta .mono{color:var(--color-quiet);font-weight:500;font-size:.66rem;}
+.run-next{color:var(--color-quiet);font-size:.7rem;line-height:1.4;}
+.lm-map-wrap{position:relative;min-height:34rem;background:var(--color-surface);border:1px solid var(--color-line);border-radius:var(--radius-lg);overflow:hidden;}
+.lm-map{position:absolute;inset:0;background:#eceae4;}
+.map-legend{position:absolute;left:.8rem;bottom:.8rem;z-index:500;display:flex;flex-wrap:wrap;gap:.35rem .9rem;padding:.5rem .75rem;font-size:.68rem;background:rgb(251 249 244/92%);border:1px solid var(--color-line);border-radius:.6rem;}
+.map-legend span{display:inline-flex;align-items:center;gap:.35rem;}
+.lg{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;border:2px solid var(--color-cobalt);}
+.lg-done{background:var(--color-cobalt);}
+.lg-here{background:var(--color-amber);border-color:var(--color-amber);}
+.lg-wait{background:#fff;}
+.lg-cancel{background:var(--color-coral);border-color:var(--color-coral);}
+.map-depot,.map-truck{display:grid;place-items:center;width:30px;height:30px;color:#fff;border-radius:50%;box-shadow:0 4px 12px rgb(20 33 43/30%);border:2px solid #fff;}
+.map-depot{background:var(--color-ink);border-radius:.55rem;}
+.map-depot .ms,.map-truck .ms{font-size:17px;}
+.map-pop{display:grid;gap:.2rem;font-family:var(--font-sans);font-size:.75rem;color:var(--color-ink);}
+.map-pop strong{font-size:.85rem;}
+.map-pop span{color:var(--color-quiet);}
+.map-pop em{color:var(--color-quiet);font-family:var(--font-mono);font-size:.64rem;font-style:normal;}
+.leaflet-container{font-family:var(--font-sans);}
+.leaflet-popup-content-wrapper{border-radius:.75rem;background:var(--color-surface);}
+.lm-table{min-width:58rem;}
+.lm-table .grid-head,.lm-table .grid-row{display:grid;grid-template-columns:9.5rem minmax(13rem,1.6fr) 9rem 4.5rem 4.5rem 10rem 6rem;align-items:center;}
+.lm-point{display:block;font-size:.8rem;}
+.lm-run-name{display:inline-flex;align-items:center;gap:.4rem;font-size:.75rem;}
+.lm-sheet{padding:.4rem 1.4rem 1rem;}
+.lm-sheet .timeline-item{cursor:pointer;border-radius:.5rem;}
+.lm-sheet .timeline-item:hover .timeline-copy strong{color:var(--color-cobalt);}
+.lm-street{color:var(--color-quiet);font-weight:500;}
+.lm-state{padding-top:.15rem;font-size:.7rem;font-weight:700;white-space:nowrap;}
+@media (max-width:72rem){.lm-grid{grid-template-columns:1fr;}}
 
 @keyframes gllpulse{0%{opacity:1;}50%{opacity:.4;}100%{opacity:1;}}
 @keyframes gllrise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
@@ -1759,106 +1809,100 @@ button,input,select{color:inherit;font:inherit;}
       </div>
       </sc-if>
 
-      <!-- ================= LAST MILE (список точек, паттерн из демо Ирбиса) ================= -->
+      <!-- ================= «ПОСЛЕДНЯЯ МИЛЯ»: what the client sees about today's deliveries ================= -->
       <sc-if value="{{ scLm }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:22px 32px 48px;max-width:1180px;">
-        <div style="display:flex;align-items:center;justify-content:space-between;gap:13px;margin-bottom:20px;">
-          <div><span style="font-size:19px;font-weight:800;color:#14212b;">{{ lm.facility }}</span><span style="font-size:12.5px;color:#5f655f;margin-left:10px;">{{ lm.period }}</span></div>
-          <span style="font-size:11px;font-weight:700;color:#5f655f;background:#e5e0d7;border:1px solid #d7d1c5;padding:5px 11px;border-radius:8px;">Демо-данные — так будет выглядеть в продукте</span>
+      <div class="shipment-content">
+        <div class="shipment-heading">
+          <div>
+            <p class="eyebrow">Развозка со склада</p>
+            <h1>Последняя миля</h1>
+          </div>
+          <p class="trips-now">Сегодня, {{ lmv.dateLabel }} · <span class="sync-moment">обновлено в {{ lmv.now }}</span></p>
         </div>
 
-        <sc-if value="{{ lm.ai }}" hint-placeholder-val="{{ true }}">
-        <div style="display:flex;align-items:flex-start;gap:13px;padding:16px 18px;border-radius:13px;background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;margin-bottom:22px;">
-          <span style="width:34px;height:34px;flex:none;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">auto_awesome</span></span>
-          <div style="flex:1;"><div style="font-size:13px;font-weight:800;color:#14212b;margin-bottom:3px;">{{ lm.ai.headline }}</div><div style="font-size:13px;line-height:1.55;color:#14212b;">{{ lm.ai.text }}</div></div>
-        </div>
-        </sc-if>
-
-        <div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:22px;">
-          <sc-for list="{{ lm.kpis }}" as="k" hint-placeholder-count="5">
-            <div style="flex:1;min-width:140px;padding:16px 18px;border-radius:13px;background:{{ k.bg }};border:1px solid {{ k.b }};">
-              <div style="font-size:24px;font-weight:800;color:{{ k.fg }};line-height:1;">{{ k.value }}</div>
-              <div style="font-size:12px;color:#5f655f;margin-top:6px;">{{ k.label }}</div>
+        <section class="strip strip-lm" aria-label="Итоги дня">
+          <div class="strip-group">
+            <div class="strip-label"><span class="period-pill period-pill-static">{{ lmv.dateLabel }}</span></div>
+            <button sc-camel-on-click="{{ lmv.showAll }}" class="strip-num strip-num-link" title="Показать все">{{ lmv.total }}</button>
+            <div class="strip-third">{{ lmv.totalNoun }}</div>
+          </div>
+          <sc-for list="{{ lmv.groups }}" as="g" hint-placeholder-count="4">
+            <div class="strip-group">
+              <div class="strip-tiles">
+                <sc-for list="{{ g.tiles }}" as="f" hint-placeholder-count="2">
+                  <div>
+                    <div class="strip-label">{{ f.label }}</div>
+                    <sc-if value="{{ f.pressable }}" hint-placeholder-val="{{ true }}"><button sc-camel-on-click="{{ f.onPress }}" class="{{ f.cls }}">{{ f.big }}</button></sc-if>
+                    <sc-if value="{{ f.notPressable }}" hint-placeholder-val="{{ false }}"><div class="{{ f.cls }}">{{ f.big }}</div></sc-if>
+                    <div class="strip-third">{{ f.third }}</div>
+                  </div>
+                </sc-for>
+              </div>
             </div>
           </sc-for>
-        </div>
-
-        <section style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);overflow:hidden;margin-bottom:20px;">
-          <div style="padding:15px 18px;border-bottom:1px solid #e5e0d7;font-size:15px;font-weight:800;color:#14212b;">Точки доставки</div>
-          <div style="padding:4px 18px 10px;">
-            <sc-for list="{{ lm.topPoints }}" as="p" hint-placeholder-count="6">
-              <div style="display:flex;align-items:center;gap:14px;padding:11px 0;border-top:1px solid #ebe6dc;">
-                <span style="flex:1;font-size:13px;font-weight:600;color:#14212b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ p.name }}">{{ p.name }}</span>
-                <span style="font-size:12.5px;font-weight:700;color:#14212b;white-space:nowrap;">{{ p.qty }}</span>
-              </div>
-            </sc-for>
-          </div>
         </section>
 
-        <section data-tour="tour-lm-list" style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);overflow:hidden;">
-          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding:15px 18px;border-bottom:1px solid #e5e0d7;flex-wrap:wrap;">
-            <div style="display:flex;align-items:center;gap:10px;">
-              <span style="font-size:15px;font-weight:800;color:#14212b;">Доставки</span>
-              <div style="display:flex;background:#ebe6dc;border:1px solid #d7d1c5;border-radius:9px;padding:2px;">
-                <button sc-camel-on-click="{{ lm.toListView }}" style="padding:6px 13px;border:none;border-radius:7px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;{{ lm.listBtnStyle }}">По доставкам</button>
-                <button sc-camel-on-click="{{ lm.toPointsView }}" style="padding:6px 13px;border:none;border-radius:7px;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;{{ lm.pointsBtnStyle }}">По точкам</button>
+        <div data-tour="tour-lm-map" class="lm-grid">
+          <div class="lm-runs">
+            <sc-for list="{{ lmv.runs }}" as="r" hint-placeholder-count="4">
+              <button sc-camel-on-click="{{ r.onPick }}" class="{{ r.cls }}">
+                <span class="run-head"><i class="run-dot" style="background:{{ r.color }};"></i><strong>{{ r.driver }}</strong><span class="status-chip" style="color:{{ r.chipFg }};background:{{ r.chipBg }};border-color:{{ r.chipBorder }};">{{ r.statusLabel }}</span></span>
+                <span class="run-vehicle mono">{{ r.vehicle }}</span>
+                <span class="run-bar"><i style="width:{{ r.pct }}%;background:{{ r.color }};"></i></span>
+                <span class="run-meta"><span>{{ r.pointsLabel }}</span><span class="mono">{{ r.kmLabel }}</span></span>
+                <span class="run-next">{{ r.nextLabel }}</span>
+              </button>
+            </sc-for>
+          </div>
+          <div class="lm-map-wrap">
+            <div id="lm-map" class="lm-map"></div>
+            <div class="map-legend"><span><i class="lg lg-done"></i>Доставлено</span><span><i class="lg lg-here"></i>Машина на точке</span><span><i class="lg lg-wait"></i>Ожидает</span><span><i class="lg lg-cancel"></i>Отменено</span></div>
+          </div>
+        </div>
+
+        <section class="shipments-panel">
+          <sc-if value="{{ lmv.hasRun }}" hint-placeholder-val="{{ false }}">
+            <div class="result-heading">
+              <h2>Маршрутный лист · {{ lmv.run.driver }} · {{ lmv.run.vehicleShort }}</h2>
+              <div class="result-tools"><button sc-camel-on-click="{{ lmv.clearRun }}" class="sort-option sort-option-on">Все машины</button><p class="mono">{{ lmv.run.pointsLabel }}</p></div>
+            </div>
+            <ol class="timeline-list lm-sheet">
+              <sc-for list="{{ lmv.sheet }}" as="st" hint-placeholder-count="6">
+                <li class="{{ st.cls }}" sc-camel-on-click="{{ st.onFocus }}">
+                  <span class="timeline-marker"><i style="border-color:{{ st.dot }};background:{{ st.fill }};"></i></span>
+                  <span class="timeline-copy"><strong>{{ st.point }} <span class="lm-street">· {{ st.street }}</span></strong><span class="timeline-sub">{{ st.goods }}</span><time>{{ st.when }}</time></span>
+                  <span class="lm-state" style="color:{{ st.fg }};">{{ st.statusLabel }}</span>
+                </li>
+              </sc-for>
+            </ol>
+          </sc-if>
+          <sc-if value="{{ lmv.noRun }}" hint-placeholder-val="{{ true }}">
+            <div class="shipment-toolbar">
+              <div class="search-field search-field-docs">
+                <span class="search-icon" aria-hidden="true">⌕</span>
+                <input value="{{ lmv.query }}" sc-camel-on-input="{{ lmv.onQuery }}" placeholder="Заказ, точка или улица" aria-label="Поиск заказов">
               </div>
             </div>
-            <div style="position:relative;display:flex;align-items:center;">
-              <span style="font-family:'Material Symbols Outlined';font-size:18px;line-height:1;color:#8a8d86;position:absolute;left:11px;pointer-events:none;">search</span>
-              <input value="{{ lm.query }}" sc-camel-on-input="{{ lm.onQuery }}" placeholder="Поиск по точке, адресу или курьеру" style="padding:9px 12px 9px 34px;width:280px;border:1px solid #d7d1c5;border-radius:9px;background:#f5f2eb;font-size:13px;font-family:inherit;color:#14212b;outline:none;" style-focus="border-color:#3157e5;">
+            <div class="result-heading"><h2>Заказы на сегодня</h2><div class="result-tools"><p class="mono">{{ lmv.resultLine }}</p></div></div>
+            <div class="table-scroll">
+              <div class="shipment-table lm-table" role="table" aria-label="Заказы на сегодня">
+                <div class="grid-head" role="row"><span>Заказ</span><span>Точка</span><span>Машина</span><span>План</span><span>Факт</span><span>Состояние</span><span>Вес</span></div>
+                <sc-for list="{{ lmv.rows }}" as="o" hint-placeholder-count="8">
+                  <div class="grid-row" role="row" sc-camel-on-click="{{ o.onFocus }}">
+                    <span><span class="mono trip-code">{{ o.no }}</span></span>
+                    <span><strong class="lm-point">{{ o.point }}</strong><small class="cell-sub">{{ o.street }}</small></span>
+                    <span class="plate-cell"><span class="lm-run-name"><i class="run-dot" style="background:{{ o.color }};"></i>{{ o.driver }}</span></span>
+                    <span><span class="date-value mono">{{ o.eta }}</span></span>
+                    <span><span class="date-value mono">{{ o.fact }}</span></span>
+                    <span><span class="unload-state" style="color:{{ o.fg }};"><i class="state-dot" style="background:{{ o.dot }};"></i>{{ o.statusLabel }}</span></span>
+                    <span><span class="date-value mono">{{ o.kg }}</span><small class="cell-sub">{{ o.positions }}</small></span>
+                  </div>
+                </sc-for>
+              </div>
             </div>
-          </div>
-
-          <div style="display:flex;flex-wrap:wrap;gap:8px;padding:14px 18px 4px;">
-            <sc-for list="{{ lm.dateChips }}" as="c" hint-placeholder-count="3">
-              <button sc-camel-on-click="{{ c.onClick }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font-size:12px;font-weight:{{ c.weight }};font-family:inherit;cursor:pointer;">{{ c.label }}<span style="font-size:10.5px;font-weight:700;color:{{ c.countColor }};background:{{ c.countBg }};padding:1px 6px;border-radius:10px;">{{ c.count }}</span></button>
-            </sc-for>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;padding:8px 18px 4px;">
-            <sc-for list="{{ lm.typeChips }}" as="c" hint-placeholder-count="2">
-              <button sc-camel-on-click="{{ c.onClick }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font-size:12px;font-weight:{{ c.weight }};font-family:inherit;cursor:pointer;">{{ c.label }}<span style="font-size:10.5px;font-weight:700;color:{{ c.countColor }};background:{{ c.countBg }};padding:1px 6px;border-radius:10px;">{{ c.count }}</span></button>
-            </sc-for>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:8px;padding:8px 18px 12px;">
-            <sc-for list="{{ lm.statusChips }}" as="c" hint-placeholder-count="3">
-              <button sc-camel-on-click="{{ c.onClick }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid {{ c.border }};background:{{ c.bg }};color:{{ c.fg }};font-size:12px;font-weight:{{ c.weight }};font-family:inherit;cursor:pointer;">{{ c.label }}<span style="font-size:10.5px;font-weight:700;color:{{ c.countColor }};background:{{ c.countBg }};padding:1px 6px;border-radius:10px;">{{ c.count }}</span></button>
-            </sc-for>
-            <sc-if value="{{ lm.hasPointFilter }}" hint-placeholder-val="{{ false }}">
-              <button sc-camel-on-click="{{ lm.onClearPoint }}" style="display:flex;align-items:center;gap:6px;padding:6px 12px;border-radius:20px;border:1px solid #14212b;background:#14212b;color:#fff;font-size:12px;font-weight:700;font-family:inherit;cursor:pointer;">Точка: {{ lm.pointFilterLabel }}<span style="font-family:'Material Symbols Outlined';font-size:15px;">close</span></button>
+            <sc-if value="{{ lmv.empty }}" hint-placeholder-val="{{ false }}">
+              <div class="dataset-message"><strong>Ничего не найдено</strong><span>Измените запрос или снимите фильтр.</span><button sc-camel-on-click="{{ lmv.showAll }}" class="link-button">Показать все заказы</button></div>
             </sc-if>
-          </div>
-
-          <sc-if value="{{ lm.isList }}" hint-placeholder-val="{{ true }}">
-          <div style="padding:2px 18px 10px;">
-            <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) 140px 100px 130px;gap:12px;padding:10px 0;font-size:10px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#5f655f;border-bottom:1px solid #e5e0d7;">
-              <div>Точка</div><div>Адрес</div><div>Курьер</div><div>Дата</div><div>Статус</div>
-            </div>
-            <sc-for list="{{ lm.deliveries }}" as="d" hint-placeholder-count="8">
-              <button sc-camel-on-click="{{ d.onOpen }}" style="width:100%;text-align:left;display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.3fr) 140px 100px 130px;gap:12px;padding:12px 0;align-items:center;border-top:1px solid #ebe6dc;border-left:none;border-right:none;border-bottom:none;background:transparent;cursor:pointer;font-family:inherit;" style-hover="background:#f5f2eb;">
-                <span style="font-size:13px;font-weight:600;color:#14212b;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ d.point }}">{{ d.point }}</span>
-                <span style="font-size:12px;color:#5f655f;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ d.address }}">{{ d.address }}</span>
-                <span style="font-size:12.5px;color:#5f655f;">{{ d.courier }}</span>
-                <span style="font-size:12.5px;color:#5f655f;font-family:var(--font-mono);">{{ d.date }}</span>
-                <span style="display:inline-flex;align-items:center;justify-self:start;padding:4px 10px;border-radius:8px;background:{{ d.bg }};color:{{ d.fg }};border:1px solid {{ d.border }};font-size:12px;font-weight:700;">{{ d.status }}</span>
-              </button>
-            </sc-for>
-            <sc-if value="{{ lm.emptyList }}" hint-placeholder-val="{{ false }}">
-              <div style="padding:32px 0;text-align:center;font-size:13px;color:#5f655f;">Ничего не найдено под текущие фильтры.</div>
-            </sc-if>
-          </div>
-          </sc-if>
-
-          <sc-if value="{{ lm.isPoints }}" hint-placeholder-val="{{ false }}">
-          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px;padding:14px 18px 18px;">
-            <sc-for list="{{ lm.points }}" as="p" hint-placeholder-count="6">
-              <button sc-camel-on-click="{{ p.onOpen }}" style="text-align:left;padding:15px 16px;border:1px solid #d7d1c5;border-radius:12px;background:#f5f2eb;cursor:pointer;font-family:inherit;" style-hover="border-color:#b9b4a9;background:#fbf9f4;">
-                <div style="font-size:13.5px;font-weight:700;color:#14212b;line-height:1.3;">{{ p.point }}</div>
-                <div style="font-size:11.5px;color:#5f655f;margin-top:3px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="{{ p.address }}">{{ p.address }}</div>
-                <div style="display:flex;align-items:center;gap:6px;margin-top:9px;"><span style="font-size:11px;font-weight:700;color:#24775b;background:#e4f3ed;border:1px solid #bfe2d4;padding:3px 8px;border-radius:7px;">{{ p.count }} доставок</span><span style="font-size:11px;font-weight:700;color:#a63c38;background:#f8e3e1;border:1px solid #ebc2bf;padding:3px 8px;border-radius:7px;">{{ p.typeLabel }}</span></div>
-              </button>
-            </sc-for>
-          </div>
           </sc-if>
         </section>
       </div>
@@ -1929,37 +1973,6 @@ button,input,select{color:inherit;font:inherit;}
     </div>
   </sc-if>
 
-  <!-- last-mile delivery drawer -->
-  <sc-if value="{{ lm.hasDrawer }}" hint-placeholder-val="{{ false }}">
-    <div sc-camel-on-click="{{ lm.drawer.onClose }}" style="position:fixed;inset:0;background:rgba(20,33,43,.42);z-index:60;"></div>
-    <div style="position:fixed;top:0;right:0;bottom:0;width:480px;max-width:88vw;background:#f1ede4;z-index:61;display:flex;flex-direction:column;box-shadow:-16px 0 48px rgba(20,20,20,.22);">
-      <div style="flex:none;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:16px 22px;background:#f5f2eb;border-bottom:1px solid #d7d1c5;">
-        <span style="font-size:15px;font-weight:800;color:#14212b;">Доставка</span>
-        <button sc-camel-on-click="{{ lm.drawer.onClose }}" style="width:32px;height:32px;border:none;border-radius:9px;background:#ebe6dc;cursor:pointer;display:flex;align-items:center;justify-content:center;color:#3a4148;" style-hover="background:#d7d1c5;"><span style="font-family:'Material Symbols Outlined';font-size:19px;">close</span></button>
-      </div>
-      <div style="flex:1;overflow:auto;padding:22px;">
-        <div style="font-size:16px;font-weight:800;color:#14212b;line-height:1.3;">{{ lm.drawer.point }}</div>
-        <div style="font-size:13px;color:#5f655f;margin-top:5px;">{{ lm.drawer.address }}</div>
-        <div style="display:flex;align-items:center;gap:14px;margin-top:14px;">
-          <span style="font-size:12.5px;color:#5f655f;font-family:var(--font-mono);">{{ lm.drawer.date }}</span>
-          <span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:8px;background:{{ lm.drawer.bg }};color:{{ lm.drawer.fg }};border:1px solid {{ lm.drawer.border }};font-size:12px;font-weight:700;">{{ lm.drawer.status }}</span>
-        </div>
-        <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#5f655f;margin:20px 0 10px;">Детали доставки</div>
-        <div style="display:flex;flex-direction:column;gap:9px;">
-          <sc-for list="{{ lm.drawer.items }}" as="it" hint-placeholder-count="4">
-            <div style="display:flex;align-items:center;gap:12px;padding:11px 13px;border:1px solid #d7d1c5;border-radius:10px;background:#fbf9f4;">
-              <span style="flex:1;font-size:13px;font-weight:600;color:#14212b;">{{ it.product }}</span>
-              <span style="font-size:12.5px;color:#5f655f;">{{ it.qty }}</span>
-            </div>
-          </sc-for>
-        </div>
-      </div>
-      <div style="flex:none;padding:18px 22px;border-top:1px solid #d7d1c5;background:#f5f2eb;">
-        <button sc-camel-on-click="{{ lm.drawer.onDownload }}" style="width:100%;display:flex;align-items:center;justify-content:center;gap:8px;padding:13px;border:none;border-radius:10px;background:#14212b;color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;" style-hover="background:#1f3a9e;">Экспорт точки<span style="font-family:'Material Symbols Outlined';font-size:19px;line-height:1;">download</span></button>
-      </div>
-    </div>
-  </sc-if>
-
   <!-- interactive tour -->
   <sc-if value="{{ tourActive }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:90;background:rgba(20,33,43,.01);"></div>
@@ -2008,7 +2021,7 @@ class Component extends DCLogic {
     docKind:'', docSelected:{}, archiveStatus:'',
     periodKey:'jul', periodOpen:false, stripFilter:{}, selected:{}, exportStatus:'',
     docQuery:'', docSeg:'all', docSort:'date_desc', openDocIdx:null,
-    lmView:'list', lmDateFilter:'all', lmTypeFilter:'all', lmStatusFilter:'all', lmQuery:'', lmPage:0, lmOpenIdx:null, lmPointFilter:'',
+    lmRun:'', lmStatus:'', lmFocus:'', lmQuery:'',
     picked:'A', legPicks:{},
     toast:'', toastIcon:'download'
   };
@@ -2209,6 +2222,14 @@ class Component extends DCLogic {
     'GLL-2607-215':{load:'2026-07-25',unloadPlan:'2026-07-30',unloadFact:null,driver:'В. Ким',ttn:false},
     'GLL-2607-216':{load:'2026-07-20',unloadPlan:'2026-08-01',unloadFact:null,driver:'Е. Садыков',ttn:false}
   };
+  // Today's last-mile run for «Последняя миля»: a snapshot of a real day in GLL's TMS, made anonymous before it
+  // landed here — point names are invented («Кафе №3»), only the street is kept (no house numbers), coordinates are
+  // shifted by 100–200 m, drivers and plates are invented, phones and notes never entered. Times, statuses and goods
+  // are real. Stops are in route order: what already happened, the current stop, then the plan by ETA.
+  //   status: delivered · arrived (the car is at the point) · on_the_way · assigned (waits) · cancelled
+  //   eta — planned arrival; otw/arr/done/canc — when the driver set off, arrived, handed over, cancelled
+  LM_TODAY={"date": "2026-07-26", "dateLabel": "26 июля", "now": "12:25", "depot": {"name": "Склад GLL · Алматы", "lat": 43.33538, "lng": 76.92462}, "runs": [{"id": "r1", "driver": "Данияр С.", "vehicle": "Foton · 512 KZ02 18", "color": "#3157e5", "status": "planned", "started": "", "shiftEnd": "15:54", "km": 58.2, "kmDone": 58.2, "stops": [{"point": "Ресторан №1", "street": "пр. Турара Рыскулова", "lat": 43.29203, "lng": 76.92466, "eta": "11:28", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 90, 90.0], ["Соус майонезный сливочно-чесночный 42% PRO балк 1кг короб 6к", 120, 120.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 90, 90.0], ["Соус \"Пицца-соус\" PRO балк 2кг короб 6кг ТМ Астория", 90, 180.0], ["Капуста брокколи 8 кг/кор", 352, 352.0], ["Капуста цветная (10кг/кор)", 300, 300.0]], "kg": 1132.0, "no": "GLL-LM-2607-001"}, {"point": "Точка продаж №1", "street": "Аксункар", "lat": 43.26809, "lng": 76.856, "eta": "12:02", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 6250, 156.2], ["Соус Барбекю Астория (дип 25гр) 1шт", 6250, 156.2]], "kg": 312.5, "no": "GLL-LM-2607-002"}, {"point": "Точка продаж №4", "street": "рынок Барыс", "lat": 43.25215, "lng": 76.82322, "eta": "12:24", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 325, 812.5]], "kg": 812.5, "no": "GLL-LM-2607-003"}, {"point": "Точка продаж №3", "street": "рынок Жулдыз", "lat": 43.25025, "lng": 76.82347, "eta": "12:34", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 60, 60.0]], "kg": 60.0, "no": "GLL-LM-2607-004"}, {"point": "Точка продаж №2", "street": "рынок Барыс", "lat": 43.2511, "lng": 76.82451, "eta": "12:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 30, 30.0]], "kg": 30.0, "no": "GLL-LM-2607-005"}, {"point": "Точка продаж №5", "street": "рынок Барыс", "lat": 43.23924, "lng": 76.83978, "eta": "13:08", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 60, 60.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 60, 60.0], ["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 60, 60.0], ["Соус на основе растительных масел \"Горчичный Оригинальный\" 2", 30, 30.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 30, 30.0], ["Соус \"Пицца-соус\" PRO балк 2кг короб 6кг ТМ Астория", 15, 30.0], ["Кетчуп томатный Астория ( балк. 2 кг)", 15, 30.0]], "kg": 300.0, "no": "GLL-LM-2607-006"}, {"point": "Бургерная №1", "street": "Сейдимбек", "lat": 43.19385, "lng": 76.85531, "eta": "13:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 300, 750.0], ["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 4375, 109.4], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 1875, 46.9]], "kg": 906.2, "no": "GLL-LM-2607-007"}, {"point": "Точка продаж №7", "street": "рынок Барыс", "lat": 43.22692, "lng": 76.96087, "eta": "14:30", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 30, 30.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 30, 30.0], ["Соус майонезный сливочно-чесночный 42% PRO балк 1кг короб 6к", 18, 18.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 12, 12.0]], "kg": 90.0, "no": "GLL-LM-2607-008"}, {"point": "Точка продаж №6", "street": "рынок Барыс", "lat": 43.22876, "lng": 76.96078, "eta": "14:40", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный сливочно-чесночный 42% PRO балк 1кг короб 6к", 120, 120.0], ["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 3750, 93.8]], "kg": 213.8, "no": "GLL-LM-2607-009"}]}, {"id": "r2", "driver": "Ерлан К.", "vehicle": "ГАЗель · 307 KZ02 44", "color": "#2f9d78", "status": "active", "started": "10:07", "shiftEnd": "16:42", "km": 111.5, "kmDone": 55.1, "stops": [{"point": "Бургерная №13", "street": "ул. Айнабулак", "lat": 43.22576, "lng": 76.95586, "eta": "11:44", "otw": "10:15", "arr": "10:15", "done": "10:17", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 15, 37.5]], "kg": 37.5, "no": "GLL-LM-2607-010"}, {"point": "Бургерная №16", "street": "Жетысу", "lat": 43.21911, "lng": 76.84177, "eta": "", "otw": "10:15", "arr": "", "done": "", "canc": "10:21", "status": "cancelled", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 20, 50.0]], "kg": 50.0, "no": "GLL-LM-2607-011"}, {"point": "Бургерная №11", "street": "ул. Демьяна Бедного", "lat": 43.2947, "lng": 76.9542, "eta": "10:43", "otw": "10:23", "arr": "10:41", "done": "10:41", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 25, 62.5]], "kg": 62.5, "no": "GLL-LM-2607-012"}, {"point": "Бургерная №17", "street": "ул. Абая", "lat": 43.23818, "lng": 76.94665, "eta": "", "otw": "10:50", "arr": "11:11", "done": "11:11", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 25, 62.5]], "kg": 62.5, "no": "GLL-LM-2607-013"}, {"point": "Бургерная №12", "street": "пр. Абая", "lat": 43.22882, "lng": 76.95943, "eta": "11:24", "otw": "11:12", "arr": "11:24", "done": "11:24", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 75, 187.5]], "kg": 187.5, "no": "GLL-LM-2607-014"}, {"point": "Бургерная №15", "street": "ул. Ауэзова", "lat": 43.25249, "lng": 76.90124, "eta": "15:43", "otw": "11:40", "arr": "11:40", "done": "11:40", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 15, 37.5]], "kg": 37.5, "no": "GLL-LM-2607-015"}, {"point": "Бургерная №14", "street": "Райымбека", "lat": 43.2516, "lng": 76.82404, "eta": "13:21", "otw": "11:40", "arr": "11:50", "done": "12:06", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 35, 87.5]], "kg": 87.5, "no": "GLL-LM-2607-016"}, {"point": "Бургерная №2", "street": "Туркебаева", "lat": 43.25138, "lng": 76.87998, "eta": "", "otw": "12:07", "arr": "12:20", "done": "", "canc": "", "status": "arrived", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 40, 100.0]], "kg": 100.0, "no": "GLL-LM-2607-017"}, {"point": "Бургерная №3", "street": "Розыбакиева", "lat": 43.20358, "lng": 76.8914, "eta": "12:21", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 30, 75.0]], "kg": 75.0, "no": "GLL-LM-2607-018"}, {"point": "Бургерная №4", "street": "ул. Мустафина", "lat": 43.19949, "lng": 76.87938, "eta": "12:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-019"}, {"point": "Бургерная №5", "street": "8-й мкр.", "lat": 43.24369, "lng": 76.82074, "eta": "13:40", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 50, 125.0]], "kg": 125.0, "no": "GLL-LM-2607-020"}, {"point": "Бургерная №6", "street": "Ташкентский тракт", "lat": 43.23596, "lng": 76.7757, "eta": "14:11", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 85, 212.5]], "kg": 212.5, "no": "GLL-LM-2607-021"}, {"point": "Бургерная №8", "street": "Шугыла", "lat": 43.21449, "lng": 76.7884, "eta": "14:43", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 20, 50.0]], "kg": 50.0, "no": "GLL-LM-2607-022"}, {"point": "Бургерная №10", "street": "Абая", "lat": 43.2362, "lng": 76.88185, "eta": "15:23", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 35, 87.5]], "kg": 87.5, "no": "GLL-LM-2607-023"}, {"point": "Бургерная №7", "street": "Ташкентский тракт", "lat": 43.23645, "lng": 76.77566, "eta": "", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 25, 62.5]], "kg": 62.5, "no": "GLL-LM-2607-024"}, {"point": "Бургерная №9", "street": "ул. Утеген Батыра", "lat": 43.24347, "lng": 76.85565, "eta": "", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 15, 37.5]], "kg": 37.5, "no": "GLL-LM-2607-025"}]}, {"id": "r3", "driver": "Мурат А.", "vehicle": "Mitsubishi Delica · 128 KZ02 61", "color": "#c98227", "status": "active", "started": "10:56", "shiftEnd": "18:39", "km": 100.2, "kmDone": 81.8, "stops": [{"point": "Точка продаж №14", "street": "рынок Турксиб", "lat": 43.32439, "lng": 76.95856, "eta": "12:10", "otw": "11:03", "arr": "11:23", "done": "11:33", "canc": "", "status": "delivered", "items": [["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 30, 30.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 42, 42.0], ["Картофель Фри 9*9мм (2,5*5) Royal Chef", 100, 250.0]], "kg": 322.0, "no": "GLL-LM-2607-026"}, {"point": "Точка продаж №15", "street": "рынок Турксиб", "lat": 43.32352, "lng": 76.95961, "eta": "14:52", "otw": "11:33", "arr": "11:41", "done": "11:44", "canc": "", "status": "delivered", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 25, 62.5]], "kg": 62.5, "no": "GLL-LM-2607-027"}, {"point": "Суши-бар №3", "street": "Райымбека", "lat": 43.29069, "lng": 77.01427, "eta": "12:28", "otw": "11:47", "arr": "12:07", "done": "12:12", "canc": "", "status": "delivered", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 1, 1.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 2, 19.2]], "kg": 33.7, "no": "GLL-LM-2607-028"}, {"point": "Магазин №1", "street": "Акмешит", "lat": 43.28185, "lng": 77.00503, "eta": "13:57", "otw": "12:12", "arr": "12:23", "done": "", "canc": "", "status": "arrived", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 50, 125.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 30, 30.0], ["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 30, 30.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 12, 12.0]], "kg": 197.0, "no": "GLL-LM-2607-029"}, {"point": "Точка продаж №8", "street": "Сейфуллина", "lat": 43.3538, "lng": 76.93253, "eta": "11:18", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 20, 50.0], ["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 375, 9.4], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 375, 9.4]], "kg": 68.8, "no": "GLL-LM-2607-030"}, {"point": "Бургерная №18", "street": "Сейфуллина", "lat": 43.23928, "lng": 76.83948, "eta": "12:57", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 35, 87.5]], "kg": 87.5, "no": "GLL-LM-2607-031"}, {"point": "Кафе №1", "street": "Макатаева", "lat": 43.19011, "lng": 76.88781, "eta": "13:36", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 15, 37.5]], "kg": 37.5, "no": "GLL-LM-2607-032"}, {"point": "Ресторан №2", "street": "ул. Аль Фараби", "lat": 43.21197, "lng": 76.92204, "eta": "14:24", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус Майонезный Провансаль Н 40% ведро 9,8 кг", 3, 29.4]], "kg": 29.4, "no": "GLL-LM-2607-033"}, {"point": "Точка продаж №9", "street": "Назарбаева", "lat": 43.23895, "lng": 76.94773, "eta": "15:18", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 2, 2.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 2, 2.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 2, 2.0], ["Жир жидкий для фритюра К800 канистра 9,1 кг/10 л TM \"Астория", 2, 18.2], ["Соус Майонезный Провансаль Н 40% ведро 9,8 кг", 2, 19.6]], "kg": 43.8, "no": "GLL-LM-2607-034"}, {"point": "Точка продаж №10", "street": "пр. Сейфуллина", "lat": 43.23502, "lng": 76.93583, "eta": "15:39", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-035"}, {"point": "Точка продаж №11", "street": "пр. Абая", "lat": 43.23976, "lng": 76.92397, "eta": "16:03", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Кетчуп томатный Астория ( балк. 2 кг)", 9, 18.0]], "kg": 18.0, "no": "GLL-LM-2607-036"}, {"point": "Точка продаж №12", "street": "Курмангазы", "lat": 43.24482, "lng": 76.93964, "eta": "16:20", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 15, 37.5], ["Кетчуп томатный Астория ( балк. 2 кг)", 5, 10.0], ["Соус на основе растительных масел \"Горчичный Оригинальный\" 2", 2, 2.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0]], "kg": 50.5, "no": "GLL-LM-2607-037"}, {"point": "Суши-бар №1", "street": "пр. Сейфуллина", "lat": 43.25581, "lng": 76.93335, "eta": "16:38", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0], ["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 1, 1.0], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 1, 1.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 2, 19.2]], "kg": 22.2, "no": "GLL-LM-2607-038"}, {"point": "Бургерная №19", "street": "ул. Сейфуллина", "lat": 43.25563, "lng": 76.93257, "eta": "16:48", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 30, 75.0]], "kg": 75.0, "no": "GLL-LM-2607-039"}, {"point": "Ресторан №3", "street": "ул. Толе би", "lat": 43.25402, "lng": 76.93273, "eta": "17:00", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-040"}, {"point": "Суши-бар №2", "street": "ул. Сейфуллина", "lat": 43.24977, "lng": 76.92932, "eta": "17:17", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 1, 1.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 1, 1.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0], ["Соус майонезный \"Сметанный с грибами\" 42% PRO балк 1 кг коро", 1, 1.0], ["Соус майонезный сливочно-чесночный 42% PRO балк 1кг короб 6к", 1, 1.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 2, 19.2], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5]], "kg": 36.7, "no": "GLL-LM-2607-041"}, {"point": "Точка продаж №13", "street": "ул. Нурмакова", "lat": 43.25484, "lng": 76.90423, "eta": "17:40", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-042"}, {"point": "Ресторан №4", "street": "Панфилова", "lat": 43.26469, "lng": 76.95312, "eta": "", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 20, 50.0]], "kg": 50.0, "no": "GLL-LM-2607-043"}]}, {"id": "r4", "driver": "Тимур Б.", "vehicle": "Hyundai Porter · 845 KZ02 09", "color": "#8a4fd6", "status": "active", "started": "10:49", "shiftEnd": "18:49", "km": 106.7, "kmDone": 71.5, "stops": [{"point": "Точка продаж №26", "street": "мкр. Нуркент", "lat": 43.41793, "lng": 76.96873, "eta": "", "otw": "10:51", "arr": "12:05", "done": "12:06", "canc": "", "status": "delivered", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 5, 12.5]], "kg": 12.5, "no": "GLL-LM-2607-044"}, {"point": "Ресторан №5", "street": "ул. Ратушного", "lat": 43.2885, "lng": 76.91413, "eta": "11:39", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 300, 300.0], ["Картофель Фри 9*9мм (2,5*5) Royal Chef", 60, 150.0]], "kg": 450.0, "no": "GLL-LM-2607-045"}, {"point": "Суши-бар №8", "street": "ул. Гажайып", "lat": 43.27333, "lng": 76.81414, "eta": "12:21", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 1, 1.0]], "kg": 1.0, "no": "GLL-LM-2607-046"}, {"point": "Суши-бар №9", "street": "ул. Гажайып", "lat": 43.27285, "lng": 76.81349, "eta": "12:31", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 2, 2.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 4, 38.4], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5]], "kg": 52.9, "no": "GLL-LM-2607-047"}, {"point": "Точка продаж №22", "street": "мкр. Нуркент", "lat": 43.25596, "lng": 76.82255, "eta": "12:47", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-048"}, {"point": "Точка продаж №23", "street": "Алматы", "lat": 43.25212, "lng": 76.82487, "eta": "13:01", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 12, 12.0], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 12, 12.0]], "kg": 24.0, "no": "GLL-LM-2607-049"}, {"point": "Точка продаж №24", "street": "ул. Запотоцкого", "lat": 43.25133, "lng": 76.82384, "eta": "13:11", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Акция 10+1уп Картофель Фри 9*9мм (2,5*5) Royal Chef", 1, 30.0]], "kg": 30.0, "no": "GLL-LM-2607-050"}, {"point": "Суши-бар №10", "street": "Ташкентский тракт", "lat": 43.23491, "lng": 76.77523, "eta": "13:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 10, 25.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 3, 28.8], ["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 2, 2.0], ["Соус майонезный \"Сметанный с грибами\" 42% PRO балк 1 кг коро", 2, 2.0]], "kg": 57.8, "no": "GLL-LM-2607-051"}, {"point": "Точка продаж №25", "street": "Ташкентский тракт", "lat": 43.23677, "lng": 76.7767, "eta": "13:54", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус майонезный Сырный Астория ( ДИП) 42% 25гр1 штука", 375, 9.4], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 750, 18.8], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 6, 6.0], ["Соус майонезный \"Цезарь Сырный\" 42% PRO балк 1кг короб 6кг Т", 3, 3.0]], "kg": 37.1, "no": "GLL-LM-2607-052"}, {"point": "Суши-бар №7", "street": "4-й мкр.", "lat": 43.22586, "lng": 76.86128, "eta": "14:43", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 3, 3.0], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 4, 38.4]], "kg": 53.9, "no": "GLL-LM-2607-053"}, {"point": "Точка продаж №21", "street": "Сатпаева", "lat": 43.23107, "lng": 76.87384, "eta": "15:07", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 40, 100.0], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 625, 15.6]], "kg": 115.6, "no": "GLL-LM-2607-054"}, {"point": "Суши-бар №6", "street": "Абая", "lat": 43.23617, "lng": 76.88297, "eta": "15:23", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 1, 1.0], ["Соус майонезный \"Сметанный с грибами\" 42% PRO балк 1 кг коро", 1, 1.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 2, 19.2]], "kg": 21.2, "no": "GLL-LM-2607-055"}, {"point": "Точка продаж №20", "street": "ул. Розыбакиева", "lat": 43.21342, "lng": 76.89212, "eta": "15:44", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 10, 25.0], ["Картофельные дольки с кожурой Триумф 2,5 кг", 10, 25.0]], "kg": 50.0, "no": "GLL-LM-2607-056"}, {"point": "Суши-бар №5", "street": "ул. Розыбакиева", "lat": 43.20632, "lng": 76.89352, "eta": "15:57", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Соус на основе растительных масел \"Бургер-соус\" 30% PRO балк", 2, 2.0], ["Соус \"Барбекю\" PRO КБ балк 1 кг короб 6кг ТЗ ASTORIA", 1, 1.0], ["Майонез Провансаль 57 % Астория ведро 9,6 кг", 4, 38.4], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 5, 12.5]], "kg": 53.9, "no": "GLL-LM-2607-057"}, {"point": "Точка продаж №18", "street": "ул. Розыбакиева", "lat": 43.20377, "lng": 76.89157, "eta": "16:13", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 50, 125.0]], "kg": 125.0, "no": "GLL-LM-2607-058"}, {"point": "Точка продаж №19", "street": "Витебская", "lat": 43.19286, "lng": 76.89241, "eta": "16:32", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 25.0, "no": "GLL-LM-2607-059"}, {"point": "Суши-бар №4", "street": "мкр. Аксай", "lat": 43.21239, "lng": 76.90186, "eta": "16:55", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Майонез Провансаль 57 % Астория ведро 9,6 кг", 4, 38.4], ["Картофель Фри в панировке 7*7мм (2,5*5) Royal Chef", 10, 25.0]], "kg": 63.4, "no": "GLL-LM-2607-060"}, {"point": "Точка продаж №17", "street": "мкр. Айнбаулак", "lat": 43.22757, "lng": 76.90613, "eta": "17:17", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Картофель Фри в панировке 9*9мм (2,5*5) Royal Chef", 50, 125.0], ["Соус Майонезный Провансаль Н 40% ведро 9,8 кг", 7, 68.6], ["Кетчуп томатный Астория (дип 25гр) 1 штука", 375, 9.4], ["Жир жидкий для фритюра К800 канистра 9,1 кг/10 л TM \"Астория", 5, 45.5], ["Малина цельная замороженная", 1, 1.0]], "kg": 249.5, "no": "GLL-LM-2607-061"}, {"point": "Точка продаж №16", "street": "3-й мкр.", "lat": 43.2346, "lng": 76.93294, "eta": "17:46", "otw": "", "arr": "", "done": "", "canc": "", "status": "assigned", "items": [["Майонез Провансаль 67% Астория ведро 9,6 кг", 4, 38.4], ["Соус майонезный \"Сырный\" 42% PRO балк 1кг короб 6кг ТЗ ASTOR", 2, 2.0]], "kg": 40.4, "no": "GLL-LM-2607-062"}]}]};
+
   // The demo's "today": the strip says «обновлено сегодня», periods are counted from it.
   TODAY='2026-07-26';
   PERIODS=[{key:'jul',label:'Июль 2026',from:'2026-07-01',to:'2026-07-31',span:'01.07 — 26.07'},{key:'jun',label:'Июнь 2026',from:'2026-06-01',to:'2026-06-30',span:'01.06 — 30.06'},{key:'all',label:'Всё время',from:'0000',to:'9999',span:'с начала работы'}];
@@ -2259,13 +2280,16 @@ class Component extends DCLogic {
     {screen:'card', id:'GLL-2607-210', target:'tour-e2e-docs', text:'И все документы по этому рейсу — с типом и размером, скачиваются в один клик.', sub:'GLL-2607-210'},
     {screen:'card', id:'GLL-2607-204', target:'tour-demurrage', text:'Простой считаем по ТТН: заезд, выезд, бесплатное время по договору и сумма к оплате. Ниже — что заявил перевозчик в своей претензии и чем она расходится с ТТН.', sub:'GLL-2607-204'},
     {screen:'card', id:'GLL-2607-204', target:'tour-nav-docs', text:'Документы по всем рейсам сразу — в разделе «Документы» слева. Там можно искать, фильтровать и скачивать любой документ по любому рейсу, не заходя в каждую карточку по отдельности.', sub:'GLL-2607-204'},
+    {screen:'lm', target:'tour-lm-map', text:'Последняя миля на сегодня: где сейчас каждая машина, какие точки уже получили товар, где машина разгружается и что ещё ждёт. Нажмите на машину — откроется её маршрутный лист.'},
     {screen:'list', center:true, text:'Это был обзорный тур по платформе. Попробуйте теперь сами — откройте любой рейс из списка, а также загляните в разделы «Документы», «Склад» и «Последняя миля» в боковой панели.'}
   ];
 
   componentDidMount(){
     this._tourResize=()=>{ if(this.state.tourActive) this.measureTour(); };
     window.addEventListener('resize', this._tourResize);
+    this.syncLmMap();
   }
+  componentDidUpdate(){ this.syncLmMap(); }
   componentWillUnmount(){
     window.removeEventListener('resize', this._tourResize);
     clearTimeout(this._tourT1); clearTimeout(this._tourT2);
@@ -2475,84 +2499,101 @@ class Component extends DCLogic {
     bg:on?'#14212b':'#f5f2eb', fg:on?'#fff':'#3a4148', border:on?'#14212b':'#d7d1c5', weight:on?'700':'600',
     countBg:on?'rgba(255,255,255,.22)':'#ebe6dc', countColor:on?'#fff':'#5f655f', onClick:()=>onPick(c.key)};}); }
 
-  buildLastMile(){
-    const lmData=this.DATA.last_mile; if(!lmData) return null;
-    const s=this.state;
-    const runs=lmData.runs||[];
-    const allStops=[]; runs.forEach(r=>(r.stops||[]).forEach(st=>allStops.push({...st, run:r})));
-    const delivered=allStops.filter(d=>/доставлено/i.test(d.status)).length;
-    const late=allStops.filter(d=>/опозданием/i.test(d.status)).length;
-    const inProgress=allStops.length-delivered;
-    const difot=delivered>0?Math.round((delivered-late)/delivered*100):100;
-    const aiRuns=runs.filter(r=>r.ai_planned);
+  // «Последняя миля» view model. The strip counts the whole day; picking a car shows its route sheet,
+  // the status figures narrow the map and the order table.
+  buildLmToday(){
+    const s=this.state, d=this.LM_TODAY;
+    const ST={delivered:{label:'Доставлено',tone:'green'},arrived:{label:'Машина на точке',tone:'amber'},on_the_way:{label:'Едет к точке',tone:'blue'},assigned:{label:'Ожидает',tone:'neutral'},cancelled:{label:'Отменено',tone:'red'}};
+    const all=[]; d.runs.forEach(r=>r.stops.forEach(st=>all.push({...st, run:r})));
+    const count=k=>all.filter(x=>x.status===k).length;
+    const fmtKg=kg=> kg>=1000 ? (kg/1000).toFixed(1).replace('.',',')+' т' : String(kg).replace('.',',')+' кг';
+    const kgAll=all.reduce((a,x)=>a+x.kg,0), kmPlan=d.runs.reduce((a,r)=>a+r.km,0), kmDone=d.runs.reduce((a,r)=>a+r.kmDone,0);
+    const onLine=d.runs.filter(r=>r.status==='active').length;
+    const sf=s.lmStatus||'';
+    const pick=k=>()=>this.setState(p=>({lmStatus:p.lmStatus===k?'':k, lmFocus:''}));
+    const fig=(label,big,third,tone,key)=>({label,big:String(big),third,pressable:!!key,notPressable:!key,onPress:key?pick(key):()=>{},
+      cls:'strip-num'+(tone?' strip-num-'+tone:'')+(key?' strip-num-link':'')+(key&&sf===key?' strip-num-on':'')});
+    const groups=[
+      [fig('Доставлено',count('delivered'),'из '+all.length,'ok','delivered'), fig('Отменено',count('cancelled'),'из '+all.length,'quiet','cancelled')],
+      [fig('На точке',count('arrived'),'сейчас','amber','arrived'), fig('Ожидают',count('assigned')+count('on_the_way'),'до 18:00','quiet','assigned')],
+      [fig('На линии',onLine+' из '+d.runs.length,d.runs.length-onLine?(d.runs.length-onLine)+' на складе':'все выехали','',null)],
+      [fig('Пройдено',Math.round(kmDone)+' км','из '+Math.round(kmPlan),'',null), fig('Груз',fmtKg(Math.round(kgAll)),'на сегодня','',null)]
+    ].map(tiles=>({tiles}));
 
-    // top points
-    const ptCount={}; allStops.forEach(d=>{ptCount[d.point]=(ptCount[d.point]||0)+1;});
-    const topPoints=Object.keys(ptCount).sort((a,b)=>ptCount[b]-ptCount[a]).slice(0,8).map(name=>({name,qty:ptCount[name]+' дост.'}));
-
-    // filter chips
-    const dateCounts={}; allStops.forEach(d=>{dateCounts[d.run.date]=(dateCounts[d.run.date]||0)+1;});
-    const dateChips=[{key:'all',label:'Все даты',count:allStops.length}].concat(Object.keys(dateCounts).map(dt=>({key:dt,label:dt,count:dateCounts[dt]})));
-    const typeCounts={}; allStops.forEach(d=>{typeCounts[d.type]=(typeCounts[d.type]||0)+1;});
-    const typeChips=[{key:'all',label:'Все типы',count:allStops.length}].concat(Object.keys(typeCounts).map(k=>({key:k,label:lmData.point_types[k]||k,count:typeCounts[k]})));
-    const statCounts={}; allStops.forEach(d=>{statCounts[d.status]=(statCounts[d.status]||0)+1;});
-    const statusChips=[{key:'all',label:'Все статусы',count:allStops.length}].concat(Object.keys(statCounts).map(st=>({key:st,label:st,count:statCounts[st]})));
-
+    const runSel=s.lmRun||'';
+    const tone=st=>this.tone(ST[st].tone);
+    const runs=d.runs.map(r=>{ const done=r.stops.filter(x=>x.status==='delivered'||x.status==='cancelled').length; const here=r.stops.find(x=>x.status==='arrived');
+      const next=r.stops.find(x=>x.status==='assigned'||x.status==='on_the_way'); const active=r.status==='active'; const t=this.tone(active?'blue':'neutral');
+      return { id:r.id, driver:r.driver, vehicle:r.vehicle, vehicleShort:r.vehicle.split(' · ')[0], color:r.color,
+        statusLabel:active?'В пути':'На складе', chipFg:t.fg, chipBg:t.bg, chipBorder:t.border,
+        pct:Math.round(done/r.stops.length*100), pointsLabel:done+' из '+r.stops.length+' точек', kmLabel:Math.round(r.kmDone)+' из '+Math.round(r.km)+' км',
+        nextLabel: here ? 'Сейчас: '+here.point+' · '+here.street : (next ? (active?'Дальше: ':'Выезд в '+r.started+'. Первая: ')+next.point+(next.eta?' · к '+next.eta:'') : 'Все точки пройдены'),
+        cls:'run-card'+(runSel===r.id?' run-card-on':'')+(runSel&&runSel!==r.id?' run-card-dim':''),
+        onPick:()=>this.setState(p=>({lmRun:p.lmRun===r.id?'':r.id, lmFocus:''})) }; });
+    const run=runs.find(r=>r.id===runSel)||null;
+    const focus=no=>()=>this.setState({lmFocus:no});
+    const factOf=x=> x.status==='delivered'?x.done : x.status==='arrived'?x.arr : x.status==='cancelled'?x.canc : '';
+    const goods=x=>{ const first=x.items[0]; const more=x.items.length-1; return first[0].replace(/\s*\(.*$/,'')+' × '+first[1]+(more>0?', ещё '+more+' '+this.plural(more,'позиция','позиции','позиций'):'')+' · '+fmtKg(x.kg); };
+    const sheet= run ? d.runs.find(r=>r.id===runSel).stops.map((x,i,arr)=>{ const t=tone(x.status); const fact=factOf(x);
+      return { point:x.point, street:x.street, goods:goods(x), statusLabel:ST[x.status].label, fg:t.fg, dot:x.status==='assigned'?run.color:t.dot, fill:x.status==='assigned'?'var(--color-surface)':t.dot,
+        when:'план '+(x.eta||'—')+(fact?' · '+(x.status==='cancelled'?'отменено ':x.status==='arrived'?'на точке с ':'доставлено ')+fact:''),
+        cls:'timeline-item'+(x.status==='arrived'?' timeline-current':''), onFocus:focus(x.no) }; }) : [];
     const q=(s.lmQuery||'').trim().toLowerCase();
-    const filtered=allStops.filter(d=>{
-      if(s.lmDateFilter!=='all' && d.run.date!==s.lmDateFilter) return false;
-      if(s.lmTypeFilter!=='all' && d.type!==s.lmTypeFilter) return false;
-      if(s.lmStatusFilter!=='all' && d.status!==s.lmStatusFilter) return false;
-      if(s.lmPointFilter && d.point!==s.lmPointFilter) return false;
-      if(q && (d.point+' '+(d.address||'')+' '+d.run.courier).toLowerCase().indexOf(q)<0) return false;
-      return true;
+    const filtered=all.filter(x=>(!sf || x.status===sf || (sf==='assigned'&&x.status==='on_the_way')) && (!q || (x.no+' '+x.point+' '+x.street).toLowerCase().indexOf(q)>=0));
+    const rank={arrived:0,on_the_way:1,assigned:2,delivered:3,cancelled:4};
+    const rows=filtered.slice().sort((a,b)=>(rank[a.status]-rank[b.status])||((a.eta||'99').localeCompare(b.eta||'99'))).map(x=>{ const t=tone(x.status); return {
+      no:x.no, point:x.point, street:x.street, color:x.run.color, driver:x.run.driver, eta:x.eta||'—', fact:factOf(x)||'—',
+      statusLabel:ST[x.status].label, fg:x.status==='assigned'?'var(--color-quiet)':t.fg, dot:t.dot, kg:fmtKg(x.kg), positions:x.items.length+' '+this.plural(x.items.length,'позиция','позиции','позиций'), onFocus:focus(x.no) }; });
+    return { dateLabel:d.dateLabel, now:d.now, total:all.length, totalNoun:this.plural(all.length,'заказ','заказа','заказов')+' · '+d.runs.length+' машины', groups, runs,
+      hasRun:!!run, noRun:!run, run, sheet, rows, empty:rows.length===0,
+      resultLine:'показаны '+rows.length+' из '+all.length+(sf?' · только «'+ST[sf].label.toLowerCase()+'»':''),
+      query:s.lmQuery||'', onQuery:e=>this.setState({lmQuery:e.target.value}),
+      showAll:()=>this.setState({lmStatus:'',lmRun:'',lmQuery:'',lmFocus:''}), clearRun:()=>this.setState({lmRun:'',lmFocus:''}) };
+  }
+
+  // The map is Leaflet, drawn outside React: the template only renders an empty #lm-map. Re-created when the
+  // screen is opened again (a new element), redrawn when the picked car, status filter or focused order changes.
+  syncLmMap(){
+    const el=document.getElementById('lm-map');
+    if(!el || typeof L==='undefined'){ if(this._lmMap && !el){ this._lmMap.remove(); this._lmMap=null; this._lmEl=null; } return; }
+    const s=this.state, d=this.LM_TODAY;
+    if(this._lmEl!==el){
+      if(this._lmMap) this._lmMap.remove();
+      this._lmMap=L.map(el,{scrollWheelZoom:false});
+      this._lmMap.attributionControl.setPrefix('Leaflet');
+      L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png',{attribution:'© OpenStreetMap',maxZoom:19,className:'lm-tiles'}).addTo(this._lmMap);
+      this._lmLayer=L.layerGroup().addTo(this._lmMap); this._lmEl=el; this._lmKey=null;
+    }
+    const key=[s.lmRun,s.lmStatus,s.lmFocus].join('|');
+    if(key===this._lmKey) return;
+    this._lmKey=key; this._lmLayer.clearLayers();
+    const ST={delivered:'Доставлено',arrived:'Машина на точке',on_the_way:'Едет к точке',assigned:'Ожидает',cancelled:'Отменено'};
+    const esc=v=>String(v).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+    const depot=[d.depot.lat,d.depot.lng]; const bounds=[depot]; let focusMarker=null;
+    L.marker(depot,{icon:L.divIcon({className:'',html:'<span class="map-depot"><span class="ms">warehouse</span></span>',iconSize:[30,30],iconAnchor:[15,15]})}).bindTooltip(esc(d.depot.name)).addTo(this._lmLayer);
+    d.runs.forEach(r=>{
+      const dim=s.lmRun && s.lmRun!==r.id; const op=dim?0.18:1;
+      const passed=[depot], ahead=[];
+      r.stops.forEach(x=>{ const ll=[x.lat,x.lng]; if(x.status==='assigned'||x.status==='on_the_way') ahead.push(ll); else passed.push(ll); });
+      if(r.status==='active'){ L.polyline(passed,{color:r.color,weight:3,opacity:.85*op}).addTo(this._lmLayer); L.polyline([passed[passed.length-1]].concat(ahead),{color:r.color,weight:2,opacity:.55*op,dashArray:'6 6'}).addTo(this._lmLayer); }
+      else L.polyline([depot].concat(ahead),{color:r.color,weight:2,opacity:.45*op,dashArray:'6 6'}).addTo(this._lmLayer);
+      r.stops.forEach(x=>{
+        const hidden=s.lmStatus && !(x.status===s.lmStatus || (s.lmStatus==='assigned'&&x.status==='on_the_way'));
+        const fill= x.status==='delivered'?r.color : x.status==='arrived'?'#c98227' : x.status==='cancelled'?'#c94a46' : '#fff';
+        const m=L.circleMarker([x.lat,x.lng],{radius:x.status==='arrived'?9:7,color:x.status==='cancelled'?'#c94a46':r.color,weight:2.5,fillColor:fill,opacity:hidden?0.15*op:op,fillOpacity:hidden?0.15*op:op});
+        const fact= x.status==='delivered'?'доставлено '+x.done : x.status==='arrived'?'на точке с '+x.arr : x.status==='cancelled'?'отменено '+x.canc : '';
+        m.bindPopup('<div class="map-pop"><strong>'+esc(x.point)+'</strong><span>'+esc(x.street)+'</span><span>'+esc(ST[x.status])+' · план '+esc(x.eta||'—')+(fact?' · '+esc(fact):'')+'</span><span>'+esc(r.driver)+' · '+esc(x.items.length)+' поз. · '+esc(String(x.kg).replace('.',','))+' кг</span><em>'+esc(x.no)+'</em></div>');
+        m.addTo(this._lmLayer);
+        if(!dim && !hidden) bounds.push([x.lat,x.lng]);
+        if(s.lmFocus===x.no) focusMarker=m;
+      });
+      if(r.status==='active'){
+        const here=r.stops.find(x=>x.status==='arrived') || r.stops.filter(x=>x.status==='delivered').slice(-1)[0];
+        if(here) L.marker([here.lat,here.lng],{zIndexOffset:500,opacity:op,icon:L.divIcon({className:'',html:'<span class="map-truck" style="background:'+r.color+';"><span class="ms">local_shipping</span></span>',iconSize:[30,30],iconAnchor:[15,34]})}).bindTooltip(esc(r.driver+' · '+r.vehicle.split(' · ')[0])).addTo(this._lmLayer);
+      }
     });
-
-    const stTone=(st)=>/опозданием/i.test(st)?this.tone('amber'): /доставлено/i.test(st)?this.tone('green'): this.tone('neutral');
-    const openPoint=(pt)=>this.setState({lmPointFilter:pt, lmView:'list', lmPage:0});
-    const clearPoint=()=>this.setState({lmPointFilter:'', lmPage:0});
-    const openDrawer=(idx)=>this.setState({lmOpenIdx:idx});
-    const closeDrawer=()=>this.setState({lmOpenIdx:null});
-    const decorate=(d,i)=>{ const t=stTone(d.status); return {point:d.point, address:d.address, courier:d.run.courier, date:d.run.date, status:d.status,
-      bg:t.bg, fg:t.fg, border:t.border, onOpen:()=>openDrawer(i)}; };
-    const deliveries=filtered.map(decorate);
-
-    const ptMap={};
-    filtered.forEach(d=>{ if(!ptMap[d.point]) ptMap[d.point]={point:d.point, address:d.address, count:0, type:d.type};
-      ptMap[d.point].count++; });
-    const points=Object.values(ptMap).sort((a,b)=>b.count-a.count).map(p=>({point:p.point, address:p.address, count:p.count,
-      typeLabel:lmData.point_types[p.type]||p.type, onOpen:()=>openPoint(p.point)}));
-
-    let drawer=null;
-    if(s.lmOpenIdx!=null){ const d=allStops[s.lmOpenIdx]; if(d){ const t=stTone(d.status);
-      drawer={ point:d.point, address:d.address, date:d.run.date, status:d.status, bg:t.bg, fg:t.fg, border:t.border,
-        items:[{product:'Курьер',qty:d.run.courier},{product:'Плановое время',qty:d.planned_time||'—'},{product:'Фактическое время',qty:d.actual_time||'—'},{product:'Тип точки',qty:lmData.point_types[d.type]||d.type}],
-        onClose:closeDrawer, onDownload:()=>this.fire('Информация по точке «'+d.point+'» — файл готовится к скачиванию…','download') }; } }
-
-    const aiText = aiRuns.length ? ('AI-логист спланировал '+aiRuns.length+' из '+runs.length+' развозок. '+aiRuns.map(r=>r.ai_note).join(' ')) : 'AI-логист пока не участвовал в планировании этих развозок.';
-
-    return {
-      facility:'Последняя миля · Демо-клиент', period:'15–21 июля',
-      ai:{headline:'AI-логист оптимизирует маршруты', text:aiText},
-      kpis:[
-        {label:'Точек всего', value:this.fmtN(allStops.length), fg:'#14212b', bg:'#fff', b:'#d7d1c5'},
-        {label:'Доставлено', value:this.fmtN(delivered), fg:'#24775b', bg:'#fff', b:'#d7d1c5'},
-        {label:'В процессе', value:this.fmtN(inProgress), fg:'#14212b', bg:'#fff', b:'#d7d1c5'},
-        {label:'DIFOT', value:difot+'%', fg:'#a63c38', bg:'#f8e3e1', b:'#ebc2bf'},
-        {label:'AI-маршрутов', value:aiRuns.length+' из '+runs.length, fg:'#2646b9', bg:'#eef1fd', b:'#cbd5ff'}
-      ],
-      topPoints,
-      isList:s.lmView==='list', isPoints:s.lmView==='points',
-      toListView:()=>this.setState({lmView:'list'}), toPointsView:()=>this.setState({lmView:'points'}),
-      listBtnStyle:this.pill(s.lmView==='list','#14212b'), pointsBtnStyle:this.pill(s.lmView==='points','#14212b'),
-      query:s.lmQuery, onQuery:e=>this.setState({lmQuery:e.target.value}),
-      dateChips:this.mkChips(dateChips,s.lmDateFilter,(k)=>this.setState({lmDateFilter:k})),
-      typeChips:this.mkChips(typeChips,s.lmTypeFilter,(k)=>this.setState({lmTypeFilter:k})),
-      statusChips:this.mkChips(statusChips,s.lmStatusFilter,(k)=>this.setState({lmStatusFilter:k})),
-      hasPointFilter:!!s.lmPointFilter, pointFilterLabel:s.lmPointFilter, onClearPoint:clearPoint,
-      deliveries, points, emptyList:filtered.length===0,
-      drawer, hasDrawer:!!drawer
-    };
+    if(focusMarker){ this._lmMap.setView(focusMarker.getLatLng(),15); focusMarker.openPopup(); el.scrollIntoView({behavior:'smooth',block:'center'}); }
+    else this._lmMap.fitBounds(bounds,{padding:[28,28]});
   }
 
   LEGORDER=['T','C','W','D'];
@@ -3006,7 +3047,7 @@ class Component extends DCLogic {
       doLogout:()=>this.setState({authed:false, clientScreen:'list'}),
       collapseIcon: s.navCollapsed?'chevron_right':'chevron_left', toggleNav:()=>this.setState(p=>({navCollapsed:!p.navCollapsed})),
       showStepper, steps, scNew, scAI, scOrch, scList, scCard, scDocs, scReports, scWh, scLm,
-      wh:this.buildWarehouse(), lm:this.buildLastMile(),
+      wh:this.buildWarehouse(), lmv: scLm ? this.buildLmToday() : null,
       topRoutes, mix, donutBg, doneShare, stateDist, reportsTotal:totalSh, importSplit, byCompany,
       aiReports,
       chain, chainCaption, legLegend, presetChips, legTiles, plBadge, plShort, scaleNote, orchCaption, orchNote,
