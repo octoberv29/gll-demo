@@ -837,8 +837,9 @@ button,input,select{color:inherit;font:inherit;}
 .run-meta .mono{color:var(--color-quiet);font-weight:500;font-size:.66rem;}
 .run-next{color:var(--color-quiet);font-size:.7rem;line-height:1.4;}
 .lm-map-wrap{position:relative;min-height:34rem;background:var(--color-surface);border:1px solid var(--color-line);border-radius:var(--radius-lg);overflow:hidden;}
-.lm-map{position:absolute;inset:0;background:#eceae4;}
-.map-legend{position:absolute;left:.8rem;bottom:.8rem;z-index:500;display:flex;flex-wrap:wrap;gap:.35rem .9rem;padding:.5rem .75rem;font-size:.68rem;background:rgb(251 249 244/92%);border:1px solid var(--color-line);border-radius:.6rem;}
+/* isolation keeps Leaflet's own z-indexes (panes 400, controls 1000) inside the map, below the tour and the document preview */
+.lm-map{position:absolute;inset:0;background:#eceae4;isolation:isolate;}
+.map-legend{position:absolute;left:.8rem;bottom:.8rem;z-index:1;display:flex;flex-wrap:wrap;gap:.35rem .9rem;padding:.5rem .75rem;font-size:.68rem;background:rgb(251 249 244/92%);border:1px solid var(--color-line);border-radius:.6rem;}
 .map-legend span{display:inline-flex;align-items:center;gap:.35rem;}
 .lg{display:inline-block;width:.7rem;height:.7rem;border-radius:50%;border:2px solid var(--color-cobalt);}
 .lg-done{background:var(--color-cobalt);}
