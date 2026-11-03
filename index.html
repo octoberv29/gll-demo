@@ -1222,7 +1222,7 @@ button,input,select{color:inherit;font:inherit;}
             <button sc-camel-on-click="{{ aiSummary.onClick }}" class="ai-card-head">
               <span class="ai-mark"><span class="ms">auto_awesome</span></span>
               <span style="flex:1;min-width:0;"><strong>AI-логист · {{ aiSummary.headline }}</strong><small>{{ aiSummary.detail }}</small></span>
-              <span class="ai-toggle">Показать<span class="ms">expand_more</span></span>
+              <span class="ai-toggle">{{ aiSummary.toggleLabel }}<span class="ms">{{ aiSummary.toggleIcon }}</span></span>
             </button>
             <sc-if value="{{ aiSummary.open }}" hint-placeholder-val="{{ false }}">
               <div class="ai-card-items">
@@ -1356,7 +1356,7 @@ button,input,select{color:inherit;font:inherit;}
             <sc-for list="{{ card.aiPlaques }}" as="p" hint-placeholder-count="1">
               <div style="display:flex;align-items:flex-start;gap:13px;padding:15px 17px;border-radius:12px;background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;">
                 <span style="width:34px;height:34px;flex:none;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">neurology</span></span>
-                <div style="flex:1;min-width:0;"><div style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#2646b9;margin-bottom:3px;">AI-логист</div><div style="font-size:13.5px;font-weight:600;color:#14212b;line-height:1.5;">{{ p.text }}</div></div>
+                <div style="flex:1;min-width:0;"><div style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#2646b9;margin-bottom:3px;">AI-логист</div><div style="font-size:13.5px;font-weight:600;color:#14212b;line-height:1.5;">{{ p.short }}</div><sc-if value="{{ p.fold.open }}" hint-placeholder-val="{{ false }}"><div style="font-size:13px;color:#3a4148;line-height:1.55;margin-top:6px;">{{ p.text }}</div></sc-if></div><button sc-camel-on-click="{{ p.fold.onToggle }}" class="ai-toggle" style="border:0;background:none;cursor:pointer;padding:6px 0;">{{ p.fold.toggleLabel }}<span class="ms">{{ p.fold.toggleIcon }}</span></button>
                 <sc-if value="{{ p.hasAction }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ p.onAction }}" style="flex:none;padding:9px 14px;border:1px solid #14212b;border-radius:9px;background:#14212b;color:#fff;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;" style-hover="background:#1f3a9e;">{{ p.actionLabel }}</button></sc-if>
               </div>
             </sc-for>
@@ -1751,16 +1751,19 @@ button,input,select{color:inherit;font:inherit;}
 
           <sc-if value="{{ aiReports }}" hint-placeholder-val="{{ true }}">
           <section style="background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;border-radius:var(--radius-lg);padding:20px 22px;">
-            <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+            <button sc-camel-on-click="{{ aiReports.fold.onToggle }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:0;border:0;background:none;text-align:left;cursor:pointer;">
               <span style="width:34px;height:34px;flex:none;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">auto_awesome</span></span>
-              <span style="font-size:15px;font-weight:800;color:#14212b;">{{ aiReports.headline }}</span>
-            </div>
-            <div style="font-size:13px;line-height:1.6;color:#14212b;margin-bottom:14px;">{{ aiReports.text }}</div>
+              <span style="font-size:15px;font-weight:800;color:#14212b;flex:1;">{{ aiReports.headline }}</span>
+              <span class="ai-toggle">{{ aiReports.fold.toggleLabel }}<span class="ms">{{ aiReports.fold.toggleIcon }}</span></span>
+            </button>
+            <sc-if value="{{ aiReports.fold.open }}" hint-placeholder-val="{{ false }}">
+            <div style="font-size:13px;line-height:1.6;color:#14212b;margin:12px 0 14px;">{{ aiReports.text }}</div>
             <div style="display:flex;flex-direction:column;gap:9px;">
               <sc-for list="{{ aiReports.highlights }}" as="h" hint-placeholder-count="3">
                 <div style="display:flex;align-items:flex-start;gap:9px;"><span style="font-family:'Material Symbols Outlined';font-size:17px;color:#3157e5;flex:none;margin-top:1px;">chevron_right</span><span style="font-size:12.5px;color:#3a4148;line-height:1.5;">{{ h }}</span></div>
               </sc-for>
             </div>
+            </sc-if>
           </section>
           </sc-if>
 
@@ -1788,15 +1791,18 @@ button,input,select{color:inherit;font:inherit;}
 
         <sc-if value="{{ aiCopilot }}" hint-placeholder-val="{{ true }}">
           <div class="ai-card">
-            <div class="ai-card-head" style="cursor:default;">
+            <button sc-camel-on-click="{{ wh.aiFold.onToggle }}" class="ai-card-head">
               <span class="ai-mark"><span class="ms">auto_awesome</span></span>
               <span style="flex:1;min-width:0;"><strong>AI-логист · {{ wh.ai.headline }}</strong><small>Считает по остаткам и средним отгрузкам последних дней.</small></span>
-            </div>
-            <div class="ai-card-items">
-              <sc-for list="{{ wh.ai.items }}" as="it" hint-placeholder-count="3">
-                <div class="ai-item"><span class="ai-dot" style="background:#c98227;"></span><div>{{ it }}</div></div>
-              </sc-for>
-            </div>
+              <span class="ai-toggle">{{ wh.aiFold.toggleLabel }}<span class="ms">{{ wh.aiFold.toggleIcon }}</span></span>
+            </button>
+            <sc-if value="{{ wh.aiFold.open }}" hint-placeholder-val="{{ false }}">
+              <div class="ai-card-items">
+                <sc-for list="{{ wh.ai.items }}" as="it" hint-placeholder-count="3">
+                  <div class="ai-item"><span class="ai-dot" style="background:#c98227;"></span><div>{{ it }}</div></div>
+                </sc-for>
+              </div>
+            </sc-if>
           </div>
         </sc-if>
 
@@ -2153,7 +2159,7 @@ class Component extends DCLogic {
     selectedLegs:{T:true,C:true,W:true,D:true}, navCollapsed:false,
     clientScreen:'list', currentId:'GLL-2607-203', variant:'A', collapsed:{},
     originKey:'Циндао', destKey:'Алматы', cargoKey:'potato', custNeeded:true,
-    query:'', stateFilter:'all', listPage:0, aiListOpen:true,
+    query:'', stateFilter:'all', listPage:0, aiOpen:{},
     docKind:'', docSelected:{}, archiveStatus:'',
     periodKey:'jul', periodOpen:false, stripFilter:{}, selected:{}, exportStatus:'',
     docQuery:'', docSeg:'all', docSort:'date_desc', openDocIdx:null,
@@ -2668,7 +2674,7 @@ class Component extends DCLogic {
      .sort((a,b)=>b.date.split('.').reverse().join('').localeCompare(a.date.split('.').reverse().join('')));
     const lowItems=stockRows.filter(r=>r.low&&r.cover!=null);
     return {
-      updated:'Алматы и Астана · обновлено в '+this.LM_TODAY.now,
+      updated:'Алматы и Астана · обновлено в '+this.LM_TODAY.now, aiFold:this.aiFold('wh'),
       ai:{ headline:'следит за остатками и отгрузками', items:[
         ...lowItems.map(r=>'«'+r.name+'» хватит '+(r.cover<1?'меньше чем на день':'примерно на '+Math.floor(r.cover)+' '+this.plural(Math.floor(r.cover),'день','дня','дней'))+' при текущих отгрузках — пора пополнить.'),
         (n=>'Картофеля фри 9×9 в Алматы хватит примерно на '+n+' '+this.plural(n,'день','дня','дней')+' отгрузок.')(Math.floor(stockRows.find(r=>r.sku==='SKU-1001').cover)),
@@ -2818,6 +2824,11 @@ class Component extends DCLogic {
   originObj(key){ for(const g of this.ORIGINS){ for(const it of g.items){ if(it.key===key) return it; } } return this.ORIGINS[0].items[0]; }
   setOrigin(key){ const o=this.originObj(key); const cust=!o.eaeu; const sel = cust?{T:true,C:true,W:true,D:true}:{T:true,C:false,W:true,D:true}; this.setState({originKey:key, custNeeded:cust, selectedLegs:sel}); }
   fire(msg,icon){ this.setState({toast:msg,toastIcon:icon||'info'}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:''}),2800); }
+
+  // Every AI-logist card starts closed; «Показать» opens it. Open/closed is kept per block in state.aiOpen.
+  aiFold(key){ const open=!!(this.state.aiOpen||{})[key];
+    return { open, toggleLabel:open?'Скрыть':'Показать', toggleIcon:open?'expand_less':'expand_more',
+      onToggle:()=>this.setState(p=>({aiOpen:{...(p.aiOpen||{}),[key]:!(p.aiOpen||{})[key]}})) }; }
 
   renderVals(){
     const s=this.state;
@@ -3040,8 +3051,8 @@ class Component extends DCLogic {
     const inTransitNow=SH.filter(x=>x.category==='transit'||(x.transport.stateKey==='IN_TRANSIT')).length;
 
     const aiSummary={
-      headline:allCounts.attention+' '+this.plural(allCounts.attention,'рейс требует','рейса требуют','рейсов требуют')+' внимания', detail:'Основано на состояниях текущих рейсов.', open:s.aiListOpen,
-      onClick:()=>this.setState(p=>({aiListOpen:!p.aiListOpen})),
+      headline:allCounts.attention+' '+this.plural(allCounts.attention,'рейс требует','рейса требуют','рейсов требуют')+' внимания', detail:'Основано на состояниях текущих рейсов.', 
+      ...(f=>({open:f.open, toggleLabel:f.toggleLabel, toggleIcon:f.toggleIcon, onClick:f.onToggle}))(this.aiFold('list')),
       items:[
         {code:'GLL-2607-203', text:': алкоголь на таможенном контроле — запрошены акцизные марки и лицензия на ввоз.', dot:this.tone('amber').dot, onCode:()=>this.setState({clientScreen:'card',currentId:'GLL-2607-203'})},
         {code:'GLL-2607-204', text:': перевозчик заявил простой 6 ч на 30 000 ₸, по ТТН сверх нормы 4 ч — к оплате 20 000 ₸.', dot:this.tone('amber').dot, onCode:()=>this.setState({clientScreen:'card',currentId:'GLL-2607-204'})}
@@ -3067,7 +3078,7 @@ class Component extends DCLogic {
     const catMap={}; SH.forEach(a=>{ const cat=a.cargo.split(',')[0].split('(')[0].trim(); catMap[cat]=(catMap[cat]||0)+1; });
     const catMax=Math.max.apply(null,Object.values(catMap).concat([1]));
     const byCompany=Object.keys(catMap).map(k=>({label:k,count:catMap[k],pct:Math.round(catMap[k]/catMax*100)})).sort((x,y)=>y.count-x.count);
-    const aiReports={headline:'AI-сводка за неделю', text:totalSh+' рейсов в демо-наборе: '+doneN+' завершено, '+transitN+' в пути, '+workN+' готовится, '+attnN+' требуют внимания.',
+    const aiReports={fold:this.aiFold('reports'), headline:'AI-сводка за неделю', text:totalSh+' рейсов в демо-наборе: '+doneN+' завершено, '+transitN+' в пути, '+workN+' готовится, '+attnN+' требуют внимания.',
       highlights:['Алкоголь GLL-2607-203 — на таможенном контроле, ждём акцизные документы.','Простой GLL-2607-204 — перевозчик заявил 30 000 ₸, по ТТН к оплате 20 000 ₸.','Последняя миля — 2 маршрута спланированы AI-логистом, объезд пробок сэкономил время.']};
 
     const sh=SH.find(x=>x.id===s.currentId)||SH[0]||null;
@@ -3119,7 +3130,7 @@ class Component extends DCLogic {
         eventGroups:groups, docs, hasDocs:docs.length>0, noDocs:docs.length===0, docAvail:docs.filter(d=>d.available).length
       };
       const plq=[];
-      if(sh.customs.stateKey==='CONTROL') plq.push({icon:'gavel',text:'Груз на таможенном контроле — запрошены акцизные марки и лицензия на ввоз алкоголя. AI отслеживает статус, при задержке эскалируем брокеру.',hasAction:false});
+      if(sh.customs.stateKey==='CONTROL') plq.push({icon:'gavel',short:'Груз на таможенном контроле',fold:this.aiFold('card:'+sh.id),text:'Груз на таможенном контроле — запрошены акцизные марки и лицензия на ввоз алкоголя. AI отслеживает статус, при задержке эскалируем брокеру.',hasAction:false});
       card.aiPlaques=plq; card.hasAiPlaques=aiOn && plq.length>0;
 
       card.isDemurrage=!!sh.demurrage; card.notDemurrage=!card.isDemurrage;
