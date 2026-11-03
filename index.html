@@ -2020,7 +2020,7 @@ button,input,select{color:inherit;font:inherit;}
     <sc-if value="{{ tour.isCenter }}" hint-placeholder-val="{{ false }}">
     <div style="position:fixed;inset:0;z-index:91;pointer-events:none;background:rgba(20,33,43,.62);"></div>
     </sc-if>
-    <div style="position:fixed;z-index:92;transition:top .25s ease,left .25s ease;top:{{ tour.tipTop }}px;left:{{ tour.tipLeft }}px;width:320px;background:#fbf9f4;border-radius:var(--radius-lg);box-shadow:0 12px 40px rgba(20,20,20,.32);padding:18px 20px;">
+    <div data-tour-tip="" style="position:fixed;z-index:92;transition:top .25s ease,left .25s ease;top:{{ tour.tipTop }}px;left:{{ tour.tipLeft }}px;width:{{ tour.tipW }}px;background:#fbf9f4;border-radius:var(--radius-lg);box-shadow:0 12px 40px rgba(20,20,20,.32);padding:18px 20px;">
       <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
         <div>
           <div style="font-size:11px;font-weight:800;letter-spacing:0.06em;text-transform:uppercase;color:#3157e5;">Шаг {{ tour.stepNum }} из {{ tour.stepTotal }}</div>
@@ -2362,7 +2362,8 @@ class Component extends DCLogic {
     const n=this.state.tourStep+1;
     if(n>=this.TOUR_STEPS.length){ this.endTour(); return; }
     const st=this.TOUR_STEPS[n];
-    this.setState({tourStep:n, tourRect:null, clientScreen:st.screen, currentId: st.id||this.state.currentId});
+    // The old spotlight stays until the new target is measured, so it glides there instead of jumping to the centre first.
+    this.setState({tourStep:n, clientScreen:st.screen, currentId: st.id||this.state.currentId});
     this.scheduleTourMeasure();
   }
   endTour(){
@@ -2371,7 +2372,7 @@ class Component extends DCLogic {
   }
   scheduleTourMeasure(){
     clearTimeout(this._tourT1); clearTimeout(this._tourT2);
-    this._tourT1=setTimeout(()=>this.measureTour(),110);
+    this._tourT1=setTimeout(()=>this.measureTour(),40);
     this._tourT2=setTimeout(()=>this.measureTour(),420);
   }
   measureTour(){
@@ -2379,16 +2380,23 @@ class Component extends DCLogic {
     if(st.center){ this.setState({tourRect:null}); return; }
     const el=document.querySelector('[data-tour="'+st.target+'"]');
     if(!el){ this.setState({tourRect:null}); return; }
-    let scroller=null; for(let anc=el.parentElement; anc; anc=anc.parentElement){ if(getComputedStyle(anc).overflowY==='auto'){ scroller=anc; break; } }
-    if(scroller){
+    const tip=document.querySelector('[data-tour-tip]');
+    const tipH=tip ? tip.offsetHeight : 230;
+    // Scroll the page itself (.app-scroll), never the nearest overflow box: a table's
+    // horizontal scroll wrapper also computes overflow-y:auto but cannot scroll vertically.
+    // The target goes near the top, leaving room for the tip below it when the screen allows.
+    const scroller=document.querySelector('.app-scroll');
+    if(scroller && scroller.contains(el)){
       const r=el.getBoundingClientRect(); const sr=scroller.getBoundingClientRect();
-      if(r.top < sr.top+70 || r.bottom > sr.bottom-40){
-        scroller.scrollTop = scroller.scrollTop + (r.top - sr.top - 130);
-      }
+      const fitsWithTip = r.height+tipH+48 <= sr.height;
+      const wantTop = sr.top + (fitsWithTip ? Math.min(96, sr.height-r.height-tipH-32) : 16);
+      const visibleWithTip = r.top>=sr.top+8 && (fitsWithTip ? r.bottom+tipH+24<=sr.bottom : r.top<=sr.top+sr.height/3);
+      if(!visibleWithTip) scroller.scrollTop += r.top - wantTop;
     }
     const r2=el.getBoundingClientRect();
-    this.setState({tourRect:{top:r2.top,left:r2.left,width:r2.width,height:r2.height}});
+    this.setState({tourRect:{top:r2.top,left:r2.left,width:r2.width,height:r2.height}, tourTipH:tipH});
   }
+
 
   tone(t){
     const m={
@@ -3185,26 +3193,30 @@ class Component extends DCLogic {
     const s=this.state; const step=this.TOUR_STEPS[s.tourStep]||this.TOUR_STEPS[0];
     const vw=(typeof window!=='undefined')?window.innerWidth:1440, vh=(typeof window!=='undefined')?window.innerHeight:900;
     const isCenter=!!step.center;
-    const rect=s.tourRect || {top:vh/2-30,left:vw/2-160,width:0,height:0};
-    const tipW=320, tipH=230;
+    const tipW=Math.min(320, vw-32), tipH=s.tourTipH||230, gap=16, pad=16;
+    // The spotlight is clipped to the window, so a target larger than the screen never pushes it off.
+    const raw=s.tourRect || {top:vh/2-30,left:vw/2-160,width:0,height:0};
+    const top=Math.max(8,raw.top), bottom=Math.min(vh-8,raw.top+raw.height);
+    const left=Math.max(8,raw.left), right=Math.min(vw-8,raw.left+raw.width);
+    const rect={top, left, width:Math.max(0,right-left), height:Math.max(0,bottom-top)};
+    const clampX=x=>Math.max(pad,Math.min(x,vw-tipW-pad)), clampY=y=>Math.max(pad,Math.min(y,vh-tipH-pad));
     let tipLeft, tipTop;
     if(isCenter){
-      tipLeft = vw/2-tipW/2; tipTop = vh/2-tipH/2;
-    } else {
-      const isTall = rect.height > vh*0.5 && rect.width < 400;
-      if(isTall){
-        tipLeft = rect.left+rect.width+16;
-        if(tipLeft+tipW+16>vw) tipLeft = Math.max(16, rect.left-tipW-16);
-        tipTop = rect.top+rect.height/2-tipH/2; tipTop = Math.max(16, Math.min(tipTop, vh-tipH-16));
-      } else {
-        tipLeft=rect.left+rect.width/2-tipW/2; tipLeft=Math.max(16,Math.min(tipLeft,vw-tipW-16));
-        tipTop=rect.top+rect.height+16;
-        if(tipTop+tipH>vh-16) tipTop=Math.max(16, rect.top-tipH-16);
-      }
+      tipLeft=vw/2-tipW/2; tipTop=vh/2-tipH/2;
+    } else if(rect.top+rect.height+gap+tipH <= vh-pad){          // below the target
+      tipLeft=clampX(rect.left+rect.width/2-tipW/2); tipTop=rect.top+rect.height+gap;
+    } else if(rect.top-gap-tipH >= pad){                          // above it
+      tipLeft=clampX(rect.left+rect.width/2-tipW/2); tipTop=rect.top-gap-tipH;
+    } else if(rect.left+rect.width+gap+tipW <= vw-pad){           // to its right
+      tipLeft=rect.left+rect.width+gap; tipTop=clampY(rect.top+rect.height/2-tipH/2);
+    } else if(rect.left-gap-tipW >= pad){                         // to its left
+      tipLeft=rect.left-gap-tipW; tipTop=clampY(rect.top+rect.height/2-tipH/2);
+    } else {                                                      // no free side: inside the target, bottom right
+      tipLeft=clampX(rect.left+rect.width-tipW-pad); tipTop=clampY(rect.top+rect.height-tipH-pad);
     }
     const isLast=s.tourStep>=this.TOUR_STEPS.length-1;
     return {
-      rect, tipTop, tipLeft, isCenter, hasSpotlight:!isCenter,
+      rect, tipTop, tipLeft, tipW, isCenter, hasSpotlight:!isCenter,
       stepNum:s.tourStep+1, stepTotal:this.TOUR_STEPS.length, text:step.text,
       hasSub:!!step.sub, sub:step.sub||'',
       onNext:()=>this.nextTourStep(), onSkip:()=>this.endTour(),
