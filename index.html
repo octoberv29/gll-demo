@@ -611,26 +611,18 @@ button,input,select{color:inherit;font:inherit;}
 .trips-now{margin:0;color:var(--color-quiet);font-size:.8rem;text-align:right;}
 .trips-now strong{color:var(--color-ink);font-size:.95rem;}
 .sync-moment{color:var(--color-amber);}
-.ai-bar{margin-bottom:1rem;background:var(--color-surface);border:1px solid var(--color-line);border-left:3px solid var(--color-amber);border-radius:var(--radius-md);}
-.ai-bar-info{border-left-color:var(--color-cobalt);}
-.ai-bar-head{display:flex;align-items:center;gap:.8rem;width:100%;min-height:3.1rem;padding:.55rem 1rem .55rem .85rem;text-align:left;background:transparent;border:0;cursor:pointer;}
-.ai-bar-head:hover .ai-bar-toggle{color:var(--color-ink);}
-.ai-tag{flex:none;display:inline-grid;place-items:center;min-width:1.7rem;height:1.25rem;padding:0 .3rem;color:var(--color-quiet);font-size:.62rem;font-weight:700;letter-spacing:.06em;border:1px solid var(--color-line);border-radius:.3rem;background:var(--color-paper);}
-.ai-bar-copy{display:flex;flex:1;flex-wrap:wrap;align-items:baseline;gap:.15rem .7rem;min-width:0;}
-.ai-bar-copy strong{font-size:.84rem;}
-.ai-bar-copy span{color:var(--color-quiet);font-size:.7rem;}
-.ai-bar-count{flex:none;color:var(--color-quiet);font-size:.66rem;}
-.ai-bar-toggle{flex:none;color:var(--color-cobalt);font-size:.72rem;font-weight:700;white-space:nowrap;}
-.ai-bar-list{display:grid;margin:0;padding:0 1rem .7rem 3.35rem;list-style:none;border-top:1px solid var(--color-row-line);}
-.ai-bar-list li{display:grid;grid-template-columns:1.6rem 1fr;gap:.4rem;padding:.55rem 0;color:#3a4148;font-size:.78rem;line-height:1.5;border-bottom:1px solid var(--color-row-line);}
-.ai-bar-list li:last-child{border-bottom:0;}
-.ai-n{color:var(--color-quiet);font-size:.64rem;padding-top:.15rem;}
-.ai-code{margin-right:.4rem;padding:0;border:0;background:none;color:var(--color-cobalt);font-size:.74rem;font-weight:700;cursor:pointer;}
+.ai-card{margin-bottom:1rem;background:var(--color-surface);border:1px solid var(--color-line);border-radius:var(--radius-md);overflow:hidden;}
+.ai-card-head{display:flex;align-items:center;gap:.8rem;width:100%;padding:.85rem 1rem;border:0;background:transparent;text-align:left;cursor:pointer;}
+.ai-card-head strong{display:block;font-size:.88rem;}
+.ai-card-head small{display:block;margin-top:.15rem;color:var(--color-quiet);font-size:.75rem;}
+.ai-mark{display:grid;place-items:center;flex:none;width:2.25rem;height:2.25rem;border-radius:.6rem;background:var(--color-ink);color:#9bb0ff;}
+.ai-mark .ms{font-size:1.25rem;}
+.ai-toggle{display:inline-flex;align-items:center;gap:.3rem;color:var(--color-cobalt);font-size:.75rem;font-weight:700;white-space:nowrap;}
+.ai-card-items{display:grid;gap:.55rem;padding:.1rem 1rem .9rem 4.05rem;}
+.ai-item{display:flex;align-items:flex-start;gap:.6rem;color:#3a4148;font-size:.8rem;line-height:1.5;}
+.ai-dot{flex:none;width:.5rem;height:.5rem;margin-top:.4rem;border-radius:50%;}
+.ai-code{margin-right:.35rem;padding:0;border:0;background:none;color:var(--color-cobalt);font-size:.78rem;font-weight:700;cursor:pointer;}
 .ai-code:hover{text-decoration:underline;}
-.ai-note{display:flex;align-items:flex-start;gap:.7rem;padding:.75rem .9rem;color:var(--color-ink);font-size:.8rem;line-height:1.55;background:var(--color-surface);border:1px solid var(--color-line);border-left:3px solid var(--color-cobalt);border-radius:var(--radius-md);}
-.ai-note .ai-tag{margin-top:.1rem;}
-.ai-note-who{display:block;color:var(--color-quiet);font-size:.66rem;font-weight:700;letter-spacing:.04em;text-transform:uppercase;}
-.ai-plan-panel{border-left:3px solid var(--color-cobalt);}
 .strip{position:relative;display:grid;grid-template-columns:1fr 1.4fr 1.2fr .9fr 1.5fr;margin-bottom:1rem;padding:.9rem 1.25rem 1rem;color:#fff;background:var(--color-ink);border-radius:var(--radius-md);box-shadow:0 8px 22px rgb(20 33 43/18%);}
 .strip-group{padding:0 1.25rem;border-right:1px solid rgb(255 255 255/12%);}
 .strip-group:first-child{padding-left:0;}
@@ -1073,14 +1065,17 @@ button,input,select{color:inherit;font:inherit;}
                 </sc-for>
               </div>
             </div>
-            <button sc-camel-on-click="{{ goAI }}" style="width:100%;margin-top:18px;padding:14px;border:none;border-radius:11px;background:#14212b;color:#fff;font-size:14.5px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;" style-hover="background:#1f3a9e;"><span style="font-family:'Material Symbols Outlined';font-size:19px;">arrow_forward</span>Собрать цепочку</button>
+            <button sc-camel-on-click="{{ goAI }}" style="width:100%;margin-top:18px;padding:14px;border:none;border-radius:11px;background:#14212b;color:#fff;font-size:14.5px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;" style-hover="background:#1f3a9e;"><span style="font-family:'Material Symbols Outlined';font-size:19px;">auto_awesome</span>Собрать цепочку</button>
           </div>
           <div>
             <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
               <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:24px;background:#14212b;color:#fff;font-size:13px;font-weight:800;letter-spacing:0.02em;"><span style="font-family:'Material Symbols Outlined';font-size:17px;color:#9bb0ff;">hub</span>{{ plBadge }}</span>
               <span style="font-size:13.5px;color:#5f655f;">{{ chainCaption }}</span>
             </div>
-            <div class="ai-note" style="margin-bottom:16px;"><span class="ai-tag mono">AI</span><div><span class="ai-note-who">AI-логист</span>{{ aiRouteHint.text }}</div></div>
+            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px 16px;border-radius:13px;background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;">
+              <span style="width:32px;height:32px;flex:none;border-radius:9px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:18px;color:#9bb0ff;">neurology</span></span>
+              <div style="flex:1;"><div style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#2646b9;margin-bottom:2px;">AI-логист</div><div style="font-size:13px;line-height:1.5;color:#14212b;">{{ aiRouteHint.text }}</div></div>
+            </div>
             <div style="display:flex;align-items:stretch;gap:0;">
               <sc-for list="{{ chain }}" as="c" hint-placeholder-count="4">
                 <sc-if value="{{ c.hasArrow }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;padding:0 2px;align-self:center;"><span style="font-family:'Material Symbols Outlined';font-size:22px;color:#b9b4a9;">chevron_right</span></div></sc-if>
@@ -1104,9 +1099,9 @@ button,input,select{color:inherit;font:inherit;}
       <!-- ================= SCREEN 2: AI plan ================= -->
       <sc-if value="{{ scAI }}" hint-placeholder-val="{{ false }}">
       <div style="padding:22px 32px 48px;max-width:1080px;">
-        <div class="detail-panel ai-plan-panel" style="margin-bottom:22px;">
+        <div style="background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;border-radius:16px;padding:22px 24px;margin-bottom:22px;position:relative;overflow:hidden;">
           <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px;">
-            <span class="ai-tag mono">AI</span>
+            <span style="width:34px;height:34px;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">auto_awesome</span></span>
             <div><div style="font-size:15px;font-weight:800;color:#14212b;">AI-логист собрал план</div><div style="font-size:12px;color:#5f655f;">Работает как ваш логист: маршрут, цена, требования — без ручного обзвона.</div></div>
           </div>
           <div style="display:flex;flex-wrap:wrap;gap:14px;">
@@ -1141,7 +1136,10 @@ button,input,select{color:inherit;font:inherit;}
               </div>
             </sc-for>
           </div>
-          <div class="ai-note" style="margin-top:12px;margin-bottom:8px;"><span class="ai-tag mono">AI</span><div>{{ blk.aiNote }}</div></div>
+          <div style="display:flex;align-items:flex-start;gap:11px;margin-top:12px;margin-bottom:8px;padding:14px 16px;border-radius:13px;background:#eef1fd;border:1px solid #cbd5ff;">
+            <span style="font-family:'Material Symbols Outlined';font-size:20px;color:#3157e5;flex:none;">query_stats</span>
+            <div style="font-size:12.5px;line-height:1.55;color:#14212b;">{{ blk.aiNote }}</div>
+          </div>
         </sc-for>
         </sc-if>
 
@@ -1220,22 +1218,22 @@ button,input,select{color:inherit;font:inherit;}
         </div>
 
         <sc-if value="{{ showAiSummary }}" hint-placeholder-val="{{ true }}">
-          <div data-tour="tour-banner" class="{{ aiSummary.cls }}">
-            <button sc-camel-on-click="{{ aiSummary.onToggle }}" class="ai-bar-head" aria-expanded="{{ aiSummary.open }}">
-              <span class="ai-tag mono">AI</span>
-              <span class="ai-bar-copy"><strong>{{ aiSummary.headline }}</strong><span>AI-логист · {{ aiSummary.basis }}</span></span>
-              <span class="ai-bar-count mono">{{ aiSummary.countLabel }}</span>
-              <span class="ai-bar-toggle">{{ aiSummary.toggleLabel }}</span>
+          <div data-tour="tour-banner" class="ai-card">
+            <button sc-camel-on-click="{{ aiSummary.onClick }}" class="ai-card-head">
+              <span class="ai-mark"><span class="ms">auto_awesome</span></span>
+              <span style="flex:1;min-width:0;"><strong>AI-логист · {{ aiSummary.headline }}</strong><small>{{ aiSummary.detail }}</small></span>
+              <span class="ai-toggle">Показать<span class="ms">expand_more</span></span>
             </button>
             <sc-if value="{{ aiSummary.open }}" hint-placeholder-val="{{ false }}">
-              <ol class="ai-bar-list">
+              <div class="ai-card-items">
                 <sc-for list="{{ aiSummary.items }}" as="it" hint-placeholder-count="3">
-                  <li><span class="ai-n mono">{{ it.n }}</span><span><sc-if value="{{ it.code }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ it.onCode }}" class="ai-code mono">{{ it.code }}</button></sc-if>{{ it.text }}</span></li>
+                  <div class="ai-item">
+                    <span class="ai-dot" style="background:{{ it.dot }};"></span>
+                    <div><button sc-camel-on-click="{{ it.onCode }}" class="ai-code mono">{{ it.code }}</button>{{ it.text }}</div>
+                  </div>
                 </sc-for>
-              </ol>
+              </div>
             </sc-if>
-          </div>
-        </sc-if>
           </div>
         </sc-if>
 
@@ -1354,22 +1352,16 @@ button,input,select{color:inherit;font:inherit;}
         <div class="detail-grid">
           <div class="detail-main">
             <sc-if value="{{ card.hasAiPlaques }}" hint-placeholder-val="{{ false }}">
-          <div class="{{ card.ai.cls }}">
-            <button sc-camel-on-click="{{ card.ai.onToggle }}" class="ai-bar-head" aria-expanded="{{ card.ai.open }}">
-              <span class="ai-tag mono">AI</span>
-              <span class="ai-bar-copy"><strong>{{ card.ai.headline }}</strong><span>AI-логист · {{ card.ai.basis }}</span></span>
-              <span class="ai-bar-count mono">{{ card.ai.countLabel }}</span>
-              <span class="ai-bar-toggle">{{ card.ai.toggleLabel }}</span>
-            </button>
-            <sc-if value="{{ card.ai.open }}" hint-placeholder-val="{{ false }}">
-              <ol class="ai-bar-list">
-                <sc-for list="{{ card.ai.items }}" as="it" hint-placeholder-count="3">
-                  <li><span class="ai-n mono">{{ it.n }}</span><span><sc-if value="{{ it.code }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ it.onCode }}" class="ai-code mono">{{ it.code }}</button></sc-if>{{ it.text }}</span></li>
-                </sc-for>
-              </ol>
-            </sc-if>
+          <div style="display:flex;flex-direction:column;gap:10px;margin-top:16px;">
+            <sc-for list="{{ card.aiPlaques }}" as="p" hint-placeholder-count="1">
+              <div style="display:flex;align-items:flex-start;gap:13px;padding:15px 17px;border-radius:12px;background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;">
+                <span style="width:34px;height:34px;flex:none;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">neurology</span></span>
+                <div style="flex:1;min-width:0;"><div style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#2646b9;margin-bottom:3px;">AI-логист</div><div style="font-size:13.5px;font-weight:600;color:#14212b;line-height:1.5;">{{ p.text }}</div></div>
+                <sc-if value="{{ p.hasAction }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ p.onAction }}" style="flex:none;padding:9px 14px;border:1px solid #14212b;border-radius:9px;background:#14212b;color:#fff;font-size:12.5px;font-weight:700;font-family:inherit;cursor:pointer;" style-hover="background:#1f3a9e;">{{ p.actionLabel }}</button></sc-if>
+              </div>
+            </sc-for>
           </div>
-            </sc-if>
+        </sc-if>
 
             <sc-if value="{{ card.hasStop }}" hint-placeholder-val="{{ false }}">
               <section data-tour="tour-demurrage" class="detail-panel">
@@ -1758,21 +1750,18 @@ button,input,select{color:inherit;font:inherit;}
           </section>
 
           <sc-if value="{{ aiReports }}" hint-placeholder-val="{{ true }}">
-          <div class="{{ aiReports.cls }}">
-            <button sc-camel-on-click="{{ aiReports.onToggle }}" class="ai-bar-head" aria-expanded="{{ aiReports.open }}">
-              <span class="ai-tag mono">AI</span>
-              <span class="ai-bar-copy"><strong>{{ aiReports.headline }}</strong><span>AI-логист · {{ aiReports.basis }}</span></span>
-              <span class="ai-bar-count mono">{{ aiReports.countLabel }}</span>
-              <span class="ai-bar-toggle">{{ aiReports.toggleLabel }}</span>
-            </button>
-            <sc-if value="{{ aiReports.open }}" hint-placeholder-val="{{ false }}">
-              <ol class="ai-bar-list">
-                <sc-for list="{{ aiReports.items }}" as="it" hint-placeholder-count="3">
-                  <li><span class="ai-n mono">{{ it.n }}</span><span><sc-if value="{{ it.code }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ it.onCode }}" class="ai-code mono">{{ it.code }}</button></sc-if>{{ it.text }}</span></li>
-                </sc-for>
-              </ol>
-            </sc-if>
-          </div>
+          <section style="background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;border-radius:var(--radius-lg);padding:20px 22px;">
+            <div style="display:flex;align-items:center;gap:11px;margin-bottom:12px;">
+              <span style="width:34px;height:34px;flex:none;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">auto_awesome</span></span>
+              <span style="font-size:15px;font-weight:800;color:#14212b;">{{ aiReports.headline }}</span>
+            </div>
+            <div style="font-size:13px;line-height:1.6;color:#14212b;margin-bottom:14px;">{{ aiReports.text }}</div>
+            <div style="display:flex;flex-direction:column;gap:9px;">
+              <sc-for list="{{ aiReports.highlights }}" as="h" hint-placeholder-count="3">
+                <div style="display:flex;align-items:flex-start;gap:9px;"><span style="font-family:'Material Symbols Outlined';font-size:17px;color:#3157e5;flex:none;margin-top:1px;">chevron_right</span><span style="font-size:12.5px;color:#3a4148;line-height:1.5;">{{ h }}</span></div>
+              </sc-for>
+            </div>
+          </section>
           </sc-if>
 
           <section style="background:#f5f2eb;border:1px dashed #b9b4a9;border-radius:var(--radius-lg);padding:20px 22px;">
@@ -1798,20 +1787,16 @@ button,input,select{color:inherit;font:inherit;}
         </div>
 
         <sc-if value="{{ aiCopilot }}" hint-placeholder-val="{{ true }}">
-          <div class="{{ wh.ai.cls }}">
-            <button sc-camel-on-click="{{ wh.ai.onToggle }}" class="ai-bar-head" aria-expanded="{{ wh.ai.open }}">
-              <span class="ai-tag mono">AI</span>
-              <span class="ai-bar-copy"><strong>{{ wh.ai.headline }}</strong><span>AI-логист · {{ wh.ai.basis }}</span></span>
-              <span class="ai-bar-count mono">{{ wh.ai.countLabel }}</span>
-              <span class="ai-bar-toggle">{{ wh.ai.toggleLabel }}</span>
-            </button>
-            <sc-if value="{{ wh.ai.open }}" hint-placeholder-val="{{ false }}">
-              <ol class="ai-bar-list">
-                <sc-for list="{{ wh.ai.items }}" as="it" hint-placeholder-count="3">
-                  <li><span class="ai-n mono">{{ it.n }}</span><span><sc-if value="{{ it.code }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ it.onCode }}" class="ai-code mono">{{ it.code }}</button></sc-if>{{ it.text }}</span></li>
-                </sc-for>
-              </ol>
-            </sc-if>
+          <div class="ai-card">
+            <div class="ai-card-head" style="cursor:default;">
+              <span class="ai-mark"><span class="ms">auto_awesome</span></span>
+              <span style="flex:1;min-width:0;"><strong>AI-логист · {{ wh.ai.headline }}</strong><small>Считает по остаткам и средним отгрузкам последних дней.</small></span>
+            </div>
+            <div class="ai-card-items">
+              <sc-for list="{{ wh.ai.items }}" as="it" hint-placeholder-count="3">
+                <div class="ai-item"><span class="ai-dot" style="background:#c98227;"></span><div>{{ it }}</div></div>
+              </sc-for>
+            </div>
           </div>
         </sc-if>
 
@@ -2168,7 +2153,7 @@ class Component extends DCLogic {
     selectedLegs:{T:true,C:true,W:true,D:true}, navCollapsed:false,
     clientScreen:'list', currentId:'GLL-2607-203', variant:'A', collapsed:{},
     originKey:'Циндао', destKey:'Алматы', cargoKey:'potato', custNeeded:true,
-    query:'', stateFilter:'all', listPage:0, aiOpen:{},
+    query:'', stateFilter:'all', listPage:0, aiListOpen:true,
     docKind:'', docSelected:{}, archiveStatus:'',
     periodKey:'jul', periodOpen:false, stripFilter:{}, selected:{}, exportStatus:'',
     docQuery:'', docSeg:'all', docSort:'date_desc', openDocIdx:null,
@@ -2684,11 +2669,10 @@ class Component extends DCLogic {
     const lowItems=stockRows.filter(r=>r.low&&r.cover!=null);
     return {
       updated:'Алматы и Астана · обновлено в '+this.LM_TODAY.now,
-      ai:this.aiBar('wh',{ headline: lowItems.length ? lowItems[0].name.split(',')[0]+' закончится примерно через '+Math.max(1,Math.floor(lowItems[0].cover))+' '+this.plural(Math.max(1,Math.floor(lowItems[0].cover)),'день','дня','дней') : 'Остатки в норме',
-        basis:'по остаткам и средним отгрузкам последних дней', items:[
+      ai:{ headline:'следит за остатками и отгрузками', items:[
         ...lowItems.map(r=>'«'+r.name+'» хватит '+(r.cover<1?'меньше чем на день':'примерно на '+Math.floor(r.cover)+' '+this.plural(Math.floor(r.cover),'день','дня','дней'))+' при текущих отгрузках — пора пополнить.'),
         (n=>'Картофеля фри 9×9 в Алматы хватит примерно на '+n+' '+this.plural(n,'день','дня','дней')+' отгрузок.')(Math.floor(stockRows.find(r=>r.sku==='SKU-1001').cover)),
-        '«Пиво светлое, кег 30 л» в Астане — срок годности в октябре, стоит отгрузить в первую очередь.'].map(text=>({text})) }),
+        '«Пиво светлое, кег 30 л» в Астане — срок годности в октябре, стоит отгрузить в первую очередь.'] },
       groups, positions:stockRows.length, positionsNoun:this.plural(stockRows.length,'позиция','позиции','позиций')+' · '+batches+' партий',
       showAll:()=>this.setState({whFilter:'',whPlace:'',whQuery:''}),
       zones, placeChips, rows, empty:rows.length===0, query:s.whQuery||'', onQuery:e=>this.setState({whQuery:e.target.value}),
@@ -2834,17 +2818,6 @@ class Component extends DCLogic {
   originObj(key){ for(const g of this.ORIGINS){ for(const it of g.items){ if(it.key===key) return it; } } return this.ORIGINS[0].items[0]; }
   setOrigin(key){ const o=this.originObj(key); const cust=!o.eaeu; const sel = cust?{T:true,C:true,W:true,D:true}:{T:true,C:false,W:true,D:true}; this.setState({originKey:key, custNeeded:cust, selectedLegs:sel}); }
   fire(msg,icon){ this.setState({toast:msg,toastIcon:icon||'info'}); clearTimeout(this._t); this._t=setTimeout(()=>this.setState({toast:''}),2800); }
-
-  // One collapsible AI-logist note, the same on every screen: closed by default, the headline is the single most
-  // important point, the list opens on click. Open/closed is kept per block in state.aiOpen.
-  //   tone: 'attention' (amber edge) for things to act on, 'info' (cobalt edge) for summaries
-  aiBar(key,{headline,basis,items,tone}){
-    const open=!!(this.state.aiOpen||{})[key]; const n=items.length;
-    return { cls:'ai-bar'+(tone==='info'?' ai-bar-info':''), open, headline, basis,
-      countLabel:n+' '+(tone==='info'?this.plural(n,'пункт','пункта','пунктов'):this.plural(n,'замечание','замечания','замечаний')), toggleLabel:open?'Скрыть':'Показать',
-      items:items.map((it,i)=>({ n:String(i+1).padStart(2,'0'), code:it.code||'', onCode:it.onCode||(()=>{}), text:it.text })),
-      onToggle:()=>this.setState(p=>({aiOpen:{...(p.aiOpen||{}),[key]:!(p.aiOpen||{})[key]}})) };
-  }
 
   renderVals(){
     const s=this.state;
@@ -3066,13 +3039,14 @@ class Component extends DCLogic {
       onPrev:()=>this.setState(p=>({listPage:Math.max(0,p.listPage-1)})), onNext:()=>this.setState(p=>({listPage:p.listPage+1})) };
     const inTransitNow=SH.filter(x=>x.category==='transit'||(x.transport.stateKey==='IN_TRANSIT')).length;
 
-    const aiSummary=this.aiBar('list',{
-      headline:allCounts.attention+' '+this.plural(allCounts.attention,'рейс требует','рейса требуют','рейсов требуют')+' внимания',
-      basis:'по состояниям текущих рейсов',
+    const aiSummary={
+      headline:allCounts.attention+' '+this.plural(allCounts.attention,'рейс требует','рейса требуют','рейсов требуют')+' внимания', detail:'Основано на состояниях текущих рейсов.', open:s.aiListOpen,
+      onClick:()=>this.setState(p=>({aiListOpen:!p.aiListOpen})),
       items:[
-        {code:'GLL-2607-203', text:'алкоголь на таможенном контроле — запрошены акцизные марки и лицензия на ввоз.', onCode:()=>this.setState({clientScreen:'card',currentId:'GLL-2607-203'})},
-        {code:'GLL-2607-204', text:'перевозчик заявил простой 6 ч на 30 000 ₸, по ТТН сверх нормы 4 ч — к оплате 20 000 ₸.', onCode:()=>this.setState({clientScreen:'card',currentId:'GLL-2607-204'})},
-        {code:'GLL-2607-214', text:'рейс отменён до погрузки — груз ждёт нового перевозчика.', onCode:()=>this.setState({clientScreen:'card',currentId:'GLL-2607-214'})}]});
+        {code:'GLL-2607-203', text:': алкоголь на таможенном контроле — запрошены акцизные марки и лицензия на ввоз.', dot:this.tone('amber').dot, onCode:()=>this.setState({clientScreen:'card',currentId:'GLL-2607-203'})},
+        {code:'GLL-2607-204', text:': перевозчик заявил простой 6 ч на 30 000 ₸, по ТТН сверх нормы 4 ч — к оплате 20 000 ₸.', dot:this.tone('amber').dot, onCode:()=>this.setState({clientScreen:'card',currentId:'GLL-2607-204'})}
+      ].map(it=>({...it, hasCode:true}))
+    };
 
     const routeCount={}; SH.forEach(a=>{const k=a.from.sub+' → '+a.to.city; routeCount[k]=(routeCount[k]||0)+1;});
     const trArr=Object.keys(routeCount).map(k=>({route:k,count:routeCount[k]})).sort((x,y)=>y.count-x.count).slice(0,6);
@@ -3093,8 +3067,8 @@ class Component extends DCLogic {
     const catMap={}; SH.forEach(a=>{ const cat=a.cargo.split(',')[0].split('(')[0].trim(); catMap[cat]=(catMap[cat]||0)+1; });
     const catMax=Math.max.apply(null,Object.values(catMap).concat([1]));
     const byCompany=Object.keys(catMap).map(k=>({label:k,count:catMap[k],pct:Math.round(catMap[k]/catMax*100)})).sort((x,y)=>y.count-x.count);
-    const aiReports=this.aiBar('reports',{ headline:'Сводка за неделю', basis:'по всем рейсам', tone:'info',
-      items:[{text:totalSh+' рейсов за неделю: '+doneN+' завершено, '+transitN+' в пути, '+workN+' готовится, '+attnN+' требуют внимания.'}, ...['Алкоголь GLL-2607-203 — на таможенном контроле, ждём акцизные документы.','Простой GLL-2607-204 — перевозчик заявил 30 000 ₸, по ТТН к оплате 20 000 ₸.','Последняя миля: 4 машины развозят 62 заказа, 11 уже доставлено, 1 отменён.'].map(text=>({text}))] });
+    const aiReports={headline:'AI-сводка за неделю', text:totalSh+' рейсов в демо-наборе: '+doneN+' завершено, '+transitN+' в пути, '+workN+' готовится, '+attnN+' требуют внимания.',
+      highlights:['Алкоголь GLL-2607-203 — на таможенном контроле, ждём акцизные документы.','Простой GLL-2607-204 — перевозчик заявил 30 000 ₸, по ТТН к оплате 20 000 ₸.','Последняя миля — 2 маршрута спланированы AI-логистом, объезд пробок сэкономил время.']};
 
     const sh=SH.find(x=>x.id===s.currentId)||SH[0]||null;
     let card=null, breadcrumbCode='';
@@ -3144,12 +3118,9 @@ class Component extends DCLogic {
           onToggle:()=>this.toggleSeg(keyC,custDefaultCollapsed) },
         eventGroups:groups, docs, hasDocs:docs.length>0, noDocs:docs.length===0, docAvail:docs.filter(d=>d.available).length
       };
-      const plq=[]; const trip=this.TRIPS[sh.id]||{};
-      if(sh.customs.stateKey==='CONTROL') plq.push({short:'Груз на таможенном контроле', text:'Запрошены акцизные марки и лицензия на ввоз алкоголя. Следим за статусом, при задержке эскалируем брокеру.'});
-      if(trip.stop&&trip.carrierClaim) plq.push({short:'Претензия перевозчика больше расчёта по ТТН на '+this.fmtTenge(trip.carrierClaim.amount-trip.stop.amount),
-        text:'Перевозчик заявил '+this.fmtMinutes(trip.carrierClaim.minutes)+' простоя на '+this.fmtTenge(trip.carrierClaim.amount)+'. По ТТН машина простояла '+this.fmtMinutes(trip.stop.totalMinutes)+' при норме '+trip.stop.freeHours+' ч — к оплате '+this.fmtTenge(trip.stop.amount)+'. Ответ перевозчику подготовим со сканом ТТН.'});
-      card.hasAiPlaques=aiOn && plq.length>0;
-      card.ai=this.aiBar('card:'+sh.id,{headline:plq.length?plq[0].short:'', basis:'по данным рейса', items:plq.map(x=>({text:x.text}))});
+      const plq=[];
+      if(sh.customs.stateKey==='CONTROL') plq.push({icon:'gavel',text:'Груз на таможенном контроле — запрошены акцизные марки и лицензия на ввоз алкоголя. AI отслеживает статус, при задержке эскалируем брокеру.',hasAction:false});
+      card.aiPlaques=plq; card.hasAiPlaques=aiOn && plq.length>0;
 
       card.isDemurrage=!!sh.demurrage; card.notDemurrage=!card.isDemurrage;
       if(sh.demurrage){
