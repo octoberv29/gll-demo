@@ -960,6 +960,37 @@ button,input,select{color:inherit;font:inherit;}
 .request-note{margin:1rem 0 0;padding:.9rem 1rem;color:#3a4148;font-size:.8rem;line-height:1.55;background:var(--color-paper);border-radius:var(--radius-md);}
 @media (max-width:72rem){.request-grid{grid-template-columns:1fr;}}
 
+/* «Новая заявка», steps 2–3 */
+.request-wide{display:grid;gap:1rem;width:min(100%,100rem);margin:0 auto;padding:1.2rem clamp(1.5rem,3vw,3rem) clamp(1.5rem,3vw,3rem);}
+.request-wide > .ai-card{margin:0;}
+.request-wide .detail-hero{margin:0;}
+.plan-facts{grid-template-columns:repeat(auto-fit,minmax(14rem,1fr));margin:0;}
+.plan-facts dd{font-size:1rem;font-weight:700;}
+.plan-facts small{color:var(--color-quiet);font-size:.72rem;line-height:1.45;}
+.plan-kicker{display:block;margin-bottom:.15rem;color:var(--color-cobalt);font-size:.62rem;font-weight:800;letter-spacing:.14em;text-transform:uppercase;}
+.plan-block .result-heading{padding-top:1.1rem;}
+.plan-block .result-heading h2{font-size:1.15rem;}
+.plan-block .result-tools p{font-family:var(--font-sans);font-size:.72rem;}
+.plan-table{min-width:56rem;}
+.plan-table .grid-head,.plan-table .grid-row{display:grid;grid-template-columns:minmax(16rem,2fr) 8rem minmax(9rem,1fr) 8rem 8rem;align-items:center;}
+.plan-row-on{background:var(--color-row-hover);box-shadow:inset 3px 0 0 var(--color-ink);}
+.plan-who{display:flex;align-items:flex-start;gap:.7rem;}
+.plan-who strong{font-size:.85rem;}
+.plan-letter{display:grid;place-items:center;flex:none;width:1.6rem;height:1.6rem;margin-top:.05rem;font-size:.7rem;font-weight:700;border:1px solid var(--color-line);border-radius:.4rem;background:var(--color-paper);}
+.plan-row-on .plan-letter{color:#fff;background:var(--color-ink);border-color:var(--color-ink);}
+.plan-tag{display:inline-block;margin-left:.45rem;padding:.05rem .45rem;color:#24775b;font-size:.6rem;font-weight:700;background:#e4f3ed;border:1px solid #bfe2d4;border-radius:999px;vertical-align:.1rem;}
+.plan-price{font-size:.8rem;font-weight:700;}
+.plan-action{text-align:right;}
+.plan-btn{min-height:2.3rem;font-size:.75rem;}
+.plan-note{margin:0 1.25rem 1.25rem;}
+.request-actions{display:flex;align-items:center;justify-content:space-between;gap:1rem;}
+.request-actions .button{min-height:3rem;}
+.party-list li{grid-template-columns:2.4rem 1fr auto;}
+.party-list strong{display:block;margin-top:.15rem;}
+.party-icon{display:grid;place-items:center;width:2.4rem;height:2.4rem;border-radius:.7rem;}
+.party-icon .ms{font-size:1.2rem;}
+.orch-legend{position:static;margin:-.8rem 0 1.2rem;background:var(--color-paper);border:0;}
+
 @keyframes gllpulse{0%{opacity:1;}50%{opacity:.4;}100%{opacity:1;}}
 @keyframes gllrise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 @keyframes gllflash{0%{background:#e9edff;}100%{background:transparent;}}
@@ -1130,115 +1161,99 @@ button,input,select{color:inherit;font:inherit;}
       </div>
       </sc-if>
 
-      <!-- ================= SCREEN 2: AI plan ================= -->
+      <!-- ================= SCREEN 2: AI plan — options per leg as a cabinet table ================= -->
       <sc-if value="{{ scAI }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:22px 32px 48px;max-width:1080px;">
-        <div style="background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;border-radius:16px;padding:22px 24px;margin-bottom:22px;position:relative;overflow:hidden;">
-          <div style="display:flex;align-items:center;gap:11px;margin-bottom:16px;">
-            <span style="width:34px;height:34px;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">auto_awesome</span></span>
-            <div><div style="font-size:15px;font-weight:800;color:#14212b;">AI-логист собрал план</div><div style="font-size:12px;color:#5f655f;">Работает как ваш логист: маршрут, цена, требования — без ручного обзвона.</div></div>
-          </div>
-          <div style="display:flex;flex-wrap:wrap;gap:14px;">
-            <sc-if value="{{ showRoute }}" hint-placeholder-val="{{ true }}">
-              <div style="flex:1;min-width:200px;border:1px solid #cbd5ff;border-radius:12px;padding:14px 16px;background:#fbf9f4;"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#5f655f;margin-bottom:6px;">Маршрут</div><div style="font-size:14px;font-weight:700;color:#14212b;">{{ planTop.routeLine }}</div><div style="font-size:12px;color:#5f655f;margin-top:3px;">{{ planTop.modeDetail }}</div></div>
-              <div style="flex:1;min-width:200px;border:1px solid #cbd5ff;border-radius:12px;padding:14px 16px;background:#fbf9f4;"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#5f655f;margin-bottom:6px;">Рыночная цена</div><div style="font-size:14px;font-weight:700;color:#14212b;">{{ planTop.marketPrice }}</div><div style="display:inline-flex;align-items:center;gap:4px;margin-top:5px;font-size:9.5px;font-weight:700;color:#2646b9;background:#eef1fd;border:1px solid #cbd5ff;padding:2px 7px;border-radius:5px;"><span style="font-family:'Material Symbols Outlined';font-size:12px;">insights</span>{{ planTop.priceNote }}</div></div>
-            </sc-if>
-            <div style="flex:1;min-width:200px;border:1px solid #cbd5ff;border-radius:12px;padding:14px 16px;background:#fbf9f4;"><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.04em;color:#5f655f;margin-bottom:6px;">Требования</div><div style="font-size:14px;font-weight:700;color:#14212b;">{{ reqText }}</div><div style="font-size:12px;color:#5f655f;margin-top:3px;">{{ reqSub }}</div></div>
+      <div class="request-wide">
+        <div class="ai-card">
+          <div class="ai-card-head" style="cursor:default;">
+            <span class="ai-mark"><span class="ms">auto_awesome</span></span>
+            <span style="flex:1;min-width:0;"><strong>AI-логист собрал план</strong><small>Работает как ваш логист: маршрут, цена, требования — без ручного обзвона.</small></span>
           </div>
         </div>
 
+        <section class="detail-panel">
+          <div class="panel-heading"><div><p class="eyebrow">Шаг 2 из 3</p><h2>План перевозки</h2></div></div>
+          <dl class="dwell-facts plan-facts">
+            <sc-if value="{{ showRoute }}" hint-placeholder-val="{{ true }}">
+              <div><dt>Маршрут</dt><dd>{{ planTop.routeLine }}</dd><small>{{ planTop.modeDetail }}</small></div>
+              <div><dt>Рыночная цена</dt><dd class="mono">{{ planTop.marketPrice }}</dd><small>{{ planTop.priceNote }}</small></div>
+            </sc-if>
+            <div><dt>Требования</dt><dd>{{ reqText }}</dd><small>{{ reqSub }}</small></div>
+          </dl>
+        </section>
+
         <sc-if value="{{ showCarriers }}" hint-placeholder-val="{{ true }}">
         <sc-for list="{{ planBlocks }}" as="blk" hint-placeholder-count="4">
-          <div style="display:flex;align-items:center;gap:10px;margin-bottom:12px;margin-top:8px;">
-            <span style="font-size:15px;font-weight:800;color:#14212b;">Рекомендация: {{ blk.seg }}</span>
-            <span style="font-size:12.5px;color:#5f655f;">— с учётом статистики, не только цены</span>
-          </div>
-          <div style="display:flex;flex-direction:column;gap:10px;">
-            <sc-for list="{{ blk.options }}" as="c" hint-placeholder-count="3">
-              <div style="display:grid;grid-template-columns:26px minmax(0,1.5fr) 128px 150px 120px 120px;gap:16px;align-items:center;padding:16px 18px;border:1px solid {{ c.border }};border-left:4px solid {{ c.accent }};border-radius:13px;background:{{ c.bg }};">
-                <span style="width:20px;height:20px;border-radius:50%;background:{{ c.tagBg }};color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:800;">{{ c.letter }}</span>
-                <div style="min-width:0;">
-                  <div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;"><span style="font-size:14.5px;font-weight:700;color:#14212b;">{{ c.name }}</span>
-                    <sc-if value="{{ c.hasTag }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:20px;background:#e4f3ed;border:1px solid #bfe2d4;font-size:11px;font-weight:700;color:#24775b;"><span style="font-family:'Material Symbols Outlined';font-size:14px;">verified</span>{{ c.tag }}</span></sc-if>
+          <section class="shipments-panel plan-block">
+            <div class="result-heading"><h2><span class="plan-kicker">Рекомендация</span>{{ blk.seg }}</h2><div class="result-tools"><p>с учётом статистики, не только цены</p></div></div>
+            <div class="table-scroll">
+              <div class="shipment-table plan-table" role="table" aria-label="Варианты исполнителей">
+                <div class="grid-head" role="row"><span>Исполнитель</span><span>Цена</span><span>Показатель</span><span>Надёжность</span><span></span></div>
+                <sc-for list="{{ blk.options }}" as="c" hint-placeholder-count="3">
+                  <div class="{{ c.cls }}" role="row" sc-camel-on-click="{{ c.onPick }}">
+                    <span class="plan-who"><span class="plan-letter mono">{{ c.letter }}</span><span><strong>{{ c.name }}</strong><sc-if value="{{ c.hasTag }}" hint-placeholder-val="{{ false }}"><small class="plan-tag">{{ c.tag }}</small></sc-if><small class="cell-sub">{{ c.desc }}</small></span></span>
+                    <span><span class="mono plan-price">{{ c.price }}</span><sc-if value="{{ c.hasDelta }}" hint-placeholder-val="{{ false }}"><small class="cell-sub" style="color:{{ c.deltaColor }};">{{ c.priceDelta }}</small></sc-if></span>
+                    <span class="unload-state" style="color:{{ c.metricColor }};"><sc-if value="{{ c.metricWarn }}" hint-placeholder-val="{{ false }}"><i class="state-dot" style="background:var(--color-amber);"></i></sc-if>{{ c.metricLabel }}</span>
+                    <span><span class="mono plan-price">{{ c.reliability }}</span><small class="cell-sub">прогноз, не факт</small></span>
+                    <span class="plan-action"><button sc-camel-on-click="{{ c.onPick }}" class="{{ c.btnCls }}">{{ c.btnLabel }}</button></span>
                   </div>
-                  <div style="font-size:12px;color:#5f655f;margin-top:3px;line-height:1.4;">{{ c.desc }}</div>
-                </div>
-                <div><div style="font-size:16px;font-weight:800;color:#14212b;">{{ c.price }}</div><sc-if value="{{ c.hasDelta }}" hint-placeholder-val="{{ false }}"><div style="font-size:11.5px;font-weight:700;color:{{ c.deltaColor }};">{{ c.priceDelta }}</div></sc-if></div>
-                <div style="display:flex;align-items:center;gap:7px;"><sc-if value="{{ c.metricWarn }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Material Symbols Outlined';font-size:17px;color:#c98227;">warning</span></sc-if><span style="font-size:12.5px;font-weight:600;color:{{ c.metricColor }};">{{ c.metricLabel }}</span></div>
-                <div style="display:flex;flex-direction:column;gap:3px;"><div style="display:flex;align-items:center;gap:7px;"><span style="font-family:'Material Symbols Outlined';font-size:17px;color:#5f655f;">shield</span><span style="font-size:12.5px;color:#3a4148;">Надёжность {{ c.reliability }}</span></div><span style="font-size:9px;font-weight:700;color:#8a5516;letter-spacing:0.02em;">прогноз, не факт</span></div>
-                <button sc-camel-on-click="{{ c.onPick }}" style="justify-self:end;padding:9px 16px;border-radius:10px;border:1px solid {{ c.btnBorder }};background:{{ c.btnBg }};color:{{ c.btnFg }};font-size:13px;font-weight:700;font-family:inherit;cursor:pointer;white-space:nowrap;">{{ c.btnLabel }}</button>
+                </sc-for>
               </div>
-            </sc-for>
-          </div>
-          <div style="display:flex;align-items:flex-start;gap:11px;margin-top:12px;margin-bottom:8px;padding:14px 16px;border-radius:13px;background:#eef1fd;border:1px solid #cbd5ff;">
-            <span style="font-family:'Material Symbols Outlined';font-size:20px;color:#3157e5;flex:none;">query_stats</span>
-            <div style="font-size:12.5px;line-height:1.55;color:#14212b;">{{ blk.aiNote }}</div>
-          </div>
+            </div>
+            <p class="request-note plan-note"><strong>AI-логист:</strong> {{ blk.aiNote }}</p>
+          </section>
         </sc-for>
         </sc-if>
 
-        <div style="display:flex;justify-content:flex-end;margin-top:22px;">
-          <button sc-camel-on-click="{{ goOrch }}" style="padding:13px 22px;border:none;border-radius:11px;background:#14212b;color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:9px;" style-hover="background:#1f3a9e;"><span>Собрать поставку<sc-if value="{{ hasCtaParties }}" hint-placeholder-val="{{ false }}"> · {{ ctaParties }}</sc-if></span><span style="font-family:'Material Symbols Outlined';font-size:19px;">arrow_forward</span></button>
+        <div class="request-actions">
+          <button sc-camel-on-click="{{ goNew }}" class="back-link"><span>←</span><span>Сборка цепочки</span></button>
+          <button sc-camel-on-click="{{ goOrch }}" class="button button-primary">Собрать поставку<sc-if value="{{ hasCtaParties }}" hint-placeholder-val="{{ false }}"> · {{ ctaParties }}</sc-if> →</button>
         </div>
       </div>
       </sc-if>
 
-      <!-- ================= SCREEN 3: orchestration ================= -->
+      <!-- ================= SCREEN 3: orchestration — the assembled shipment, as a trip card ================= -->
       <sc-if value="{{ scOrch }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:22px 32px 48px;max-width:1180px;">
-        <div style="display:flex;align-items:center;gap:12px;margin-bottom:6px;">
-          <span style="font-family:var(--font-mono);font-size:19px;font-weight:600;color:#14212b;">{{ demo.code }}</span>
-          <span style="display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:9px;background:#fbf9f4;border:1px solid #d7d1c5;font-size:13.5px;font-weight:600;">{{ orchFrom }}<span style="font-family:'Material Symbols Outlined';font-size:16px;color:#8a8d86;">east</span>{{ orchTo }}</span>
-          <span style="display:inline-flex;align-items:center;gap:7px;padding:6px 12px;border-radius:9px;background:#14212b;color:#fff;font-size:12px;font-weight:800;"><span style="font-family:'Material Symbols Outlined';font-size:15px;color:#9bb0ff;">hub</span>{{ plShort }}</span>
-        </div>
-        <div style="font-size:13.5px;color:#5f655f;margin-bottom:22px;">{{ orchCaption }}</div>
+      <div class="request-wide">
+        <section class="detail-hero">
+          <p class="eyebrow">Шаг 3 из 3 · {{ plShort }} · <span class="mono">{{ demo.code }}</span></p>
+          <h1>{{ orchFrom }} <span class="hero-dash">—</span> {{ orchTo }}</h1>
+          <p class="hero-line">{{ orchCaption }}</p>
+        </section>
 
-        <div style="display:grid;grid-template-columns:minmax(0,1fr) 372px;gap:24px;align-items:start;">
-          <div style="display:flex;flex-direction:column;gap:14px;">
-            <sc-for list="{{ orchParties }}" as="p" hint-placeholder-count="4">
-              <div style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);padding:18px;border-left:4px solid {{ p.main }};">
-                <div style="display:flex;align-items:center;gap:14px;">
-                  <span style="width:44px;height:44px;flex:none;border-radius:12px;background:{{ p.bg }};display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:24px;color:{{ p.main }};">{{ p.icon }}</span></span>
-                  <div style="flex:1;min-width:0;">
-                    <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:{{ p.main }};margin-bottom:2px;">{{ p.role }}</div>
-                    <div style="font-size:15px;font-weight:700;color:#14212b;">{{ p.name }}</div>
-                    <div style="font-size:11.5px;color:#5f655f;margin-top:2px;">{{ p.entity }}</div>
-                  </div>
-                  <span style="display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:9px;background:{{ p.stBg }};color:{{ p.stFg }};border:1px solid {{ p.stBorder }};font-size:12.5px;font-weight:700;white-space:nowrap;"><sc-if value="{{ p.live }}" hint-placeholder-val="{{ false }}"><span style="position:relative;width:8px;height:8px;"><span style="position:absolute;inset:0;border-radius:50%;background:{{ p.stFg }};"></span><span style="position:absolute;inset:0;border-radius:50%;background:{{ p.stFg }};animation:gllping 1.4s infinite;"></span></span></sc-if>{{ p.status }}</span>
-                </div>
-              </div>
-            </sc-for>
-            <div style="display:flex;align-items:flex-start;gap:11px;padding:15px 17px;border-radius:13px;background:#eef1fd;border:1px solid #cbd5ff;">
-              <span style="font-family:'Material Symbols Outlined';font-size:21px;color:#3157e5;flex:none;">account_tree</span>
-              <div style="font-size:13px;line-height:1.55;color:#14212b;">{{ orchNote }}</div>
-            </div>
-          </div>
-
-          <div style="position:sticky;top:8px;background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);overflow:hidden;">
-            <div style="padding:16px 18px;border-bottom:1px solid #e5e0d7;">
-              <div style="font-size:14.5px;font-weight:700;color:#14212b;margin-bottom:10px;">Сквозной таймлайн</div>
-              <div style="display:flex;flex-wrap:wrap;gap:10px 14px;">
-                <sc-for list="{{ legLegend }}" as="l" hint-placeholder-count="4">
-                  <span style="display:flex;align-items:center;gap:6px;font-size:11px;font-weight:600;color:{{ l.color }};"><span style="width:8px;height:8px;border-radius:50%;background:{{ l.color }};"></span>{{ l.label }}</span>
-                </sc-for>
-              </div>
-            </div>
-            <div style="padding:14px 18px 10px;max-height:440px;overflow:auto;">
-              <sc-for list="{{ orchTimeline }}" as="ev" hint-placeholder-count="5">
-                <div style="display:grid;grid-template-columns:18px 1fr;gap:12px;">
-                  <div style="position:relative;display:flex;justify-content:center;"><div style="position:absolute;top:0;bottom:0;width:2px;background:{{ ev.color }};opacity:.26;"></div><div style="width:11px;height:11px;border-radius:50%;background:{{ ev.color }};border:2px solid #fff;box-shadow:0 0 0 1.5px {{ ev.color }};margin-top:4px;z-index:1;"></div></div>
-                  <div style="padding-bottom:14px;">
-                    <div style="display:flex;align-items:center;gap:7px;"><span style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:0.03em;color:{{ ev.color }};background:{{ ev.chipBg }};padding:2px 7px;border-radius:5px;">{{ ev.seg }}</span><sc-if value="{{ ev.planned }}" hint-placeholder-val="{{ false }}"><span style="font-size:9.5px;font-weight:700;color:#8a8d86;background:#e5e0d7;padding:2px 7px;border-radius:5px;">план</span></sc-if></div>
-                    <div style="font-size:13px;font-weight:700;color:#14212b;margin-top:4px;line-height:1.3;">{{ ev.title }}</div>
-                    <div style="font-size:11.5px;color:#5f655f;margin-top:1px;">{{ ev.party }}</div>
-                  </div>
-                </div>
+        <div class="detail-grid">
+          <section class="detail-panel">
+            <div class="panel-heading"><div><p class="eyebrow">Кто что делает</p><h2>Исполнители</h2></div></div>
+            <ul class="document-list party-list">
+              <sc-for list="{{ orchParties }}" as="p" hint-placeholder-count="4">
+                <li>
+                  <span class="party-icon" style="color:{{ p.main }};background:{{ p.bg }};"><span class="ms">{{ p.icon }}</span></span>
+                  <span><span class="chain-role" style="color:{{ p.main }};">{{ p.role }}</span><strong>{{ p.name }}</strong><span class="document-meta">{{ p.entity }}</span></span>
+                  <span class="status-chip" style="color:{{ p.stFg }};background:{{ p.stBg }};border-color:{{ p.stBorder }};">{{ p.status }}</span>
+                </li>
               </sc-for>
-            </div>
-          </div>
+            </ul>
+            <p class="request-note">{{ orchNote }}</p>
+          </section>
+
+          <section class="detail-panel">
+            <div class="panel-heading"><div><p class="eyebrow">Одна лента на всю цепочку</p><h2>Сквозной таймлайн</h2></div></div>
+            <div class="map-legend orch-legend"><sc-for list="{{ legLegend }}" as="l" hint-placeholder-count="4"><span><i class="run-dot" style="background:{{ l.color }};"></i>{{ l.label }}</span></sc-for></div>
+            <ol class="timeline-list">
+              <sc-for list="{{ orchTimeline }}" as="ev" hint-placeholder-count="5">
+                <li class="timeline-item">
+                  <span class="timeline-marker"><i style="border-color:{{ ev.color }};"></i></span>
+                  <span class="timeline-copy"><span class="chain-role" style="color:{{ ev.color }};">{{ ev.seg }}</span><strong>{{ ev.title }}</strong><span class="timeline-sub">{{ ev.party }}</span></span>
+                  <span class="event-kind">план</span>
+                </li>
+              </sc-for>
+            </ol>
+          </section>
         </div>
-        <div style="display:flex;justify-content:flex-end;margin-top:22px;">
-          <button sc-camel-on-click="{{ goList }}" style="padding:13px 22px;border:none;border-radius:11px;background:#14212b;color:#fff;font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;gap:9px;" style-hover="background:#1f3a9e;">Открыть в кабинете<span style="font-family:'Material Symbols Outlined';font-size:19px;">arrow_forward</span></button>
+
+        <div class="request-actions">
+          <button sc-camel-on-click="{{ goAI }}" class="back-link"><span>←</span><span>AI-план</span></button>
+          <button sc-camel-on-click="{{ goList }}" class="button button-primary">Открыть в кабинете →</button>
         </div>
       </div>
       </sc-if>
@@ -2848,6 +2863,7 @@ class Component extends DCLogic {
             metricLabel:o.metric_label, metricWarn:!!o.metric_warn, metricColor:(o.metric_warn?'#8a5516':'#3a4148'), reliability:o.reliability+'%',
             accent: o.recommended?'#24775b':(o.metric_warn?'#ead0ad':'#b9b4a9'), border:o.recommended?'#bfe2d4':'#d7d1c5', bg:on?(o.recommended?'#eef7f2':'#f5f2eb'):'#fff',
             tagBg:o.recommended?'#24775b':'#14212b',
+            cls:'grid-row'+(on?' plan-row-on':''), btnCls:'button '+(on?'button-ink':'')+' plan-btn',
             btnLabel:on?'Выбран':'Выбрать', btnBg:on?'#14212b':'#fff', btnFg:on?'#fff':'#3a4148', btnBorder:on?'#14212b':'#d7d1c5',
             onPick:()=>setLegPick(name,o.id) }; }) };
     }).filter(Boolean);
@@ -3144,7 +3160,7 @@ class Component extends DCLogic {
       chain, chainCount, chainCaption, legLegend, presetChips, legTiles, plBadge, plShort, scaleNote, orchCaption, orchNote,
       originOpts, destOpts, cargoOpts, originKey:s.originKey, destKey:s.destKey, cargoKey:s.cargoKey, onOrigin, onDest, onCargo, cargoTemp:cargoO.temp, cargoIcon:(cargoO.temp?'ac_unit':'inventory_2'), aiRouteHint,
       showRoute, showCarriers, reqText, reqSub, planTop, planBlocks, ctaParties, hasCtaParties:!!ctaParties,
-      goAI:()=>this.setState({clientScreen:'ai'}), goOrch:()=>this.setState({clientScreen:'orch'}), goList:()=>this.setState({clientScreen:'list'}),
+      goNew:()=>this.setState({clientScreen:'new'}), goAI:()=>this.setState({clientScreen:'ai'}), goOrch:()=>this.setState({clientScreen:'orch'}), goList:()=>this.setState({clientScreen:'list'}),
       demo, orchFrom:originLabel, orchTo:destLabel,
       orchParties:this.LEGORDER.filter(k=>selLegs[k]).map(k=>{ const g=this.SEG[k]; const nm={T:pickedParties.T||pickedName,C:pickedParties.C||'Брокер «ЦентрТамож»',W:pickedParties.W||'Склад GLL, '+destLabel,D:pickedParties.D||'GLL Последняя миля'}[k];
         const role={T:'Перевозчик',C:'Брокер / таможня',W:'Склад',D:'Доставка (последняя миля)'}[k]; const ic={T:'local_shipping',C:'assured_workload',W:'warehouse',D:'pin_drop'}[k];
