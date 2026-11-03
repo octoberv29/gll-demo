@@ -914,6 +914,52 @@ button,input,select{color:inherit;font:inherit;}
 .history-figures dd{margin:0;font-size:1.15rem;font-weight:600;}
 .history-figures small{color:var(--color-quiet);font-size:.66rem;}
 
+.tag-4pl{display:inline-block;margin-top:.3rem;padding:.08rem .4rem;color:var(--color-cobalt);font-family:var(--font-sans);font-size:.6rem;font-weight:700;white-space:nowrap;background:#e9edff;border:1px solid #cbd5ff;border-radius:999px;}
+.grid-row .tag-4pl{display:table;}
+.results-line{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.5rem 1rem;}
+.full-cycle-link{display:inline-flex;align-items:center;gap:.5rem;padding:0;color:var(--color-ink);font-size:.72rem;font-weight:600;background:none;border:0;cursor:pointer;}
+.full-cycle-link .tag-4pl{margin:0;}
+.full-cycle-link:hover{color:var(--color-cobalt);}
+
+/* «Новая заявка» */
+.flow-steps{display:flex;align-items:center;gap:.6rem;width:min(100%,100rem);margin:0 auto;padding:clamp(1.5rem,3vw,2.5rem) clamp(1.5rem,3vw,3rem) 0;}
+.flow-step{display:inline-flex;align-items:center;gap:.55rem;padding:.35rem 0;color:var(--color-quiet);font-size:.82rem;font-weight:600;background:none;border:0;cursor:pointer;}
+.flow-step:hover{color:var(--color-ink);}
+.flow-num{display:grid;place-items:center;width:1.6rem;height:1.6rem;font-size:.7rem;border:1px solid var(--color-line);border-radius:50%;background:var(--color-surface);}
+.flow-step-done{color:var(--color-ink);}
+.flow-step-done .flow-num{color:#fff;background:var(--color-mint);border-color:var(--color-mint);}
+.flow-step-on{color:var(--color-ink);font-weight:800;}
+.flow-step-on .flow-num{color:#fff;background:var(--color-ink);border-color:var(--color-ink);}
+.flow-line{flex:0 0 2.5rem;height:1px;background:var(--color-line);}
+.request-grid{display:grid;grid-template-columns:minmax(22rem,26rem) minmax(0,1fr);gap:1rem;align-items:start;width:min(100%,100rem);margin:0 auto;padding:1.2rem clamp(1.5rem,3vw,3rem) clamp(1.5rem,3vw,3rem);}
+.request-title{margin:0;font-size:1.6rem;letter-spacing:-.03em;}
+.request-lead{margin:.5rem 0 1.4rem;color:var(--color-quiet);font-size:.85rem;line-height:1.55;}
+.field select{width:100%;height:3rem;padding:0 .9rem;color:var(--color-ink);font-weight:500;background:#fff;border:1px solid var(--color-line);border-radius:var(--radius-md);outline:none;cursor:pointer;}
+.field select:hover{border-color:#aaa79f;}
+.field select:focus-visible{border-color:var(--color-cobalt);}
+.field-row{display:flex;align-items:baseline;justify-content:space-between;gap:.5rem;}
+.field-label{font-size:.82rem;font-weight:750;}
+.field-hint{color:var(--color-quiet);font-size:.68rem;font-weight:600;}
+.request-block{display:grid;gap:.6rem;margin-top:1.4rem;padding-top:1.3rem;border-top:1px solid var(--color-row-line);}
+.segmented{display:grid;grid-template-columns:repeat(4,1fr);gap:.25rem;padding:.25rem;background:var(--color-paper);border:1px solid var(--color-line);border-radius:var(--radius-md);}
+.segmented-option{min-height:2.3rem;color:var(--color-quiet);font-size:.78rem;font-weight:700;background:transparent;border:0;border-radius:.55rem;cursor:pointer;}
+.segmented-option:hover{color:var(--color-ink);}
+.segmented-option-on,.segmented-option-on:hover{color:#fff;background:var(--color-ink);}
+.leg-options{display:grid;}
+.leg-option{display:grid;grid-template-columns:1.2rem .6rem auto 1fr;align-items:center;gap:.65rem;padding:.7rem .2rem;text-align:left;background:none;border:0;border-bottom:1px solid var(--color-row-line);cursor:pointer;}
+.leg-option:last-child{border-bottom:0;}
+.leg-check{display:grid;place-items:center;width:1.1rem;height:1.1rem;color:transparent;border:1.5px solid #aaa79f;border-radius:.3rem;background:#fff;}
+.leg-check .ms{font-size:.85rem;font-weight:700;}
+.leg-option-on .leg-check{color:#fff;background:var(--color-cobalt);border-color:var(--color-cobalt);}
+.leg-name{font-size:.85rem;font-weight:700;}
+.leg-sub{color:var(--color-quiet);font-size:.72rem;text-align:right;}
+.leg-option:not(.leg-option-on) .leg-name{color:var(--color-quiet);font-weight:600;}
+.request-submit{width:100%;min-height:3rem;margin-top:1.3rem;}
+.chain-list .timeline-item{min-height:4.6rem;}
+.chain-role{font-size:.64rem;font-weight:800;letter-spacing:.1em;text-transform:uppercase;}
+.request-note{margin:1rem 0 0;padding:.9rem 1rem;color:#3a4148;font-size:.8rem;line-height:1.55;background:var(--color-paper);border-radius:var(--radius-md);}
+@media (max-width:72rem){.request-grid{grid-template-columns:1fr;}}
+
 @keyframes gllpulse{0%{opacity:1;}50%{opacity:.4;}100%{opacity:1;}}
 @keyframes gllrise{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
 @keyframes gllflash{0%{background:#e9edff;}100%{background:transparent;}}
@@ -1009,90 +1055,78 @@ button,input,select{color:inherit;font:inherit;}
 
       <!-- ===== flow stepper (screens 1-3) ===== -->
       <sc-if value="{{ showStepper }}" hint-placeholder-val="{{ false }}">
-        <div style="display:flex;align-items:center;gap:0;padding:18px 32px 4px;">
+        <nav class="flow-steps" aria-label="Шаги заявки">
           <sc-for list="{{ steps }}" as="st" hint-placeholder-count="3">
-            <sc-if value="{{ st.hasBar }}" hint-placeholder-val="{{ false }}"><div style="width:44px;height:2px;background:{{ st.barColor }};margin-top:0;"></div></sc-if>
-            <button sc-camel-on-click="{{ st.onClick }}" style="display:flex;align-items:center;gap:9px;padding:8px 14px;border:1px solid {{ st.border }};border-radius:24px;background:{{ st.bg }};cursor:pointer;font-family:inherit;">
-              <span style="width:22px;height:22px;border-radius:50%;background:{{ st.numBg }};color:{{ st.numFg }};display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;">{{ st.num }}</span>
-              <span style="font-size:13px;font-weight:{{ st.weight }};color:{{ st.fg }};white-space:nowrap;">{{ st.label }}</span>
-            </button>
+            <sc-if value="{{ st.hasBar }}" hint-placeholder-val="{{ false }}"><span class="flow-line"></span></sc-if>
+            <button sc-camel-on-click="{{ st.onClick }}" class="{{ st.cls }}"><span class="flow-num mono">{{ st.num }}</span>{{ st.label }}</button>
           </sc-for>
-        </div>
+        </nav>
       </sc-if>
 
-      <!-- ================= SCREEN 1: chain assembly ================= -->
+      <!-- ================= SCREEN 1: chain assembly, in the cabinet's form language ================= -->
       <sc-if value="{{ scNew }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:22px 32px 48px;max-width:1180px;">
-        <div style="display:grid;grid-template-columns:380px minmax(0,1fr);gap:26px;align-items:start;">
-          <div data-tour="tour-new-shipment" style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:16px;padding:24px;">
-            <div style="font-size:16px;font-weight:800;color:#14212b;margin-bottom:4px;">Новая заявка</div>
-            <div style="font-size:13px;color:#5f655f;line-height:1.5;margin-bottom:22px;">Укажите точки и груз — платформа сама соберёт цепочку исполнителей.</div>
-            <div style="display:flex;flex-direction:column;gap:16px;">
-              <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#5f655f;margin-bottom:6px;">Откуда</div>
-                <div style="display:flex;align-items:center;gap:10px;padding:4px 12px;border:1px solid #d7d1c5;border-radius:11px;background:#f5f2eb;"><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#3157e5;flex:none;">location_on</span>
-                  <sc-raw-select value="{{ originKey }}" sc-camel-on-change="{{ onOrigin }}" style="flex:1;min-width:0;border:none;background:transparent;font-family:inherit;font-size:14.5px;font-weight:600;color:#14212b;padding:10px 4px;outline:none;cursor:pointer;">
-                    <sc-for list="{{ originOpts }}" as="g" hint-placeholder-count="3"><optgroup label="{{ g.group }}"><sc-for list="{{ g.items }}" as="o" hint-placeholder-count="3"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for></optgroup></sc-for>
-                  </sc-raw-select>
-                </div></div>
-              <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#5f655f;margin-bottom:6px;">Куда</div>
-                <div style="display:flex;align-items:center;gap:10px;padding:4px 12px;border:1px solid #d7d1c5;border-radius:11px;background:#f5f2eb;"><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#a63c38;flex:none;">flag</span>
-                  <sc-raw-select value="{{ destKey }}" sc-camel-on-change="{{ onDest }}" style="flex:1;min-width:0;border:none;background:transparent;font-family:inherit;font-size:14.5px;font-weight:600;color:#14212b;padding:10px 4px;outline:none;cursor:pointer;">
-                    <sc-for list="{{ destOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
-                  </sc-raw-select>
-                </div></div>
-              <div><div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#5f655f;margin-bottom:6px;">Груз</div>
-                <div style="display:flex;align-items:center;gap:10px;padding:4px 12px;border:1px solid #d7d1c5;border-radius:11px;background:#f5f2eb;"><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#2f9d78;flex:none;">{{ cargoIcon }}</span>
-                  <sc-raw-select value="{{ cargoKey }}" sc-camel-on-change="{{ onCargo }}" style="flex:1;min-width:0;border:none;background:transparent;font-family:inherit;font-size:14.5px;font-weight:600;color:#14212b;padding:10px 4px;outline:none;cursor:pointer;">
-                    <sc-for list="{{ cargoOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
-                  </sc-raw-select>
-                  <sc-if value="{{ cargoTemp }}" hint-placeholder-val="{{ false }}"><span style="font-family:'Material Symbols Outlined';font-size:18px;color:#3157e5;flex:none;" title="Реф">ac_unit</span></sc-if>
-                </div></div>
-            </div>
-            <div style="margin-top:22px;padding-top:20px;border-top:1px solid #d7d1c5;">
-              <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;"><span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.05em;color:#5f655f;">Объём услуги</span><span style="font-size:11px;font-weight:700;color:#3157e5;">{{ plBadge }}</span></div>
-              <div style="display:flex;gap:8px;margin-bottom:12px;">
-                <sc-for list="{{ presetChips }}" as="p" hint-placeholder-count="4">
-                  <button sc-camel-on-click="{{ p.onClick }}" style="flex:1;padding:9px 0;border-radius:9px;border:1px solid {{ p.border }};background:{{ p.bg }};color:{{ p.fg }};font-size:13px;font-weight:{{ p.weight }};font-family:inherit;cursor:pointer;">{{ p.label }}</button>
-                </sc-for>
-              </div>
-              <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
-                <sc-for list="{{ legTiles }}" as="t" hint-placeholder-count="4">
-                  <button sc-camel-on-click="{{ t.onToggle }}" style="display:flex;align-items:center;gap:9px;padding:11px 12px;border-radius:11px;border:1px solid {{ t.border }};background:{{ t.bg }};cursor:pointer;font-family:inherit;text-align:left;">
-                    <span style="font-family:'Material Symbols Outlined';font-size:20px;color:{{ t.iconColor }};flex:none;">{{ t.icon }}</span>
-                    <span style="flex:1;font-size:13px;font-weight:700;color:{{ t.titleColor }};">{{ t.label }}</span>
-                    <span style="font-family:'Material Symbols Outlined';font-size:20px;color:{{ t.checkColor }};">{{ t.checkIcon }}</span>
-                  </button>
-                </sc-for>
-              </div>
-            </div>
-            <button sc-camel-on-click="{{ goAI }}" style="width:100%;margin-top:18px;padding:14px;border:none;border-radius:11px;background:#14212b;color:#fff;font-size:14.5px;font-weight:700;font-family:inherit;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:9px;" style-hover="background:#1f3a9e;"><span style="font-family:'Material Symbols Outlined';font-size:19px;">auto_awesome</span>Собрать цепочку</button>
+      <div class="request-grid">
+        <section data-tour="tour-new-shipment" class="detail-panel request-form">
+          <p class="eyebrow">Шаг 1 из 3</p>
+          <h2 class="request-title">Маршрут и груз</h2>
+          <p class="request-lead">Укажите точки и груз — платформа сама соберёт цепочку исполнителей.</p>
+          <div class="auth-form">
+            <label class="field">Откуда
+              <sc-raw-select value="{{ originKey }}" sc-camel-on-change="{{ onOrigin }}">
+                <sc-for list="{{ originOpts }}" as="g" hint-placeholder-count="3"><optgroup label="{{ g.group }}"><sc-for list="{{ g.items }}" as="o" hint-placeholder-count="3"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for></optgroup></sc-for>
+              </sc-raw-select>
+            </label>
+            <label class="field">Куда
+              <sc-raw-select value="{{ destKey }}" sc-camel-on-change="{{ onDest }}">
+                <sc-for list="{{ destOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
+              </sc-raw-select>
+            </label>
+            <label class="field"><span class="field-row">Груз<sc-if value="{{ cargoTemp }}" hint-placeholder-val="{{ false }}"><span class="field-hint mono">−18 °C, рефрижератор</span></sc-if></span>
+              <sc-raw-select value="{{ cargoKey }}" sc-camel-on-change="{{ onCargo }}">
+                <sc-for list="{{ cargoOpts }}" as="o" hint-placeholder-count="5"><option value="{{ o.value }}" selected="{{ o.selected }}">{{ o.label }}</option></sc-for>
+              </sc-raw-select>
+            </label>
           </div>
-          <div>
-            <div style="display:flex;align-items:center;gap:12px;margin-bottom:16px;">
-              <span style="display:inline-flex;align-items:center;gap:8px;padding:7px 14px;border-radius:24px;background:#14212b;color:#fff;font-size:13px;font-weight:800;letter-spacing:0.02em;"><span style="font-family:'Material Symbols Outlined';font-size:17px;color:#9bb0ff;">hub</span>{{ plBadge }}</span>
-              <span style="font-size:13.5px;color:#5f655f;">{{ chainCaption }}</span>
+
+          <div class="request-block">
+            <div class="field-row"><span class="field-label">Объём услуги</span><span class="field-hint">{{ plBadge }}</span></div>
+            <div class="segmented" role="group" aria-label="Объём услуги">
+              <sc-for list="{{ presetChips }}" as="p" hint-placeholder-count="4"><button sc-camel-on-click="{{ p.onClick }}" class="{{ p.cls }}">{{ p.label }}</button></sc-for>
             </div>
-            <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:16px;padding:14px 16px;border-radius:13px;background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;">
-              <span style="width:32px;height:32px;flex:none;border-radius:9px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:18px;color:#9bb0ff;">neurology</span></span>
-              <div style="flex:1;"><div style="font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:0.07em;color:#2646b9;margin-bottom:2px;">AI-логист</div><div style="font-size:13px;line-height:1.5;color:#14212b;">{{ aiRouteHint.text }}</div></div>
-            </div>
-            <div style="display:flex;align-items:stretch;gap:0;">
-              <sc-for list="{{ chain }}" as="c" hint-placeholder-count="4">
-                <sc-if value="{{ c.hasArrow }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;padding:0 2px;align-self:center;"><span style="font-family:'Material Symbols Outlined';font-size:22px;color:#b9b4a9;">chevron_right</span></div></sc-if>
-                <div style="flex:1;min-width:0;background:#fbf9f4;border:1px solid #d7d1c5;border-top:3px solid {{ c.main }};border-radius:var(--radius-lg);padding:16px 15px;display:flex;flex-direction:column;gap:9px;">
-                  <span style="width:40px;height:40px;border-radius:11px;background:{{ c.bg }};display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:22px;color:{{ c.main }};">{{ c.icon }}</span></span>
-                  <div style="font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:0.05em;color:{{ c.main }};">{{ c.role }}</div>
-                  <div style="font-size:13.5px;font-weight:700;color:#14212b;line-height:1.25;">{{ c.name }}</div>
-                  <div style="font-size:11px;color:#5f655f;line-height:1.35;margin-top:auto;">{{ c.entity }}</div>
-                </div>
+            <div class="leg-options">
+              <sc-for list="{{ legTiles }}" as="t" hint-placeholder-count="4">
+                <button sc-camel-on-click="{{ t.onToggle }}" class="{{ t.cls }}" role="checkbox" aria-checked="{{ t.on }}">
+                  <span class="leg-check"><span class="ms">check</span></span>
+                  <i class="run-dot" style="background:{{ t.main }};"></i>
+                  <span class="leg-name">{{ t.label }}</span>
+                  <span class="leg-sub">{{ t.sub }}</span>
+                </button>
               </sc-for>
             </div>
-            <div style="display:flex;align-items:flex-start;gap:11px;margin-top:18px;padding:15px 17px;border-radius:13px;background:#eef1fd;border:1px solid #cbd5ff;">
-              <span style="font-family:'Material Symbols Outlined';font-size:21px;color:#3157e5;flex:none;">insights</span>
-              <div style="font-size:13px;line-height:1.55;color:#14212b;"><b style="color:#2646b9;">GLL — не одна услуга, а оркестратор.</b> {{ scaleNote }}</div>
+          </div>
+          <button sc-camel-on-click="{{ goAI }}" class="button button-primary request-submit">Собрать цепочку →</button>
+        </section>
+
+        <section class="detail-panel">
+          <div class="panel-heading"><div><p class="eyebrow">{{ plBadge }}</p><h2>Цепочка исполнителей</h2></div><span class="mono">{{ chainCount }}</span></div>
+          <p class="request-lead" style="margin-top:-.9rem;">{{ chainCaption }}</p>
+          <div class="ai-card" style="margin:1.1rem 0 1.4rem;">
+            <div class="ai-card-head" style="cursor:default;">
+              <span class="ai-mark"><span class="ms">auto_awesome</span></span>
+              <span style="flex:1;min-width:0;"><strong>AI-логист</strong><small>{{ aiRouteHint.text }}</small></span>
             </div>
           </div>
-        </div>
+          <ol class="timeline-list chain-list">
+            <sc-for list="{{ chain }}" as="c" hint-placeholder-count="4">
+              <li class="timeline-item">
+                <span class="timeline-marker"><i style="border-color:{{ c.main }};background:{{ c.main }};"></i></span>
+                <span class="timeline-copy"><span class="chain-role" style="color:{{ c.main }};">{{ c.role }}</span><strong>{{ c.name }}</strong><span class="timeline-sub">{{ c.entity }}</span></span>
+                <span class="event-kind">{{ c.step }}</span>
+              </li>
+            </sc-for>
+          </ol>
+          <p class="request-note"><strong>GLL — не одна услуга, а оркестратор.</strong> {{ scaleNote }}</p>
+        </section>
       </div>
       </sc-if>
 
@@ -1274,16 +1308,8 @@ button,input,select{color:inherit;font:inherit;}
           <sc-if value="{{ hasQuery }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ clearQuery }}" aria-label="Очистить поиск">×</button></sc-if>
         </div>
 
-        <div class="filter-row" style="margin-bottom:.9rem;">
-          <sc-for list="{{ stateChips }}" as="chip" hint-placeholder-count="4">
-            <button sc-camel-on-click="{{ chip.onClick }}" class="{{ chip.cls }}">{{ chip.label }}<span class="chip-count mono">{{ chip.count }}</span></button>
-          </sc-for>
-          <span class="filter-divider"></span>
-          <button sc-camel-on-click="{{ full4plChip.onClick }}" class="{{ full4plChip.cls }}">{{ full4plChip.label }}<span class="chip-count mono">{{ full4plChip.count }}</span></button>
-        </div>
-
         <section class="shipments-panel">
-          <div class="results-line"><p>{{ resultLine }} · <button sc-camel-on-click="{{ resetFilters }}" class="link-button">показать все</button></p></div>
+          <div class="results-line"><p>{{ resultLine }} · <button sc-camel-on-click="{{ resetFilters }}" class="link-button">показать все</button></p><sc-if value="{{ fullCycle }}" hint-placeholder-val="{{ false }}"><button sc-camel-on-click="{{ fullCycle.open }}" class="full-cycle-link"><span class="tag-4pl">4PL</span>Полный цикл: перевозка, таможня, склад, развозка — рейс <span class="mono">{{ fullCycle.code }}</span> · {{ fullCycle.route }} →</button></sc-if></div>
           <div class="table-scroll">
             <div class="shipment-table trip-grid" role="table" aria-label="Рейсы">
               <div class="grid-head" role="row">
@@ -1294,7 +1320,7 @@ button,input,select{color:inherit;font:inherit;}
                 <div data-tour="{{ row.tourTarget }}" sc-camel-on-click="{{ row.onOpen }}" class="grid-row" role="row">
                   <span class="selection-cell" sc-camel-on-click="{{ row.stopClick }}"><input type="checkbox" checked="{{ row.checked }}" sc-camel-on-change="{{ row.onToggle }}" aria-label="Выбрать рейс"></span>
                   <span><span class="date-value mono">{{ row.loadDate }}</span></span>
-                  <span><span class="mono trip-code">{{ row.code }}</span></span>
+                  <span><span class="mono trip-code">{{ row.code }}</span><sc-if value="{{ row.is4pl }}" hint-placeholder-val="{{ false }}"><small class="tag-4pl">полный цикл 4PL</small></sc-if></span>
                   <span class="route-cell">
                     <span class="route-copy"><span>{{ row.from }}</span><span class="route-arrow">→</span><span>{{ row.to }}</span></span>
                     <small class="cell-sub">{{ row.cargo }}</small>
@@ -1482,19 +1508,6 @@ button,input,select{color:inherit;font:inherit;}
               </section>
             </sc-if>
 
-            <sc-if value="{{ card.notE2e }}" hint-placeholder-val="{{ true }}">
-              <p class="chain-heading">4PL-цепочка</p>
-              <sc-if value="{{ card.transport.selected }}" hint-placeholder-val="{{ true }}">
-              <section style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);overflow:hidden;margin-bottom:16px;">
-                <div sc-camel-on-click="{{ card.transport.onToggle }}" style="display:flex;align-items:center;gap:13px;padding:16px 18px;cursor:pointer;border-left:4px solid {{ card.transport.main }};" style-hover="background:#f5f2eb;">
-                  <span style="width:38px;height:38px;flex:none;border-radius:10px;background:{{ card.transport.bg }};display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:21px;line-height:1;color:{{ card.transport.main }};">{{ card.transport.icon }}</span></span>
-                  <div style="flex:1;min-width:0;"><div style="font-size:15px;font-weight:700;color:#14212b;">Транспорт</div><div style="font-size:12px;color:#5f655f;">{{ card.transport.sub }}</div></div>
-                  <span style="display:inline-flex;align-items:center;padding:5px 11px;border-radius:8px;background:{{ card.transport.stBg }};color:{{ card.transport.stFg }};border:1px solid {{ card.transport.stBorder }};font-size:12.5px;font-weight:700;">{{ card.transport.label }}</span>
-                  <span style="font-family:'Material Symbols Outlined';font-size:24px;line-height:1;color:#8a8d86;">{{ card.transport.chevron }}</span>
-                </div>
-                <sc-if value="{{ card.transport.collapsed }}" hint-placeholder-val="{{ false }}">
-                  <div style="padding:0 18px 16px 18px;font-size:13px;color:#5f655f;">Секция свёрнута — нажмите, чтобы раскрыть.</div>
-                </sc-if>
                 <sc-if value="{{ card.transport.open }}" hint-placeholder-val="{{ true }}">
                   <div style="padding:4px 18px 20px 18px;">
                     <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px 24px;margin-bottom:18px;">
@@ -1673,111 +1686,6 @@ button,input,select{color:inherit;font:inherit;}
             <span class="export-status">{{ archive.status }}</span>
           </div>
         </section>
-      </div>
-      </sc-if>
-
-      <!-- ================= REPORTS ================= -->
-      <sc-if value="{{ scReports }}" hint-placeholder-val="{{ false }}">
-      <div style="padding:22px 32px 48px;max-width:1180px;">
-        <div style="display:grid;grid-template-columns:1fr 1fr;gap:18px;align-items:start;">
-
-          <section style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);padding:20px 22px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;"><span style="font-size:15px;font-weight:800;color:#14212b;">Топ направлений</span><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#8a8d86;">route</span></div>
-            <div style="font-size:12px;color:#5f655f;margin-bottom:16px;">По фактическим рейсам · {{ reportsTotal }} шт.</div>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-              <sc-for list="{{ topRoutes }}" as="r" hint-placeholder-count="4">
-                <div>
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><span style="font-size:13px;font-weight:600;color:#14212b;">{{ r.route }}</span><span style="font-size:13px;font-weight:800;color:#14212b;font-family:var(--font-mono);">{{ r.count }}</span></div>
-                  <div style="height:8px;border-radius:5px;background:#e5e0d7;overflow:hidden;"><div style="height:100%;width:{{ r.pct }}%;background:#3157e5;border-radius:5px;"></div></div>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-
-          <section style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);padding:20px 22px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;"><span style="font-size:15px;font-weight:800;color:#14212b;">Успех / срыв</span><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#8a8d86;">verified</span></div>
-            <div style="font-size:12px;color:#5f655f;margin-bottom:16px;">По финальному состоянию рейсов</div>
-            <div style="display:flex;align-items:center;gap:22px;">
-              <div style="width:132px;height:132px;border-radius:50%;flex:none;background:{{ donutBg }};display:flex;align-items:center;justify-content:center;">
-                <div style="width:88px;height:88px;border-radius:50%;background:#fbf9f4;display:flex;flex-direction:column;align-items:center;justify-content:center;"><span style="font-size:22px;font-weight:800;color:#14212b;">{{ doneShare }}%</span><span style="font-size:10px;color:#5f655f;">успешно</span></div>
-              </div>
-              <div style="flex:1;display:flex;flex-direction:column;gap:11px;">
-                <sc-for list="{{ mix }}" as="m" hint-placeholder-count="3">
-                  <div style="display:flex;align-items:center;gap:9px;"><span style="width:11px;height:11px;border-radius:3px;background:{{ m.color }};flex:none;"></span><span style="flex:1;font-size:13px;color:#3a4148;">{{ m.label }}</span><span style="font-size:13px;font-weight:800;color:#14212b;font-family:var(--font-mono);">{{ m.n }}</span></div>
-                </sc-for>
-              </div>
-            </div>
-          </section>
-
-          <section style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);padding:20px 22px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;"><span style="font-size:15px;font-weight:800;color:#14212b;">Распределение по состояниям</span><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#8a8d86;">donut_small</span></div>
-            <div style="font-size:12px;color:#5f655f;margin-bottom:16px;">Те же числа, что в фильтрах рейсов</div>
-            <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-              <sc-for list="{{ stateDist }}" as="d" hint-placeholder-count="4">
-                <div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border:1px solid #d7d1c5;border-radius:11px;background:#f5f2eb;">
-                  <span style="width:10px;height:10px;border-radius:50%;background:{{ d.color }};flex:none;"></span>
-                  <span style="flex:1;font-size:12.5px;color:#3a4148;">{{ d.label }}</span>
-                  <span style="font-size:18px;font-weight:800;color:#14212b;font-family:var(--font-mono);">{{ d.n }}</span>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-
-          <section style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);padding:20px 22px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;"><span style="font-size:15px;font-weight:800;color:#14212b;">Импорт vs внутренний развоз</span><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#8a8d86;">public</span></div>
-            <div style="font-size:12px;color:#5f655f;margin-bottom:16px;">По признаку таможенного оформления</div>
-            <div style="display:flex;flex-direction:column;gap:14px;">
-              <sc-for list="{{ importSplit }}" as="m" hint-placeholder-count="2">
-                <div>
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><span style="font-size:13px;font-weight:600;color:#14212b;">{{ m.label }}</span><span style="font-size:13px;font-weight:800;color:#14212b;font-family:var(--font-mono);">{{ m.n }} · {{ m.pct }}%</span></div>
-                  <div style="height:8px;border-radius:5px;background:#e5e0d7;overflow:hidden;"><div style="height:100%;width:{{ m.pct }}%;background:{{ m.color }};border-radius:5px;"></div></div>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-
-          <section style="background:#fbf9f4;border:1px solid #d7d1c5;border-radius:var(--radius-lg);padding:20px 22px;">
-            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px;"><span style="font-size:15px;font-weight:800;color:#14212b;">По категориям груза</span><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#8a8d86;">apartment</span></div>
-            <div style="font-size:12px;color:#5f655f;margin-bottom:16px;">Клиент «Демо-клиент»</div>
-            <div style="display:flex;flex-direction:column;gap:14px;">
-              <sc-for list="{{ byCompany }}" as="c" hint-placeholder-count="2">
-                <div>
-                  <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:5px;"><span style="font-size:13px;font-weight:600;color:#14212b;">{{ c.label }}</span><span style="font-size:13px;font-weight:800;color:#14212b;font-family:var(--font-mono);">{{ c.count }}</span></div>
-                  <div style="height:8px;border-radius:5px;background:#e5e0d7;overflow:hidden;"><div style="height:100%;width:{{ c.pct }}%;background:#3157e5;border-radius:5px;"></div></div>
-                </div>
-              </sc-for>
-            </div>
-          </section>
-
-          <sc-if value="{{ aiReports }}" hint-placeholder-val="{{ true }}">
-          <section style="background:linear-gradient(180deg,#fff,#eef1fd);border:1px solid #cbd5ff;border-radius:var(--radius-lg);padding:20px 22px;">
-            <button sc-camel-on-click="{{ aiReports.fold.onToggle }}" style="display:flex;align-items:center;gap:11px;width:100%;padding:0;border:0;background:none;text-align:left;cursor:pointer;">
-              <span style="width:34px;height:34px;flex:none;border-radius:10px;background:#14212b;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:20px;color:#9bb0ff;">auto_awesome</span></span>
-              <span style="font-size:15px;font-weight:800;color:#14212b;flex:1;">{{ aiReports.headline }}</span>
-              <span class="ai-toggle">{{ aiReports.fold.toggleLabel }}<span class="ms">{{ aiReports.fold.toggleIcon }}</span></span>
-            </button>
-            <sc-if value="{{ aiReports.fold.open }}" hint-placeholder-val="{{ false }}">
-            <div style="font-size:13px;line-height:1.6;color:#14212b;margin:12px 0 14px;">{{ aiReports.text }}</div>
-            <div style="display:flex;flex-direction:column;gap:9px;">
-              <sc-for list="{{ aiReports.highlights }}" as="h" hint-placeholder-count="3">
-                <div style="display:flex;align-items:flex-start;gap:9px;"><span style="font-family:'Material Symbols Outlined';font-size:17px;color:#3157e5;flex:none;margin-top:1px;">chevron_right</span><span style="font-size:12.5px;color:#3a4148;line-height:1.5;">{{ h }}</span></div>
-              </sc-for>
-            </div>
-            </sc-if>
-          </section>
-          </sc-if>
-
-          <section style="background:#f5f2eb;border:1px dashed #b9b4a9;border-radius:var(--radius-lg);padding:20px 22px;">
-            <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.06em;color:#5f655f;margin-bottom:14px;">В разработке</div>
-            <div style="display:flex;flex-direction:column;gap:12px;">
-              <div style="display:flex;align-items:flex-start;gap:12px;opacity:.85;">
-                <span style="width:34px;height:34px;flex:none;border-radius:10px;background:#ebe6dc;display:flex;align-items:center;justify-content:center;"><span style="font-family:'Material Symbols Outlined';font-size:19px;color:#8a8d86;">timer</span></span>
-                <div style="flex:1;"><div style="display:flex;align-items:center;gap:8px;"><span style="font-size:13.5px;font-weight:700;color:#5f655f;">Среднее время (в пути / растаможка)</span><span style="font-size:9px;font-weight:700;letter-spacing:0.05em;text-transform:uppercase;color:#5f655f;background:#d7d1c5;padding:2px 6px;border-radius:5px;">скоро</span></div><div style="font-size:12px;color:#5f655f;margin-top:2px;">Появится после наведения порядка в стадиях — не строим отчёт на кривых таймингах.</div></div>
-              </div>
-            </div>
-          </section>
-
-        </div>
       </div>
       </sc-if>
 
@@ -2159,7 +2067,7 @@ class Component extends DCLogic {
     selectedLegs:{T:true,C:true,W:true,D:true}, navCollapsed:false,
     clientScreen:'list', currentId:'GLL-2607-203', variant:'A', collapsed:{},
     originKey:'Циндао', destKey:'Алматы', cargoKey:'potato', custNeeded:true,
-    query:'', stateFilter:'all', listPage:0, aiOpen:{},
+    query:'', listPage:0, aiOpen:{},
     docKind:'', docSelected:{}, archiveStatus:'',
     periodKey:'jul', periodOpen:false, stripFilter:{}, selected:{}, exportStatus:'',
     docQuery:'', docSeg:'all', docSort:'date_desc', openDocIdx:null,
@@ -2835,7 +2743,7 @@ class Component extends DCLogic {
     const isLogin=!s.authed;
     const isClient=s.authed;
     const cs=s.clientScreen;
-    const scNew=cs==='new', scAI=cs==='ai', scOrch=cs==='orch', scList=cs==='list', scCard=cs==='card', scDocs=cs==='docs', scReports=cs==='reports', scWh=cs==='wh', scLm=cs==='lm';
+    const scNew=cs==='new', scAI=cs==='ai', scOrch=cs==='orch', scList=cs==='list', scCard=cs==='card', scDocs=cs==='docs', scWh=cs==='wh', scLm=cs==='lm';
     const isVariantA=s.variant==='A', isVariantB=s.variant==='B';
     const aiOn=this.props.aiCopilot ?? true;
     const SH=this.raw().map(a=>this.adapt(a));
@@ -2852,12 +2760,11 @@ class Component extends DCLogic {
       navRow('new','Новая заявка','add',['new','ai','orch'],{action:true}),
       navRow('list','Рейсы','local_shipping',['list','card']),
       navRow('docs','Документы','description',['docs']),
-      navRow('reports','Отчёты','monitoring',['reports'],{groupBefore:'4PL-цепочка'}),
-      navRow('wh','Склад','warehouse',['wh']),
+      navRow('wh','Склад','warehouse',['wh'],{groupBefore:'4PL-цепочка'}),
       navRow('lm','Последняя миля','pin_drop',['lm'])
     ];
 
-    const titles={new:['Новая заявка','Сборка 4PL-цепочки'],ai:['AI-план','Рекомендации перед запуском'],orch:['Оркестрация','Цепочка из контрагентов'],list:['Демо-клиент',''],docs:['Демо-клиент',''],reports:['Отчёты','Аналитика на демо-данных'],wh:['Склад · Алматы / Астана','Ответственное хранение'],lm:['Последняя миля','Развозка по точкам']};
+    const titles={new:['Новая заявка','Сборка 4PL-цепочки'],ai:['AI-план','Рекомендации перед запуском'],orch:['Оркестрация','Цепочка из контрагентов'],list:['Демо-клиент',''],docs:['Демо-клиент',''],wh:['Склад · Алматы / Астана','Ответственное хранение'],lm:['Последняя миля','Развозка по точкам']};
     const clientTitle=(titles[cs]||['',''])[0], clientSubtitle=(titles[cs]||['',''])[1];
     const clientKicker=(scList||scDocs)?'Контур клиента':'Демо-клиент';
     const notCard=!scCard;
@@ -2870,6 +2777,7 @@ class Component extends DCLogic {
       border: active?'#14212b':(done?'#d7d1c5':'#d7d1c5'), bg: active?'#14212b':'#fff',
       fg: active?'#fff':(done?'#3a4148':'#5f655f'), weight: active?'700':'600',
       numBg: active?'#3157e5':(done?'#14212b':'#ebe6dc'), numFg:(active||done)?'#fff':'#5f655f',
+      cls:'flow-step'+(active?' flow-step-on':'')+(done?' flow-step-done':''),
       onClick:()=>this.setState({clientScreen:d[0]}) }; });
 
     const selLegs=s.selectedLegs;
@@ -2907,10 +2815,11 @@ class Component extends DCLogic {
       {key:'D',label:'Доставка',icon:'pin_drop'}
     ];
     const presetChips=[1,2,3,4].map(n=>{ const active=selCount===n; return {
-      label:n+'PL', onClick:()=>this.setPreset(n),
+      label:n+'PL', onClick:()=>this.setPreset(n), cls:'segmented-option'+(active?' segmented-option-on':''),
       bg: active?'#14212b':'#fff', fg: active?'#fff':'#5f655f', border: active?'#14212b':'#d7d1c5', weight: active?'800':'700' }; });
     const legTiles=legMeta.map(m=>{ const g=this.SEG[m.key]; const on=selLegs[m.key]; return {
-      key:m.key, label:m.label, icon:m.icon, main:g.main,
+      key:m.key, label:m.label, icon:m.icon, main:g.main, on:!!on, cls:'leg-option'+(on?' leg-option-on':''),
+      sub:{T:'перевозчик',C:'брокер и СВХ',W:'ответственное хранение',D:'развозка до точек'}[m.key],
       bg: on?g.bg:'#f5f2eb', border: on?g.main:'#d7d1c5', iconColor: on?g.main:'#8a8d86',
       titleColor: on?'#14212b':'#5f655f',
       checkIcon: on?'check_box':'check_box_outline_blank', checkColor: on?g.main:'#b9b4a9',
@@ -2922,7 +2831,8 @@ class Component extends DCLogic {
       {seg:'W',role:'Склад',name:'Склад GLL, '+destLabel,entity:'Ответственное хранение',icon:'warehouse'},
       {seg:'D',role:'Доставка',name:'GLL Последняя миля, '+destLabel,entity:'Последняя миля · до получателя',icon:'pin_drop'}
     ];
-    const chain=chainDef.filter(c=>selLegs[c.seg]).map((c,i)=>{const g=this.SEG[c.seg];return {...c,main:g.main,bg:g.bg,hasArrow:i>0};});
+    const chain=chainDef.filter(c=>selLegs[c.seg]).map((c,i)=>{const g=this.SEG[c.seg];return {...c,main:g.main,bg:g.bg,hasArrow:i>0,step:'плечо '+(i+1)};});
+    const chainCount=chain.length+' '+this.plural(chain.length,'исполнитель','исполнителя','исполнителей');
     const legLegend=legMeta.filter(m=>selLegs[m.key]).map(m=>{const g=this.SEG[m.key];return {label:g.label,color:g.main};});
 
     const planRaw=this.NSPLAN.recommendations||{};
@@ -2981,7 +2891,7 @@ class Component extends DCLogic {
       togglePeriod:()=>this.setState(p=>({periodOpen:!p.periodOpen})),
       periodOptions:this.PERIODS.map(x=>({label:x.label, cls:'period-option'+(x.key===period.key?' period-option-current':''), onPick:()=>this.setState({periodKey:x.key,periodOpen:false,listPage:0,selected:{}})})),
       trips:inPeriod.length, tripsNoun:this.plural(inPeriod.length,'рейс','рейса','рейсов')+' · '+period.span,
-      showAll:()=>this.setState({stripFilter:{},stateFilter:'all',full4plOnly:false,query:'',listPage:0}),
+      showAll:()=>this.setState({stripFilter:{},query:'',listPage:0}),
       groups:[
         [stripFig('Вовремя',onTimeShare.big,onTimeShare.third,'ok',null), stripFig('С опозданием',lateShare.big,lateShare.third,'quiet','late')],
         [stripFig('ТТН есть',String(finished.length-noTtnList.length),'из '+finished.length,'ok',null), stripFig('ТТН нет',String(noTtnList.length),'из '+finished.length,'quiet','noTtn')],
@@ -2992,16 +2902,9 @@ class Component extends DCLogic {
     const filterNames={late:'выгружено с опозданием',noTtn:'без ТТН',over:'стоянка сверх нормы',cust:'с таможней',attn:'требуют внимания'};
     const activeStrip=Object.keys(filterNames).filter(k=>sf[k]);
 
-    const counts={all:inPeriod.length,done:0,work:0,transit:0,attention:0};
-    inPeriod.forEach(x=>{counts[x.category]=(counts[x.category]||0)+1;});
-    const chipsDef=[['all','Все'],['done','Завершены'],['work','В работе'],['transit','В пути']];
-    const stateChips=chipsDef.map(([key,label])=>({ label, count:counts[key]||0, cls:'filter-chip'+(s.stateFilter===key?' filter-chip-on':''), onClick:()=>this.setState({stateFilter:key,listPage:0}) }));
-    const full4plChip={ label:'Полный цикл 4PL', count:inPeriod.filter(x=>x.is4pl).length, cls:'filter-chip'+(s.full4plOnly?' filter-chip-on':''), onClick:()=>this.setState(p=>({full4plOnly:!p.full4plOnly,listPage:0})) };
     const catRank={attention:0,work:1,transit:2,done:3};
     const listAll=inPeriod.filter(x=>{
       const tr=tripOf(x);
-      if(s.stateFilter!=='all' && x.category!==s.stateFilter) return false;
-      if(s.full4plOnly && !x.is4pl) return false;
       if(sf.late && !(lateList.indexOf(x)>=0)) return false;
       if(sf.noTtn && !(noTtnList.indexOf(x)>=0)) return false;
       if(sf.over && !(overList.indexOf(x)>=0)) return false;
@@ -3009,6 +2912,10 @@ class Component extends DCLogic {
       if(sf.attn && x.category!=='attention') return false;
       return true;
     }).slice().sort((a,b)=> (catRank[a.category]-catRank[b.category]) || (tripOf(b).load||'').localeCompare(tripOf(a).load||''));
+    // The full-cycle 4PL trip (transport → customs → warehouse → last mile) is the demo's showcase: its row carries
+    // a tag and the results line links straight to it, instead of a filter chip.
+    const fullTrip=inPeriod.find(x=>x.is4pl);
+    const fullCycle= fullTrip ? {code:fullTrip.id, route:fullTrip.from.sub+' → '+fullTrip.to.city, open:()=>this.setState({clientScreen:'card',currentId:fullTrip.id})} : null;
     const PAGE=25;
     const totalFiltered=listAll.length;
     const pageCount=Math.max(1,Math.ceil(totalFiltered/PAGE));
@@ -3059,27 +2966,6 @@ class Component extends DCLogic {
       ].map(it=>({...it, hasCode:true}))
     };
 
-    const routeCount={}; SH.forEach(a=>{const k=a.from.sub+' → '+a.to.city; routeCount[k]=(routeCount[k]||0)+1;});
-    const trArr=Object.keys(routeCount).map(k=>({route:k,count:routeCount[k]})).sort((x,y)=>y.count-x.count).slice(0,6);
-    const maxRoute=Math.max.apply(null,trArr.map(r=>r.count).concat([1]));
-    const topRoutes=trArr.map(r=>({route:r.route,count:r.count,pct:Math.round(r.count/maxRoute*100)}));
-    const totalSh=SH.length;
-    const doneN=allCounts.done, workN=allCounts.work, transitN=allCounts.transit, attnN=allCounts.attention;
-    const mixDef=[{label:'Завершена',n:doneN,color:'#24775b'},{label:'В работе',n:workN,color:'#c98227'},{label:'В пути',n:transitN,color:'#3157e5'},{label:'Требует внимания',n:attnN,color:'#a63c38'}];
-    const mix=mixDef.map(m=>({...m,pct:totalSh?Math.round(m.n/totalSh*100):0}));
-    let accD=0; const donutSegs=mixDef.filter(m=>m.n>0).map(m=>{const st=accD/totalSh*360; accD+=m.n; const en=accD/totalSh*360; return m.color+' '+st+'deg '+en+'deg';});
-    const donutBg='conic-gradient('+donutSegs.join(',')+')';
-    const doneShare=totalSh>0?Math.round(doneN/totalSh*100):100;
-    const stateDist=[{label:'Завершена',n:doneN,color:'#24775b'},{label:'В работе',n:workN,color:'#c98227'},{label:'В пути',n:transitN,color:'#3157e5'},{label:'Внимание',n:attnN,color:'#a63c38'}];
-    let intlN=0; SH.forEach(a=>{ if(a.intl) intlN++; });
-    const domN=totalSh-intlN;
-    const splitMix=[{label:'Внутренний развоз',n:domN,color:'#2f9d78'},{label:'Импорт (ВЭД)',n:intlN,color:'#3157e5'}];
-    const importSplit=splitMix.map(m=>({...m,pct:totalSh?Math.round(m.n/totalSh*100):0}));
-    const catMap={}; SH.forEach(a=>{ const cat=a.cargo.split(',')[0].split('(')[0].trim(); catMap[cat]=(catMap[cat]||0)+1; });
-    const catMax=Math.max.apply(null,Object.values(catMap).concat([1]));
-    const byCompany=Object.keys(catMap).map(k=>({label:k,count:catMap[k],pct:Math.round(catMap[k]/catMax*100)})).sort((x,y)=>y.count-x.count);
-    const aiReports={fold:this.aiFold('reports'), headline:'AI-сводка за неделю', text:totalSh+' рейсов в демо-наборе: '+doneN+' завершено, '+transitN+' в пути, '+workN+' готовится, '+attnN+' требуют внимания.',
-      highlights:['Алкоголь GLL-2607-203 — на таможенном контроле, ждём акцизные документы.','Простой GLL-2607-204 — перевозчик заявил 30 000 ₸, по ТТН к оплате 20 000 ₸.','Последняя миля — 2 маршрута спланированы AI-логистом, объезд пробок сэкономил время.']};
 
     const sh=SH.find(x=>x.id===s.currentId)||SH[0]||null;
     let card=null, breadcrumbCode='';
@@ -3253,11 +3139,9 @@ class Component extends DCLogic {
       navCollapsedFlag: s.navCollapsed, accountCls: s.navCollapsed?'rail-account rail-account-collapsed':'rail-account', clientKicker,
       doLogout:()=>this.setState({authed:false, clientScreen:'list'}),
       collapseIcon: s.navCollapsed?'chevron_right':'chevron_left', toggleNav:()=>this.setState(p=>({navCollapsed:!p.navCollapsed})),
-      showStepper, steps, scNew, scAI, scOrch, scList, scCard, scDocs, scReports, scWh, scLm,
+      showStepper, steps, scNew, scAI, scOrch, scList, scCard, scDocs, scWh, scLm,
       wh:this.buildWarehouse(), lmv: scLm ? this.buildLmToday() : null,
-      topRoutes, mix, donutBg, doneShare, stateDist, reportsTotal:totalSh, importSplit, byCompany,
-      aiReports,
-      chain, chainCaption, legLegend, presetChips, legTiles, plBadge, plShort, scaleNote, orchCaption, orchNote,
+      chain, chainCount, chainCaption, legLegend, presetChips, legTiles, plBadge, plShort, scaleNote, orchCaption, orchNote,
       originOpts, destOpts, cargoOpts, originKey:s.originKey, destKey:s.destKey, cargoKey:s.cargoKey, onOrigin, onDest, onCargo, cargoTemp:cargoO.temp, cargoIcon:(cargoO.temp?'ac_unit':'inventory_2'), aiRouteHint,
       showRoute, showCarriers, reqText, reqSub, planTop, planBlocks, ctaParties, hasCtaParties:!!ctaParties,
       goAI:()=>this.setState({clientScreen:'ai'}), goOrch:()=>this.setState({clientScreen:'orch'}), goList:()=>this.setState({clientScreen:'list'}),
@@ -3268,10 +3152,10 @@ class Component extends DCLogic {
       orchTimeline:this.LEGORDER.filter(k=>selLegs[k]).map((k,i)=>{ const g=this.SEG[k]; const nm={T:pickedParties.T||pickedName,C:pickedParties.C||'Брокер «ЦентрТамож»',W:pickedParties.W||'Склад GLL',D:pickedParties.D||'GLL Последняя миля'}[k];
         return {seg:g.label, title:'Этап запланирован — '+g.label.toLowerCase(), party:nm, color:g.main, chipBg:g.chip, planned:true}; }),
       aiSummary, showAiSummary: aiOn, aiCopilot:aiOn,
-      strip, stateChips, full4plChip, rows, emptyState:rows.length===0, pageInfo, resultLine, exportBar, allOnPage, toggleAllRows,
+      strip, rows, fullCycle, emptyState:rows.length===0, pageInfo, resultLine, exportBar, allOnPage, toggleAllRows,
       inTransitNow, syncMoment:'обновлено сегодня в 11:20', hasQuery:!!s.query,
       query:s.query, onQuery:e=>this.setState({query:e.target.value,listPage:0}), clearQuery:()=>this.setState({query:'',listPage:0}),
-      resetFilters:()=>this.setState({query:'',stateFilter:'all',stripFilter:{},full4plOnly:false,listPage:0}),
+      resetFilters:()=>this.setState({query:'',stripFilter:{},listPage:0}),
       isVariantA, isVariantB, vaStyle:this.pill(isVariantA,'#14212b'), vbStyle:this.pill(isVariantB,'#14212b'),
       setVariantA:()=>this.setState({variant:'A'}), setVariantB:()=>this.setState({variant:'B'}),
       card, breadcrumbCode,
